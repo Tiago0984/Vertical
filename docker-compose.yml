@@ -10,7 +10,7 @@ services:
     depends_on:
       - php
     networks:
-      - davilla_network
+      - vertical_network
 
   php:
     build:
@@ -23,14 +23,14 @@ services:
     depends_on:
       - mysql
     networks:
-      - davilla_network
+      - vertical_network
 
   mysql:
     image: mysql:8.0
     container_name: vertical_mysql
     restart: unless-stopped
     environment:
-      MYSQL_DATABASE: vertical
+      MYSQL_DATABASE: db_vertical
       MYSQL_USER: user
       MYSQL_PASSWORD: user
       MYSQL_ROOT_PASSWORD: root
