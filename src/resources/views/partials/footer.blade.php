@@ -13,19 +13,19 @@
 						<div class="footer_top_right">
 							<ul id="payment">
 								<li><a href="">
-									<img src="images/pay1.png" alt="" />
+									<img src="vertical/images/pay1.png" alt="" />
 								</a></li>
 								<li><a href="">
-									<img src="images/pay2.png" alt="" />
+									<img src="vertical/images/pay2.png" alt="" />
 								</a></li>
 								<li><a href="">
-									<img src="images/pay3.png" alt="" />
+									<img src="vertical/images/pay3.png" alt="" />
 								</a></li>
 								<li><a href="">
-									<img src="images/pay4.png" alt="" />
+									<img src="vertical/images/pay4.png" alt="" />
 								</a></li>
 								<li><a href="">
-									<img src="images/pay5.png" alt="" />
+									<img src="vertical/images/pay5.png" alt="" />
 								</a></li>
 							</ul>
 						</div>
