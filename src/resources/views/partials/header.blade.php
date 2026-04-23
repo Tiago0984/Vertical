@@ -41,7 +41,7 @@
 				</div>
 				<div class="col-md-6 col-sm-5 col-xs-12">
 					<div class="header_center">
-						<a href="index.html"><img src="vertical/images/logo.png" alt="Site Logo" /></a>
+						<a href="{{ route('home') }}"><img src="vertical/images/logo.png" alt="Site Logo" /></a>
 					</div>
 				</div>
 				<div class="col-md-3 col-sm-4 col-xs-12">
@@ -61,7 +61,7 @@
 	<section class="nav_area">
 		<div class="container">
 			<div class="nav_left floatleft">
-				<a href="category-1.html">categoria<i class="fa fa-bars"></i></a>
+				<a href="{{ route('categorias') }}">categorias<i class="fa fa-bars"></i></a>
 				<div class="cat_mega_menu">
 						<div class="cat_left">
 							<h5>Camisas</h5>
@@ -104,17 +104,17 @@
 			<div class="nav_center">
 				<nav class="mainmenu">
 					<ul id="nav">
-						<li class="current-page-item"><a href="index.html">Início</a>
+						<li class="current-page-item"><a href="{{ route('home') }}">Início</a>
 							<ul id="sub-menu4">
 								<li><a href="index-2.html">Versão Inicial Dois</a></li>
 							</ul>
 						</li>
-						<li><a href="category-2.html">loja</a>
+						<li><a href="{{ route('loja') }}">loja</a>
 							<ul id="sub-menu7">
 								<li><a href="product-detail.html">Página de Detalhes do Produto</a></li>
 							</ul>
 						</li>
-						<li><a href="category-1.html">acessórios</a>
+						<li><a href="{{ route('acessorios') }}">acessórios</a>
 							<ul id="sub-menu">
 								<li><a href="">ver camisas</a></li>
 								<li><a href="">camisas jeans</a></li>
@@ -125,23 +125,23 @@
 								<li class="last-child"><a href="">camisas jeans de manga curta</a></li>
 							</ul>
 						</li>
-						<li><a href="#">páginas</a>
+						<li><a href="{{ route('paginas') }}">páginas</a>
 							<ul id="sub-menu5">
 								<li><a href="category-1.html">Loja com Filtro</a></li>
 								<li><a href="category-2.html">Loja sem Filtro</a></li>
 								<li><a href="checkout.html">Página de Finalização</a></li>
-								<li><a href="cart.html">Página do Carrinho</a></li>
+								<li><a href="{{ route('carrinho') }}">Página do Carrinho</a></li>
 								<li><a href="single-blog.html">Post do Blog</a></li>
 								<li><a href="contact.html">Página de Contato</a></li>
 								<li><a href="404.html">Página 404</a></li>
 							</ul>
 						</li>
-						<li><a href="blog.html">Blog</a></li>
+						<li><a href="{{ route('blog') }}">Blog</a></li>
 					</ul>
 				</nav>
 			</div>
 		<div class="nav_right floatright">
-			<a href="cart.html"><img src="vertical/images/bag.png" alt="Bag" />carrinho: 2 itens</a>
+			<a href="{{ route('carrinho') }}"><img src="vertical/images/bag.png" alt="Bag" />carrinho: 2 itens</a>
 				<div class="cart_menu">
 					<div class="cart_items">
 					<div class="c_item_img floatleft">
@@ -181,7 +181,7 @@
 					</div>
 					<div class="cart_view_bottom">
 						<div class="c_totals_left floatleft">
-							<a href="cart.html">Ver Carrinho</a>
+							<a href="{{ route('carrinho') }}">Ver Carrinho</a>
 						</div>
 						<div class="c_totals_right floatleft">
 							<a href="checkout.html">Finalizar Compra</a>
@@ -265,10 +265,10 @@
 								</ul>
 							</li>
 							<li>
-								<a href='category-2.html'><span>loja</span></a>
+								<a href='{{ route('loja') }}'><span>loja</span></a>
 							</li>
 							<li class='has-sub'>
-								<a href='category-1.html'><span>acessórios</span></a>
+								<a href='{{ route('acessorios') }}'><span>acessórios</span></a>
 								<ul class="sub-nav">
 									<li><a href="#"><span>ver camisas</span></a></li>
 									<li><a href="#"><span>camisas jeans</span></a></li>
@@ -280,7 +280,7 @@
 								</ul>
 							</li>
 							<li class='has-sub'>
-								<a href='#'><span>páginas</span></a>
+								<a href='{{ route('paginas') }}'><span>páginas</span></a>
 								<ul id="sub-nav">
 									<li><a href="category-1.html">Página de categoria</a></li>
 									<li><a href="category-2.html">Página de categoria sem filtro</a></li>
@@ -297,7 +297,7 @@
 								<a href='blog.html'><span>Blog</span></a>
 							</li>
 							<li>
-								<a href='cart.html'><span>carrinho</span></a>
+								<a href='{{ route('carrinho') }}'><span>carrinho</span></a>
 							</li>
 						</ul>
 					</div>
