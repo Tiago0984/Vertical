@@ -1148,17 +1148,17 @@ border: 1px solid #ff6766;
 color: #fff;
 }
 .footer_top_right > ul#payment {
-  list-style: outside none none;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  list-style: none;
   margin: 0;
   padding: 0;
-  text-align: right;
+  flex-wrap: wrap;
+  justify-content: flex-end;
 }
 .footer_top_right > ul#payment li {
-  display: inline;
-  margin-left: 5px;
-}
-.footer_top_right > ul#payment li a {
-  
+  display: flex;
 }
 .footer_area {
   background: none repeat scroll 0 0 #232323;
@@ -1207,7 +1207,7 @@ line-height: 33px;
 }
 ul.wid_social {
   list-style: outside none none;
-  margin: 0;
+  margin: 14px 0 0;
   padding: 0;
 }
 ul.wid_social li {
@@ -1233,12 +1233,16 @@ text-decoration: none;
   padding: 18px 0;
 }
 .footer_bottom {
-  text-align: center;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 10px;
 }
 .footer_bottom > p {
   color: #aaaaaa;
   font-size: 12px;
-  margin-bottom: 0;
+  margin: 0;
   text-transform: uppercase;
 }
 .footer_bottom a {
@@ -3870,3 +3874,163 @@ font-size:13px;
   opacity:0.5;
   filter: none !important;
 }
+
+
+/* ============================================
+15. Componentes Customizados
+===============================================*/
+
+/* Header — Logo */
+.logo-link { text-decoration: none; }
+.logo-brand {
+    font-family: 'Oswald', sans-serif;
+    font-size: 36px;
+    font-weight: 700;
+    color: #333;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+}
+.flag-icon {
+    border-radius: 2px;
+    vertical-align: middle;
+    box-shadow: 0 0 2px rgba(0,0,0,.3);
+}
+
+/* Slider Banner */
+.fullwidthbanner-container {
+    background: linear-gradient(135deg, #fff5f7 0%, #ffffff 45%, #ffe8ec 100%) !important;
+}
+.slider-btn {
+    display: inline-block;
+    padding: 14px 40px;
+    background: #e91e8c;
+    color: #fff !important;
+    font-family: 'Montserrat', sans-serif;
+    font-size: 14px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    text-decoration: none !important;
+    border-radius: 3px;
+    box-shadow: 0 4px 15px rgba(233, 30, 140, 0.4);
+    transition: background 0.2s, transform 0.2s;
+}
+.slider-btn:hover {
+    background: #c2185b;
+    transform: translateY(-2px);
+    color: #fff !important;
+}
+
+/* CTA — Ícone */
+.cta-icon {
+    font-size: 42px;
+    line-height: 1;
+    display: block;
+    margin-bottom: 10px;
+}
+
+/* Badge de promoção */
+.badge-promo {
+    background: #e53935 !important;
+    color: #fff !important;
+    font-weight: 700 !important;
+    font-size: 11px !important;
+    letter-spacing: 0.5px;
+}
+
+/* Footer — Endereço */
+.footer-address {
+    line-height: 1.9;
+    font-size: 13px;
+}
+.footer-address-icon {
+    color: #e91e8c;
+    margin-right: 6px;
+    width: 14px;
+}
+.footer-address-indent { margin-left: 20px; }
+
+/* Footer — Badges de pagamento */
+.payment-badge {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 52px;
+    height: 32px;
+    border-radius: 4px;
+}
+.payment-visa {
+    background: #1a1f71;
+    color: #fff;
+    font-family: 'Montserrat', sans-serif;
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+    font-style: italic;
+}
+.payment-mastercard {
+    background: #fff;
+    border: 1px solid #ddd;
+    gap: 0;
+    overflow: hidden;
+}
+.mc-circle-red {
+    width: 22px;
+    height: 22px;
+    background: #eb001b;
+    border-radius: 50%;
+    margin-right: -8px;
+    opacity: 0.9;
+}
+.mc-circle-yellow {
+    width: 22px;
+    height: 22px;
+    background: #f79e1b;
+    border-radius: 50%;
+    opacity: 0.9;
+}
+.payment-pix {
+    background: #32bcad;
+    color: #fff;
+    font-family: 'Montserrat', sans-serif;
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+}
+.payment-boleto {
+    background: #fff;
+    border: 1px solid #ddd;
+    flex-direction: column;
+    gap: 2px;
+    padding: 4px;
+}
+.boleto-bar {
+    display: block;
+    height: 3px;
+    background: #333;
+    border-radius: 1px;
+}
+.boleto-bar-long { width: 36px; }
+.boleto-bar-short { width: 28px; }
+.payment-elo {
+    background: #FFD600;
+    color: #333;
+    font-family: 'Montserrat', sans-serif;
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+}
+
+/* Slider — Cupom em destaque */
+.slider-cupom {
+    color: #e91e8c;
+    font-size: 20px;
+}
+
+/* Footer — Copyright */
+.footer-brand-link {
+    color: #e91e8c;
+    font-weight: 700;
+}
+.footer-made-in { font-size: 12px; color: #aaa; }
+.footer-heart { color: #e91e8c; }

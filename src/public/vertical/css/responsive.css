@@ -1174,6 +1174,18 @@ position: relative;
 .owl-carousel .item {
   margin: 0 auto;
 }
+.fresh_blog_text,
+.fresh_blog_img {
+  float: none;
+  width: 100%;
+}
+.header_right {
+  margin: 60px auto 10px 0;
+}
+.blog_search input[type="text"] {
+  width: 100%;
+  max-width: 262px;
+}
 
 
 }

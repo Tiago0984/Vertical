@@ -1,30 +1,3 @@
-<style>
-.fullwidthbanner-container {
-    background: linear-gradient(135deg, #fff5f7 0%, #ffffff 45%, #ffe8ec 100%) !important;
-}
-/* Botão do slider */
-.slider-btn {
-    display: inline-block;
-    padding: 14px 40px;
-    background: #e91e8c;
-    color: #fff !important;
-    font-family: 'Montserrat', sans-serif;
-    font-size: 14px;
-    font-weight: 700;
-    text-transform: uppercase;
-    letter-spacing: 2px;
-    text-decoration: none !important;
-    border-radius: 3px;
-    box-shadow: 0 4px 15px rgba(233, 30, 140, 0.4);
-    transition: background 0.2s, transform 0.2s;
-}
-.slider-btn:hover {
-    background: #c2185b;
-    transform: translateY(-2px);
-    color: #fff !important;
-}
-</style>
-
 <div class="slider-wrap">
     <div class="fullwidthbanner-container">
         <div class="fullwidthbanner">
@@ -119,7 +92,7 @@
 
                     <div class="tp-caption lfb" data-x="122" data-y="315" data-speed="1100" data-start="1600" data-easing="easeInOutBack"
                         style="font-family:'Cabin',sans-serif; font-size:18px; font-weight:600; color:#555; text-shadow:0 0 4px rgba(255,255,255,0.9); z-index:5;">
-                        Na primeira compra use o cupom: <strong style="color:#e91e8c; font-size:20px;">BEMVINDO10</strong>
+                        Na primeira compra use o cupom: <strong class="slider-cupom">BEMVINDO10</strong>
                     </div>
 
                     <div class="tp-caption lfb" data-x="120" data-y="375" data-speed="1300" data-start="1900" data-easing="easeInOutBack" style="z-index:5;">

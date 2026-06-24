@@ -17,7 +17,7 @@
 								     srcset="https://flagcdn.com/w40/br.png 2x"
 								     width="20" height="14"
 								     alt="Brasil"
-								     style="border-radius:2px; vertical-align:middle; box-shadow:0 0 2px rgba(0,0,0,.3);" />
+								     class="flag-icon" />
 							</li>
 						</ul>
 					</nav>
@@ -37,8 +37,8 @@
 				</div>
 				<div class="col-md-6 col-sm-5 col-xs-12">
 					<div class="header_center">
-						<a href="{{ route('home') }}" style="text-decoration: none;">
-							<span style="font-family: 'Oswald', sans-serif; font-size: 36px; font-weight: 700; color: #333; letter-spacing: 2px; text-transform: uppercase;">
+						<a href="{{ route('home') }}" class="logo-link">
+							<span class="logo-brand">
 								Vertical
 							</span>
 						</a>

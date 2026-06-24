@@ -1,15 +1,4 @@
 <!-- Seção Tendências -->
-<style>
-/* Badge PROMOÇÃO em vermelho */
-.badge-promo {
-    background: #e53935 !important;
-    color: #fff !important;
-    font-weight: 700 !important;
-    font-size: 11px !important;
-    letter-spacing: 0.5px;
-}
-</style>
-
 <section class="trending_area">
     <div class="container">
         <div class="row">
