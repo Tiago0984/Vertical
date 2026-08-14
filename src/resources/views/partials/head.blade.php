@@ -4,8 +4,9 @@
 <title>vertical | Página Inicial 1</title>
 
 <!-- fonts files -->
-<link href='http://fonts.googleapis.com/css?family=Cabin:400,500,400italic,600,600italic,700,700italic' rel='stylesheet' type='text/css'>
-<link href='http://fonts.googleapis.com/css?family=Montserrat:400,700' rel='stylesheet' type='text/css'>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href='https://fonts.googleapis.com/css2?family=Inter:ital,wght@0,400;0,500;0,600;0,700;1,400;1,600&display=swap' rel='stylesheet' type='text/css'>
 
 <!-- Font awesome css -->
 <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css">
@@ -34,6 +35,9 @@
 <!-- Custom css -->
 <link rel="stylesheet" href="{{ asset('vertical/css/style.css') }}">
 <link rel="stylesheet" href="{{ asset('vertical/css/responsive.css') }}">
+
+<!-- Alphaco theme override -->
+<link rel="stylesheet" href="{{ asset('vertical/css/theme-alphaco.css') }}">
 
 <!-- Favicons -->
 <link rel="apple-touch-icon-precomposed" href="{{ asset('vertical/images/apple-touch-icon-precomposed.png') }}">

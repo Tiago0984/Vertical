@@ -2,167 +2,6 @@
 
 @section('content')
 
-<style>
-/* ── Carrinho geral ── */
-.cart-section { padding: 50px 0 70px; }
-.cart-title {
-    font-family: 'Montserrat', sans-serif;
-    font-size: 22px; font-weight: 700;
-    color: #232323; text-transform: uppercase;
-    letter-spacing: 1px; margin-bottom: 6px;
-}
-
-/* ── Tabela do carrinho ── */
-.cart-table { width: 100%; border-collapse: collapse; }
-.cart-table thead th {
-    background: #f8f8f8;
-    font-family: 'Montserrat', sans-serif;
-    font-size: 12px; font-weight: 700;
-    text-transform: uppercase; letter-spacing: 1px;
-    color: #333; padding: 14px 12px;
-    border-bottom: 2px solid #e91e8c;
-    text-align: center;
-}
-.cart-table thead th:first-child { text-align: left; }
-.cart-table tbody tr { border-bottom: 1px solid #f0f0f0; }
-.cart-table tbody tr:hover { background: #fafafa; }
-.cart-table tbody td { padding: 16px 12px; vertical-align: middle; text-align: center; }
-.cart-table tbody td:first-child { text-align: left; }
-
-.cart-product-info { display: flex; align-items: center; gap: 14px; }
-.cart-product-img { width: 72px; height: 72px; object-fit: cover; border-radius: 4px; border: 1px solid #eee; flex-shrink: 0; }
-.cart-product-name {
-    font-family: 'Montserrat', sans-serif;
-    font-size: 13px; font-weight: 600; color: #333;
-    text-decoration: none; display: block; margin-bottom: 3px;
-}
-.cart-product-name:hover { color: #e91e8c; }
-.cart-product-sku { font-size: 11px; color: #aaa; font-family: 'Cabin', sans-serif; }
-
-.cart-badge {
-    display: inline-block; padding: 3px 10px;
-    border-radius: 12px; font-size: 11px;
-    font-family: 'Cabin', sans-serif; font-weight: 600;
-}
-.cart-badge-size { background: #f0f0f0; color: #555; }
-.cart-badge-color { color: #555; border: 1px solid #ddd; }
-
-.cart-price { font-family: 'Montserrat', sans-serif; font-size: 14px; font-weight: 700; color: #333; }
-.cart-total { font-family: 'Montserrat', sans-serif; font-size: 14px; font-weight: 700; color: #e91e8c; }
-
-.qty-ctrl { display: flex; align-items: center; justify-content: center; gap: 0; }
-.qty-ctrl button {
-    width: 28px; height: 32px; border: 1px solid #ddd;
-    background: #f8f8f8; cursor: pointer; font-size: 14px;
-    color: #555; transition: all 0.15s; line-height: 1;
-}
-.qty-ctrl button:hover { background: #e91e8c; color: #fff; border-color: #e91e8c; }
-.qty-ctrl input {
-    width: 40px; height: 32px; border: 1px solid #ddd;
-    border-left: none; border-right: none;
-    text-align: center; font-family: 'Montserrat', sans-serif;
-    font-size: 13px; font-weight: 700; color: #333; outline: none;
-}
-
-.btn-remove {
-    background: none; border: none; cursor: pointer;
-    color: #ccc; font-size: 18px; transition: color 0.15s; padding: 4px;
-}
-.btn-remove:hover { color: #e53935; }
-
-/* ── Cupom + Resumo ── */
-.coupon-box {
-    display: flex; gap: 10px; align-items: center;
-    flex-wrap: wrap; margin-top: 24px;
-}
-.coupon-box input[type=text] {
-    flex: 1; min-width: 160px; padding: 11px 16px;
-    border: 2px solid #ddd; border-radius: 3px;
-    font-family: 'Cabin', sans-serif; font-size: 14px;
-    outline: none; transition: border 0.15s;
-    text-transform: uppercase; letter-spacing: 2px;
-}
-.coupon-box input[type=text]:focus { border-color: #e91e8c; }
-.coupon-box input::placeholder { text-transform: none; letter-spacing: 0; color: #aaa; }
-.btn-coupon {
-    padding: 11px 24px; background: #333; color: #fff;
-    border: none; font-family: 'Montserrat', sans-serif;
-    font-size: 12px; font-weight: 700; text-transform: uppercase;
-    letter-spacing: 1px; cursor: pointer; border-radius: 3px;
-    transition: background 0.2s; white-space: nowrap;
-}
-.btn-coupon:hover { background: #e91e8c; }
-
-.cart-actions { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 20px; }
-.btn-action {
-    padding: 11px 22px; border: 2px solid #ddd;
-    background: #fff; color: #555;
-    font-family: 'Montserrat', sans-serif; font-size: 12px;
-    font-weight: 700; text-transform: uppercase; letter-spacing: 1px;
-    cursor: pointer; border-radius: 3px; transition: all 0.15s;
-    text-decoration: none; display: inline-flex; align-items: center; gap: 6px;
-}
-.btn-action:hover { border-color: #e91e8c; color: #e91e8c; }
-
-/* ── Resumo do pedido ── */
-.order-summary {
-    background: #fafafa; border: 1px solid #f0f0f0;
-    border-radius: 6px; padding: 28px 24px;
-    position: sticky; top: 20px;
-}
-.order-summary h4 {
-    font-family: 'Montserrat', sans-serif;
-    font-size: 14px; font-weight: 700;
-    text-transform: uppercase; letter-spacing: 1px;
-    color: #232323; margin-bottom: 18px;
-    padding-bottom: 12px; border-bottom: 2px solid #e91e8c;
-}
-.summary-row {
-    display: flex; justify-content: space-between;
-    align-items: center; padding: 10px 0;
-    border-bottom: 1px solid #f0f0f0;
-    font-family: 'Cabin', sans-serif; font-size: 14px; color: #555;
-}
-.summary-row:last-of-type { border-bottom: none; }
-.summary-row .label { }
-.summary-row .value { font-weight: 600; color: #333; }
-.summary-row.frete-gratis .value { color: #4caf50; font-weight: 700; }
-.summary-row.desconto .value { color: #e53935; }
-.summary-row.total { padding-top: 14px; margin-top: 4px; border-top: 2px solid #e91e8c; }
-.summary-row.total .label { font-family: 'Montserrat', sans-serif; font-weight: 700; font-size: 15px; color: #232323; }
-.summary-row.total .value { font-family: 'Montserrat', sans-serif; font-weight: 700; font-size: 20px; color: #e91e8c; }
-
-.summary-note {
-    font-family: 'Cabin', sans-serif; font-size: 11px;
-    color: #aaa; text-align: center; margin: 10px 0 18px;
-}
-.btn-checkout {
-    display: block; width: 100%; padding: 15px;
-    background: #e91e8c; color: #fff; border: none;
-    font-family: 'Montserrat', sans-serif; font-size: 14px;
-    font-weight: 700; text-transform: uppercase; letter-spacing: 1px;
-    border-radius: 3px; cursor: pointer; text-align: center;
-    text-decoration: none; transition: background 0.2s;
-    box-shadow: 0 4px 15px rgba(233,30,140,0.3);
-}
-.btn-checkout:hover { background: #c2185b; color: #fff; }
-
-.coupon-applied {
-    background: #e8f5e9; border: 1px solid #a5d6a7;
-    border-radius: 3px; padding: 8px 14px;
-    font-family: 'Cabin', sans-serif; font-size: 13px;
-    color: #2e7d32; margin-top: 12px; display: none;
-}
-.coupon-applied i { margin-right: 6px; }
-
-/* ── Carrinho vazio ── */
-.empty-cart {
-    text-align: center; padding: 60px 20px;
-}
-.empty-cart i { font-size: 64px; color: #ddd; display: block; margin-bottom: 16px; }
-.empty-cart p { font-family: 'Cabin', sans-serif; font-size: 16px; color: #aaa; margin-bottom: 20px; }
-</style>
-
 {{-- Breadcrumb --}}
 <div class="breadcumb_area">
     <div class="container">
@@ -181,7 +20,7 @@
         <div class="row">
             <div class="col-md-12">
                 <h2 class="cart-title">
-                    <i class="fa fa-shopping-cart" style="color:#e91e8c; margin-right:10px;"></i>
+                    <i class="fa fa-shopping-cart" style="color:#000; margin-right:10px;"></i>
                     Meu Carrinho
                     <span id="cart-count" style="font-size:14px; font-weight:400; color:#aaa; margin-left:8px;">(3 itens)</span>
                 </h2>
@@ -210,7 +49,7 @@
 
                             {{-- Item 1 --}}
                             <tr data-price="69.90" data-id="1">
-                                <td>
+                                <td data-label="Produto">
                                     <div class="cart-product-info">
                                         <img src="{{ asset('vertical/images/t_item2.jpg') }}" alt="" class="cart-product-img" />
                                         <div>
@@ -219,22 +58,22 @@
                                         </div>
                                     </div>
                                 </td>
-                                <td><span class="cart-badge cart-badge-size">M</span></td>
-                                <td>
+                                <td data-label="Tamanho"><span class="cart-badge cart-badge-size">M</span></td>
+                                <td data-label="Cor">
                                     <span class="cart-badge cart-badge-color" style="display:flex; align-items:center; gap:5px; justify-content:center;">
                                         <span style="width:14px; height:14px; background:#1a1a1a; border-radius:50%; display:inline-block; border:1px solid #ccc;"></span>Preta
                                     </span>
                                 </td>
-                                <td><span class="cart-price">R$69,90</span></td>
-                                <td>
+                                <td data-label="Preço"><span class="cart-price">R$69,90</span></td>
+                                <td data-label="Qtd.">
                                     <div class="qty-ctrl">
                                         <button type="button" onclick="alterarQtd(this,-1)">−</button>
                                         <input type="number" value="1" min="1" max="99" onchange="recalcular()" class="cart-qty" />
                                         <button type="button" onclick="alterarQtd(this,1)">+</button>
                                     </div>
                                 </td>
-                                <td><span class="cart-total item-total">R$69,90</span></td>
-                                <td>
+                                <td data-label="Total"><span class="cart-total item-total">R$69,90</span></td>
+                                <td data-label="">
                                     <button class="btn-remove" onclick="removerItem(this)" title="Remover">
                                         <i class="fa fa-times-circle"></i>
                                     </button>
@@ -243,7 +82,7 @@
 
                             {{-- Item 2 --}}
                             <tr data-price="49.90" data-id="2">
-                                <td>
+                                <td data-label="Produto">
                                     <div class="cart-product-info">
                                         <img src="{{ asset('vertical/images/t_item1.jpg') }}" alt="" class="cart-product-img" />
                                         <div>
@@ -252,22 +91,22 @@
                                         </div>
                                     </div>
                                 </td>
-                                <td><span class="cart-badge cart-badge-size">G</span></td>
-                                <td>
+                                <td data-label="Tamanho"><span class="cart-badge cart-badge-size">G</span></td>
+                                <td data-label="Cor">
                                     <span class="cart-badge cart-badge-color" style="display:flex; align-items:center; gap:5px; justify-content:center;">
                                         <span style="width:14px; height:14px; background:#FFFFFF; border-radius:50%; display:inline-block; border:1px solid #ccc;"></span>Branca
                                     </span>
                                 </td>
-                                <td><span class="cart-price">R$49,90</span></td>
-                                <td>
+                                <td data-label="Preço"><span class="cart-price">R$49,90</span></td>
+                                <td data-label="Qtd.">
                                     <div class="qty-ctrl">
                                         <button type="button" onclick="alterarQtd(this,-1)">−</button>
                                         <input type="number" value="2" min="1" max="99" onchange="recalcular()" class="cart-qty" />
                                         <button type="button" onclick="alterarQtd(this,1)">+</button>
                                     </div>
                                 </td>
-                                <td><span class="cart-total item-total">R$99,80</span></td>
-                                <td>
+                                <td data-label="Total"><span class="cart-total item-total">R$99,80</span></td>
+                                <td data-label="">
                                     <button class="btn-remove" onclick="removerItem(this)" title="Remover">
                                         <i class="fa fa-times-circle"></i>
                                     </button>
@@ -276,7 +115,7 @@
 
                             {{-- Item 3 --}}
                             <tr data-price="59.90" data-id="3">
-                                <td>
+                                <td data-label="Produto">
                                     <div class="cart-product-info">
                                         <img src="{{ asset('vertical/images/t_item4.jpg') }}" alt="" class="cart-product-img" />
                                         <div>
@@ -285,22 +124,22 @@
                                         </div>
                                     </div>
                                 </td>
-                                <td><span class="cart-badge cart-badge-size">P</span></td>
-                                <td>
+                                <td data-label="Tamanho"><span class="cart-badge cart-badge-size">P</span></td>
+                                <td data-label="Cor">
                                     <span class="cart-badge cart-badge-color" style="display:flex; align-items:center; gap:5px; justify-content:center;">
                                         <span style="width:14px; height:14px; background:#1565C0; border-radius:50%; display:inline-block; border:1px solid #ccc;"></span>Azul
                                     </span>
                                 </td>
-                                <td><span class="cart-price">R$59,90</span></td>
-                                <td>
+                                <td data-label="Preço"><span class="cart-price">R$59,90</span></td>
+                                <td data-label="Qtd.">
                                     <div class="qty-ctrl">
                                         <button type="button" onclick="alterarQtd(this,-1)">−</button>
                                         <input type="number" value="1" min="1" max="99" onchange="recalcular()" class="cart-qty" />
                                         <button type="button" onclick="alterarQtd(this,1)">+</button>
                                     </div>
                                 </td>
-                                <td><span class="cart-total item-total">R$59,90</span></td>
-                                <td>
+                                <td data-label="Total"><span class="cart-total item-total">R$59,90</span></td>
+                                <td data-label="">
                                     <button class="btn-remove" onclick="removerItem(this)" title="Remover">
                                         <i class="fa fa-times-circle"></i>
                                     </button>
@@ -313,7 +152,7 @@
 
                 {{-- Ações e Cupom --}}
                 <div class="coupon-box" style="margin-top:28px;">
-                    <i class="fa fa-tag" style="color:#e91e8c; font-size:18px;"></i>
+                    <i class="fa fa-tag" style="color:#000; font-size:18px;"></i>
                     <input type="text" id="cupom-input" placeholder="Código do cupom (ex: BEMVINDO10)" maxlength="20" />
                     <button class="btn-coupon" onclick="aplicarCupom()">
                         <i class="fa fa-check" style="margin-right:6px;"></i>APLICAR
@@ -373,12 +212,12 @@
                     </a>
 
                     <div style="margin-top:18px; text-align:center;">
-                        <p style="font-family:'Cabin',sans-serif; font-size:11px; color:#aaa; margin-bottom:8px;">Pagamentos aceitos:</p>
+                        <p style="font-size:11px; color:#aaa; margin-bottom:8px;">Pagamentos aceitos:</p>
                         <div style="display:flex; gap:6px; justify-content:center; flex-wrap:wrap;">
-                            <span style="background:#1a1f71; color:#fff; font-weight:700; font-size:10px; padding:4px 8px; border-radius:3px; font-family:'Montserrat',sans-serif;">VISA</span>
-                            <span style="background:#eb001b; color:#fff; font-weight:700; font-size:10px; padding:4px 8px; border-radius:3px; font-family:'Montserrat',sans-serif; letter-spacing:0.5px;">MC</span>
-                            <span style="background:#00b0ea; color:#fff; font-weight:700; font-size:10px; padding:4px 8px; border-radius:3px; font-family:'Montserrat',sans-serif;">PIX</span>
-                            <span style="background:#555; color:#fff; font-weight:700; font-size:10px; padding:4px 8px; border-radius:3px; font-family:'Montserrat',sans-serif;">BOLETO</span>
+                            <span style="background:#1a1f71; color:#fff; font-weight:700; font-size:10px; padding:4px 8px; border-radius:3px;">VISA</span>
+                            <span style="background:#eb001b; color:#fff; font-weight:700; font-size:10px; padding:4px 8px; border-radius:3px; letter-spacing:0.5px;">MC</span>
+                            <span style="background:#00b0ea; color:#fff; font-weight:700; font-size:10px; padding:4px 8px; border-radius:3px;">PIX</span>
+                            <span style="background:#555; color:#fff; font-weight:700; font-size:10px; padding:4px 8px; border-radius:3px;">BOLETO</span>
                         </div>
                     </div>
                 </div>

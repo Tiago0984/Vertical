@@ -2,170 +2,6 @@
 
 @section('content')
 
-<style>
-/* ── Seletor de tamanho ── */
-.size-selector { display: flex; gap: 8px; flex-wrap: wrap; margin: 10px 0 18px; }
-.size-btn {
-    display: inline-block;
-    min-width: 46px;
-    padding: 7px 10px;
-    border: 2px solid #ddd;
-    background: #fff;
-    color: #333;
-    font-family: 'Montserrat', sans-serif;
-    font-size: 12px;
-    font-weight: 700;
-    text-align: center;
-    cursor: pointer;
-    border-radius: 3px;
-    transition: all 0.15s;
-    user-select: none;
-}
-.size-btn:hover, .size-btn.active {
-    border-color: #e91e8c;
-    color: #e91e8c;
-    background: #fff0f7;
-}
-.size-btn.esgotado {
-    border-color: #eee;
-    color: #ccc;
-    cursor: not-allowed;
-    text-decoration: line-through;
-}
-
-/* ── Seletor de cor ── */
-.color-selector { display: flex; gap: 10px; align-items: center; margin: 10px 0 18px; flex-wrap: wrap; }
-.color-dot {
-    width: 28px;
-    height: 28px;
-    border-radius: 50%;
-    border: 3px solid transparent;
-    cursor: pointer;
-    box-shadow: 0 0 0 1px #ccc;
-    transition: box-shadow 0.15s, transform 0.15s;
-    position: relative;
-}
-.color-dot:hover, .color-dot.active {
-    box-shadow: 0 0 0 2px #e91e8c;
-    transform: scale(1.18);
-}
-.color-dot[title]::after {
-    content: attr(title);
-    position: absolute;
-    bottom: -22px;
-    left: 50%;
-    transform: translateX(-50%);
-    font-size: 10px;
-    color: #666;
-    white-space: nowrap;
-    font-family: 'Cabin', sans-serif;
-    pointer-events: none;
-}
-.color-label { font-size: 12px; color: #777; margin-left: 4px; }
-
-/* ── Guia de tamanhos link ── */
-.size-guide-link {
-    font-size: 12px;
-    color: #e91e8c;
-    text-decoration: underline;
-    cursor: pointer;
-    display: inline-block;
-    margin-bottom: 14px;
-}
-.size-guide-link i { margin-right: 4px; }
-
-/* ── Descrição do produto ── */
-.product-specs { margin: 0; padding: 0; list-style: none; }
-.product-specs li {
-    padding: 9px 0;
-    border-bottom: 1px solid #f0f0f0;
-    font-family: 'Cabin', sans-serif;
-    font-size: 14px;
-    color: #444;
-}
-.product-specs li strong { color: #222; min-width: 120px; display: inline-block; }
-.product-specs li:last-child { border-bottom: none; }
-
-/* ── Modal tabela de medidas ── */
-#modal-medidas .modal-header { background: #e91e8c; color: #fff; border-radius: 4px 4px 0 0; }
-#modal-medidas .modal-title { font-family: 'Montserrat', sans-serif; font-weight: 700; font-size: 16px; }
-#modal-medidas .modal-header .close { color: #fff; opacity: 1; }
-.tabela-medidas { width: 100%; border-collapse: collapse; font-family: 'Cabin', sans-serif; font-size: 13px; }
-.tabela-medidas th {
-    background: #f8f8f8;
-    color: #333;
-    padding: 10px 14px;
-    text-align: center;
-    font-weight: 700;
-    border: 1px solid #e0e0e0;
-}
-.tabela-medidas td {
-    padding: 9px 14px;
-    text-align: center;
-    border: 1px solid #e8e8e8;
-    color: #555;
-}
-.tabela-medidas tr:nth-child(even) td { background: #fafafa; }
-.tabela-medidas tr:hover td { background: #fff0f7; }
-
-/* ── Produto relacionado ── */
-.related-item { margin-bottom: 20px; }
-.related-item .item-img { position: relative; overflow: hidden; }
-.related-item .item-img img { width: 100%; display: block; transition: transform 0.3s; }
-.related-item .item-img:hover img { transform: scale(1.05); }
-.related-item h5 {
-    font-family: 'Montserrat', sans-serif;
-    font-size: 13px;
-    font-weight: 600;
-    margin: 10px 0 4px;
-    color: #333;
-}
-.related-item .preco { color: #e91e8c; font-weight: 700; font-size: 14px; }
-.related-item .preco del { color: #aaa; font-weight: 400; font-size: 12px; margin-left: 6px; }
-
-/* ── Botão carrinho / favoritos ── */
-.btn-cart-main {
-    background: #e91e8c;
-    color: #fff;
-    border: none;
-    padding: 14px 30px;
-    font-family: 'Montserrat', sans-serif;
-    font-size: 13px;
-    font-weight: 700;
-    text-transform: uppercase;
-    letter-spacing: 1px;
-    border-radius: 3px;
-    cursor: pointer;
-    transition: background 0.2s;
-}
-.btn-cart-main:hover { background: #c2185b; }
-.btn-fav-main {
-    background: #fff;
-    color: #e91e8c;
-    border: 2px solid #e91e8c;
-    padding: 12px 18px;
-    border-radius: 3px;
-    font-size: 16px;
-    cursor: pointer;
-    transition: all 0.2s;
-    margin-left: 8px;
-}
-.btn-fav-main:hover { background: #e91e8c; color: #fff; }
-.qty-wrap { display: flex; align-items: center; gap: 0; margin-bottom: 16px; }
-.qty-wrap input[type=number] {
-    width: 58px;
-    text-align: center;
-    border: 2px solid #ddd;
-    padding: 10px 6px;
-    font-size: 14px;
-    font-family: 'Montserrat', sans-serif;
-    font-weight: 700;
-    outline: none;
-    border-radius: 3px;
-}
-.qty-wrap input[type=number]::-webkit-inner-spin-button { opacity: 1; }
-</style>
-
 {{-- ══════════════════════════════════════════
      BREADCRUMB
 ══════════════════════════════════════════ --}}
@@ -209,7 +45,7 @@
                         <img src="{{ asset('vertical/images/product_detail.png') }}"
                              alt="thumb 1"
                              onclick="document.getElementById('foto-principal').src=this.src.replace('product_detail','product_detail_lg')"
-                             style="width:70px; height:70px; object-fit:cover; border:2px solid #e91e8c; border-radius:3px; cursor:pointer;" />
+                             style="width:70px; height:70px; object-fit:cover; border:2px solid #000; border-radius:3px; cursor:pointer;" />
                         <img src="{{ asset('vertical/images/product_detail2.png') }}"
                              alt="thumb 2"
                              onclick="document.getElementById('foto-principal').src=this.src.replace('product_detail2','product_detail_lg2')"
@@ -232,10 +68,10 @@
                 <div class="product_detail_text" style="padding-left: 20px;">
 
                     {{-- Badge --}}
-                    <span style="display:inline-block; background:#e91e8c; color:#fff; font-family:'Montserrat',sans-serif; font-size:11px; font-weight:700; padding:4px 12px; border-radius:20px; letter-spacing:1px; margin-bottom:12px;">NOVO</span>
+                    <span style="display:inline-block; background:#000; color:#fff; font-size:11px; font-weight:700; padding:4px 12px; border-radius:20px; letter-spacing:1px; margin-bottom:12px;">NOVO</span>
 
                     {{-- Nome --}}
-                    <h2 style="font-family:'Montserrat',sans-serif; font-size:26px; font-weight:700; color:#232323; margin:0 0 6px;">
+                    <h2 style="font-size:26px; font-weight:700; color:#232323; margin:0 0 6px;">
                         Camiseta Estampada Street Art
                     </h2>
 
@@ -251,17 +87,17 @@
 
                     {{-- Preço --}}
                     <div style="margin-bottom: 18px;">
-                        <span style="font-family:'Montserrat',sans-serif; font-size:28px; font-weight:700; color:#e91e8c;">R$69,90</span>
+                        <span style="font-size:28px; font-weight:700; color:#000;">R$69,90</span>
                         <span style="font-size:16px; color:#aaa; margin-left:10px; text-decoration:line-through;">R$89,90</span>
-                        <span style="background:#e53935; color:#fff; font-size:11px; font-weight:700; padding:3px 8px; border-radius:3px; margin-left:8px;">-22%</span>
+                        <span style="background:#d90000; color:#fff; font-size:11px; font-weight:700; padding:3px 8px; border-radius:3px; margin-left:8px;">-22%</span>
                     </div>
 
                     <hr style="border-color:#f0f0f0; margin: 0 0 16px;">
 
                     {{-- Seletor de COR --}}
                     <div>
-                        <p style="font-family:'Montserrat',sans-serif; font-size:12px; font-weight:700; color:#333; text-transform:uppercase; margin-bottom:4px;">
-                            Cor: <span id="cor-selecionada" style="color:#e91e8c; font-weight:400; text-transform:none;">Branca</span>
+                        <p style="font-size:12px; font-weight:700; color:#333; text-transform:uppercase; margin-bottom:4px;">
+                            Cor: <span id="cor-selecionada" style="color:#000; font-weight:400; text-transform:none;">Branca</span>
                         </p>
                         <div class="color-selector">
                             <div class="color-dot active" style="background:#FFFFFF;" title="Branca"
@@ -281,8 +117,8 @@
 
                     {{-- Seletor de TAMANHO --}}
                     <div>
-                        <p style="font-family:'Montserrat',sans-serif; font-size:12px; font-weight:700; color:#333; text-transform:uppercase; margin-bottom:4px;">
-                            Tamanho: <span id="tamanho-selecionado" style="color:#e91e8c; font-weight:400; text-transform:none;">—</span>
+                        <p style="font-size:12px; font-weight:700; color:#333; text-transform:uppercase; margin-bottom:4px;">
+                            Tamanho: <span id="tamanho-selecionado" style="color:#000; font-weight:400; text-transform:none;">—</span>
                         </p>
                         <div class="size-selector">
                             <div class="size-btn" onclick="selecionarTamanho(this)">PP</div>
@@ -299,7 +135,7 @@
 
                     {{-- Quantidade + Botões --}}
                     <div style="margin-top: 6px;">
-                        <p style="font-family:'Montserrat',sans-serif; font-size:12px; font-weight:700; color:#333; text-transform:uppercase; margin-bottom:6px;">Quantidade:</p>
+                        <p style="font-size:12px; font-weight:700; color:#333; text-transform:uppercase; margin-bottom:6px;">Quantidade:</p>
                         <div class="qty-wrap">
                             <input type="number" id="quantidade" value="1" min="1" max="99" />
                         </div>
@@ -315,14 +151,14 @@
 
                     {{-- Informações rápidas --}}
                     <div style="margin-top:22px; padding-top:16px; border-top:1px solid #f0f0f0;">
-                        <p style="font-size:13px; color:#666; font-family:'Cabin',sans-serif; margin-bottom:5px;">
+                        <p style="font-size:13px; color:#666; margin-bottom:5px;">
                             <i class="fa fa-check" style="color:#4caf50; margin-right:6px;"></i>Em estoque — envio em até 2 dias úteis
                         </p>
-                        <p style="font-size:13px; color:#666; font-family:'Cabin',sans-serif; margin-bottom:5px;">
-                            <i class="fa fa-truck" style="color:#e91e8c; margin-right:6px;"></i>Frete grátis para pedidos acima de R$150
+                        <p style="font-size:13px; color:#666; margin-bottom:5px;">
+                            <i class="fa fa-truck" style="color:#000; margin-right:6px;"></i>Frete grátis para pedidos acima de R$150
                         </p>
-                        <p style="font-size:13px; color:#666; font-family:'Cabin',sans-serif; margin-bottom:0;">
-                            <i class="fa fa-refresh" style="color:#e91e8c; margin-right:6px;"></i>Troca em até 30 dias
+                        <p style="font-size:13px; color:#666; margin-bottom:0;">
+                            <i class="fa fa-refresh" style="color:#000; margin-right:6px;"></i>Troca em até 30 dias
                         </p>
                     </div>
 
@@ -343,23 +179,23 @@
                 <div role="tabpanel">
 
                     <ul class="nav nav-tabs" role="tablist"
-                        style="border-bottom:2px solid #e91e8c; margin-bottom:24px;">
+                        style="border-bottom:2px solid #000; margin-bottom:24px;">
                         <li role="presentation" class="active">
                             <a href="#aba-descricao" role="tab" data-toggle="tab"
-                               style="font-family:'Montserrat',sans-serif; font-size:12px; font-weight:700; text-transform:uppercase;">
+                               style="font-size:12px; font-weight:700; text-transform:uppercase;">
                                Descrição
                             </a>
                         </li>
                         <li role="presentation">
                             <a href="#aba-material" role="tab" data-toggle="tab"
-                               style="font-family:'Montserrat',sans-serif; font-size:12px; font-weight:700; text-transform:uppercase;">
+                               style="font-size:12px; font-weight:700; text-transform:uppercase;">
                                Material &amp; Cuidados
                             </a>
                         </li>
                         <li role="presentation">
                             <a href="#aba-avaliacoes" role="tab" data-toggle="tab"
-                               style="font-family:'Montserrat',sans-serif; font-size:12px; font-weight:700; text-transform:uppercase;">
-                               Avaliações <span style="background:#e91e8c; color:#fff; border-radius:10px; padding:1px 7px; font-size:10px;">42</span>
+                               style="font-size:12px; font-weight:700; text-transform:uppercase;">
+                               Avaliações <span style="background:#000; color:#fff; border-radius:10px; padding:1px 7px; font-size:10px;">42</span>
                             </a>
                         </li>
                     </ul>
@@ -370,10 +206,10 @@
                         <div role="tabpanel" class="tab-pane active" id="aba-descricao">
                             <div class="row">
                                 <div class="col-md-8">
-                                    <p style="font-family:'Cabin',sans-serif; font-size:15px; color:#555; line-height:1.8; margin-bottom:16px;">
+                                    <p style="font-size:15px; color:#555; line-height:1.8; margin-bottom:16px;">
                                         Camiseta com estampa exclusiva inspirada na arte urbana. Malha premium de algodão de alta qualidade, com toque macio e conforto durante todo o dia. Ideal para compor looks casuais com personalidade.
                                     </p>
-                                    <p style="font-family:'Cabin',sans-serif; font-size:15px; color:#555; line-height:1.8;">
+                                    <p style="font-size:15px; color:#555; line-height:1.8;">
                                         Disponível em 6 cores e todos os tamanhos, do PP ao XGG. As estampas são aplicadas com tecnologia de sublimação resistente a múltiplas lavagens, mantendo a cor e o brilho originais por muito mais tempo.
                                     </p>
                                 </div>
@@ -414,7 +250,7 @@
                                 <div class="col-md-5" style="display:flex; align-items:center; justify-content:center; padding-top:10px;">
                                     <div style="text-align:center; background:#fff; border:1px solid #eee; border-radius:8px; padding:20px;">
                                         <i class="fa fa-tint" style="font-size:36px; color:#1565C0; display:block; margin-bottom:10px;"></i>
-                                        <p style="font-family:'Cabin',sans-serif; font-size:13px; color:#555; margin:0;">Lavar fria</p>
+                                        <p style="font-size:13px; color:#555; margin:0;">Lavar fria</p>
                                     </div>
                                 </div>
                             </div>
@@ -428,9 +264,9 @@
                                     {{-- Avaliação 1 --}}
                                     <div style="border-bottom:1px solid #f0f0f0; padding-bottom:20px; margin-bottom:20px;">
                                         <div style="display:flex; align-items:center; gap:12px; margin-bottom:8px;">
-                                            <div style="width:42px; height:42px; background:#e91e8c; border-radius:50%; display:flex; align-items:center; justify-content:center; color:#fff; font-family:'Montserrat',sans-serif; font-weight:700; font-size:16px;">M</div>
+                                            <div style="width:42px; height:42px; background:#000; border-radius:50%; display:flex; align-items:center; justify-content:center; color:#fff; font-weight:700; font-size:16px;">M</div>
                                             <div>
-                                                <strong style="font-family:'Montserrat',sans-serif; font-size:13px;">Maria S.</strong>
+                                                <strong style="font-size:13px;">Maria S.</strong>
                                                 <div>
                                                     <i class="fa fa-star" style="color:#f5a623; font-size:11px;"></i>
                                                     <i class="fa fa-star" style="color:#f5a623; font-size:11px;"></i>
@@ -441,15 +277,15 @@
                                                 </div>
                                             </div>
                                         </div>
-                                        <p style="font-family:'Cabin',sans-serif; font-size:14px; color:#555; margin:0;">Camiseta incrível! O algodão é super macio e a estampa ficou perfeita depois de várias lavagens. Comprei tamanho M e caiu certinho.</p>
+                                        <p style="font-size:14px; color:#555; margin:0;">Camiseta incrível! O algodão é super macio e a estampa ficou perfeita depois de várias lavagens. Comprei tamanho M e caiu certinho.</p>
                                     </div>
 
                                     {{-- Avaliação 2 --}}
                                     <div style="border-bottom:1px solid #f0f0f0; padding-bottom:20px; margin-bottom:20px;">
                                         <div style="display:flex; align-items:center; gap:12px; margin-bottom:8px;">
-                                            <div style="width:42px; height:42px; background:#1565C0; border-radius:50%; display:flex; align-items:center; justify-content:center; color:#fff; font-family:'Montserrat',sans-serif; font-weight:700; font-size:16px;">J</div>
+                                            <div style="width:42px; height:42px; background:#1565C0; border-radius:50%; display:flex; align-items:center; justify-content:center; color:#fff; font-weight:700; font-size:16px;">J</div>
                                             <div>
-                                                <strong style="font-family:'Montserrat',sans-serif; font-size:13px;">João P.</strong>
+                                                <strong style="font-size:13px;">João P.</strong>
                                                 <div>
                                                     <i class="fa fa-star" style="color:#f5a623; font-size:11px;"></i>
                                                     <i class="fa fa-star" style="color:#f5a623; font-size:11px;"></i>
@@ -460,7 +296,7 @@
                                                 </div>
                                             </div>
                                         </div>
-                                        <p style="font-family:'Cabin',sans-serif; font-size:14px; color:#555; margin:0;">Muito boa qualidade! Entrega rápida e embalagem excelente. Só tirei uma estrela porque o tamanho G ficou um pouco largo — sugiro pedir um tamanho a menos se preferir mais ajustado.</p>
+                                        <p style="font-size:14px; color:#555; margin:0;">Muito boa qualidade! Entrega rápida e embalagem excelente. Só tirei uma estrela porque o tamanho G ficou um pouco largo — sugiro pedir um tamanho a menos se preferir mais ajustado.</p>
                                     </div>
 
                                 </div>
@@ -481,7 +317,7 @@
     <div class="container">
         <div class="row">
             <div class="col-md-12">
-                <h3 style="font-family:'Montserrat',sans-serif; font-size:20px; font-weight:700; color:#232323; text-transform:uppercase; letter-spacing:1px; margin-bottom:6px;">
+                <h3 style="font-size:20px; font-weight:700; color:#232323; text-transform:uppercase; letter-spacing:1px; margin-bottom:6px;">
                     Você também pode gostar
                 </h3>
                 <div class="multi_line" style="margin-bottom:28px;"></div>
@@ -541,7 +377,7 @@
                     <h5><a href="{{ route('produto') }}" style="color:#333; text-decoration:none;">Camiseta Gola V Azul</a></h5>
                     <p class="preco">
                         R$54,90 <del>R$74,90</del>
-                        <span style="background:#e53935; color:#fff; font-size:10px; padding:2px 6px; border-radius:3px; margin-left:4px;">-26%</span>
+                        <span style="background:#d90000; color:#fff; font-size:10px; padding:2px 6px; border-radius:3px; margin-left:4px;">-26%</span>
                     </p>
                 </div>
             </div>
@@ -584,7 +420,7 @@
             </div>
             <div class="modal-body" style="padding: 24px;">
 
-                <p style="font-family:'Cabin',sans-serif; font-size:13px; color:#666; margin-bottom:18px;">
+                <p style="font-size:13px; color:#666; margin-bottom:18px;">
                     Todas as medidas estão em <strong>centímetros (cm)</strong>. Meça seu corpo e compare com a tabela abaixo para encontrar o tamanho ideal.
                 </p>
 
@@ -645,7 +481,7 @@
                 </table>
 
                 <div style="margin-top:18px; background:#fff8f0; border-left:4px solid #f5a623; padding:12px 16px; border-radius:0 4px 4px 0;">
-                    <p style="margin:0; font-family:'Cabin',sans-serif; font-size:13px; color:#555;">
+                    <p style="margin:0; font-size:13px; color:#555;">
                         <i class="fa fa-lightbulb-o" style="color:#f5a623; margin-right:6px;"></i>
                         <strong>Dica:</strong> Se suas medidas ficarem entre dois tamanhos, recomendamos escolher o maior para maior conforto. Para um look mais ajustado, escolha o menor.
                     </p>
@@ -694,13 +530,13 @@ function toggleFavorito(btn) {
     const icon = btn.querySelector('i');
     if (icon.classList.contains('fa-heart-o')) {
         icon.classList.replace('fa-heart-o', 'fa-heart');
-        btn.style.background = '#e91e8c';
+        btn.style.background = '#000';
         btn.style.color = '#fff';
         btn.title = 'Remover dos favoritos';
     } else {
         icon.classList.replace('fa-heart', 'fa-heart-o');
         btn.style.background = '#fff';
-        btn.style.color = '#e91e8c';
+        btn.style.color = '#000';
         btn.title = 'Adicionar aos favoritos';
     }
 }

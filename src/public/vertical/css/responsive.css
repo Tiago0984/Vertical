@@ -1053,7 +1053,7 @@ ul.nav.nav-tabs.tab-product li a {
   padding: 18px;
 }
 ul.nav.nav-tabs.tab-product li.active {
-  border-top: 3px solid #ff6766;
+  border-top: 3px solid #000000;
   border-right:1px solid #ececec;
   border-left:1px solid #ececec;
   border-bottom:0px solid #ececec;
