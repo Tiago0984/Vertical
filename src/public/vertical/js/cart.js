@@ -230,6 +230,8 @@
             var openTrigger = e.target.closest('.js-cart-open');
             if (openTrigger) {
                 e.preventDefault();
+                var mobiMenu = document.querySelector('.mobi-menu');
+                if (mobiMenu) mobiMenu.style.display = 'none';
                 open();
                 return;
             }

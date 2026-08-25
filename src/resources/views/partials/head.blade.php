@@ -37,7 +37,7 @@
 <link rel="stylesheet" href="{{ asset('vertical/css/responsive.css') }}">
 
 <!-- Alphaco theme override -->
-<link rel="stylesheet" href="{{ asset('vertical/css/theme-alphaco.css') }}">
+<link rel="stylesheet" href="{{ asset('vertical/css/theme-alphaco.css') }}?v={{ filemtime(public_path('vertical/css/theme-alphaco.css')) }}">
 
 <!-- Favicons -->
 <link rel="apple-touch-icon-precomposed" href="{{ asset('vertical/images/apple-touch-icon-precomposed.png') }}">

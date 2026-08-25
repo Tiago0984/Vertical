@@ -138,9 +138,7 @@ a:hover {
 }
 
 /* Menu suspenso de categorias e submenus */
-.cat_mega_menu,
 .mainmenu ul#nav li ul#sub-menu,
-.mainmenu ul#nav li ul#sub-menu4,
 .mainmenu ul#nav li ul#sub-menu5,
 .mainmenu ul#nav li ul#sub-menu7,
 .nav_left ul#sub-menu3,
@@ -148,26 +146,13 @@ a:hover {
   background: var(--alpha-color-white);
   box-shadow: 0 10px 24px rgba(0, 0, 0, 0.12);
 }
-.cat_left > h5,
-.cat_middle > h5,
-.cat_middle_right > h5 {
-  color: var(--alpha-color-fg);
-  letter-spacing: 0.04em;
-}
-.cat_menu_line::after {
-  border-top-color: var(--alpha-color-fg);
-}
-ul.cat_nav li a,
 .mainmenu ul#nav li ul#sub-menu li a,
-.mainmenu ul#nav li ul#sub-menu4 li a,
 .mainmenu ul#nav li ul#sub-menu5 li a,
 .mainmenu ul#nav li ul#sub-menu7 li a,
 .nav_left ul#sub-menu3 li a {
   color: var(--alpha-color-fg-muted);
 }
-ul.cat_nav li a:hover,
 .mainmenu ul#nav li ul#sub-menu li a:hover,
-.mainmenu ul#nav li ul#sub-menu4 li a:hover,
 .mainmenu ul#nav li ul#sub-menu5 li a:hover,
 .mainmenu ul#nav li ul#sub-menu7 li a:hover,
 .nav_left ul#sub-menu3 li a:hover {
@@ -1595,4 +1580,18 @@ body.cart-drawer-locked {
   background: var(--alpha-color-fg-muted);
   color: var(--alpha-color-white);
   text-decoration: none;
+}
+
+/* ==========================================================================
+   Etapa 15 — Carrossel "Novidades" (#blog-caro): setas no mobile
+   Corrige responsive.css, que posiciona as setas com top em % relativo à
+   altura do próprio carrossel — no mobile os posts empilham e o carrossel
+   fica muito alto, então a % empurra as setas pra cima da escrita do título.
+   Usa um valor fixo em px, independente da altura do conteúdo.
+   ========================================================================== */
+@media only screen and (max-width: 767px) {
+  #blog-caro .carousel-control.left,
+  #blog-caro .carousel-control.right {
+    top: -70px;
+  }
 }

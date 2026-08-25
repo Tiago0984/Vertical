@@ -63,60 +63,19 @@
 		<div class="container">
 			<div class="nav_left floatleft">
 				<a href="{{ route('categorias') }}">categorias<i class="fa fa-bars"></i></a>
-				<div class="cat_mega_menu">
-						<div class="cat_left">
-							<h5>Camisetas Básicas</h5>
-							<div class="cat_menu_line"></div>
-							<ul class="cat_nav">
-								<li><a href="">gola redonda</a></li>
-								<li><a href="">gola V</a></li>
-								<li><a href="">manga longa</a></li>
-							</ul>
-						</div>
-						<div class="cat_middle">
-							<h5>Camisetas Estampadas</h5>
-							<div class="cat_menu_line"></div>
-							<ul class="cat_nav">
-								<li><a href="">frases</a></li>
-								<li><a href="">geométricas</a></li>
-								<li><a href="">personagens</a></li>
-							</ul>
-						</div>
-						<div class="cat_middle_right">
-							<h5>Camisetas Esportivas</h5>
-							<div class="cat_menu_line"></div>
-							<ul class="cat_nav">
-								<li><a href="">dry-fit</a></li>
-								<li><a href="">treino</a></li>
-								<li><a href="">corrida</a></li>
-							</ul>
-						</div>
-						<div class="cat_middle_right">
-							<h5>Camisetas Premium</h5>
-							<div class="cat_menu_line"></div>
-							<ul class="cat_nav">
-								<li><a href="">algodão pima</a></li>
-								<li><a href="">oversized</a></li>
-								<li><a href="">slim fit</a></li>
-							</ul>
-						</div>
-					<div class="cat_img">
-						<img src="{{ asset('vertical/images/menu_cat.png') }}" alt="" />
-					</div>
-				</div>
+				<ul id="sub-menu3">
+					<li><a href="{{ route('home') }}">Início</a></li>
+					<li><a href="{{ route('categorias') }}">Camisetas</a></li>
+					<li><a href="{{ route('loja') }}">Loja</a></li>
+					<li><a href="{{ route('blog') }}">Blog</a></li>
+					<li><a href="{{ route('favoritos') }}">Favoritos</a></li>
+				</ul>
 			</div>
 			<div class="nav_center">
 				<nav class="mainmenu">
 					<ul id="nav">
 						<li class="current-page-item"><a href="{{ route('home') }}">Início</a></li>
-						<li><a href="{{ route('categorias') }}">Camisetas</a>
-							<ul id="sub-menu4">
-								<li><a href="">Camisetas Básicas</a></li>
-								<li><a href="">Camisetas Estampadas</a></li>
-								<li><a href="">Camisetas Esportivas</a></li>
-								<li><a href="">Camisetas Premium</a></li>
-							</ul>
-						</li>
+						<li><a href="{{ route('categorias') }}">Camisetas</a></li>
 						<li><a href="{{ route('loja') }}">Loja</a></li>
 						<li><a href="{{ route('blog') }}">Blog</a></li>
 					</ul>
@@ -138,46 +97,12 @@
 				<div class="mobi-menu">
 					<div id='cssmenu'>
 						<ul>
-							<li class='has-sub'>
+							<li>
 								<a href='{{ route("home") }}'><span>Início</span></a>
 							</li>
 
-							<li class='has-sub'>
+							<li>
 								<a href='{{ route("categorias") }}'><span>Camisetas</span></a>
-								<ul>
-									<li class='has-sub'>
-										<a href='#'><span>Camisetas Básicas</span></a>
-										<ul>
-											<li><a href="#"><span>gola redonda</span></a></li>
-											<li><a href="#"><span>gola V</span></a></li>
-											<li class="last"><a href="#"><span>manga longa</span></a></li>
-										</ul>
-									</li>
-									<li class='has-sub'>
-										<a href='#'><span>Camisetas Estampadas</span></a>
-										<ul>
-											<li><a href="#"><span>frases</span></a></li>
-											<li><a href="#"><span>geométricas</span></a></li>
-											<li class='last'><a href="#"><span>personagens</span></a></li>
-										</ul>
-									</li>
-									<li class='has-sub'>
-										<a href='#'><span>Camisetas Esportivas</span></a>
-										<ul>
-											<li><a href="#"><span>dry-fit</span></a></li>
-											<li><a href="#"><span>treino</span></a></li>
-											<li class='last'><a href="#"><span>corrida</span></a></li>
-										</ul>
-									</li>
-									<li class='has-sub'>
-										<a href='#'><span>Camisetas Premium</span></a>
-										<ul>
-											<li><a href="#"><span>algodão pima</span></a></li>
-											<li><a href="#"><span>oversized</span></a></li>
-											<li class='last'><a href="#"><span>slim fit</span></a></li>
-										</ul>
-									</li>
-								</ul>
 							</li>
 							<li>
 								<a href='{{ route('loja') }}'><span>Loja</span></a>

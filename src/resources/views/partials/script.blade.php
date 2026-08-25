@@ -52,6 +52,6 @@
 <!--[if lte IE 8]>
     <script type="text/javascript" src="{{ asset('vertical/js/ie-opacity-polyfill.js') }}"></script>
 <![endif]-->
-<script src="{{ asset('vertical/js/main.js') }}"></script>
-<script src="{{ asset('vertical/js/cart.js') }}"></script>
-<script src="{{ asset('vertical/js/favoritos.js') }}"></script>
+<script src="{{ asset('vertical/js/main.js') }}?v={{ filemtime(public_path('vertical/js/main.js')) }}"></script>
+<script src="{{ asset('vertical/js/cart.js') }}?v={{ filemtime(public_path('vertical/js/cart.js')) }}"></script>
+<script src="{{ asset('vertical/js/favoritos.js') }}?v={{ filemtime(public_path('vertical/js/favoritos.js')) }}"></script>
