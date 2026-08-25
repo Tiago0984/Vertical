@@ -14,6 +14,8 @@
         </main>
 
         @include('partials.footer')
+
+        @include('partials.cart-drawer')
     </div>
 
     @include('partials.script')

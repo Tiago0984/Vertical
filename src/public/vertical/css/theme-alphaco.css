@@ -45,6 +45,16 @@ p, span, a, li, input, textarea, button {
   font-family: var(--alpha-font-family);
 }
 
+/* Preserva a fonte de ícones em elementos que usam classes Font Awesome
+   (ex.: <a class="fa fa-heart">), já que a regra acima sobrescreveria o
+   glifo do ícone pela fonte de texto do tema. !important porque outras
+   regras deste arquivo (ex.: .tr-add-cart > ul li a) têm especificidade
+   maior e também tentam aplicar a fonte do tema a esses mesmos links. */
+a[class*="fa-"],
+a.fa {
+  font-family: FontAwesome !important;
+}
+
 a:hover {
   color: var(--alpha-color-fg);
 }
@@ -266,8 +276,6 @@ ul.cat_nav li a:hover,
 
 /* Ícones — dessaturados para se alinhar à paleta preto & branco */
 .cta-icon {
-  filter: grayscale(1) contrast(1.1);
-  opacity: 0.85;
   font-size: 30px;
 }
 
@@ -296,11 +304,12 @@ ul.cat_nav li a:hover,
   font-size: 20px;
   letter-spacing: 0.02em;
   text-transform: uppercase;
+  margin-bottom: 6px;
 }
 .p_line {
   border-top: 1px solid var(--alpha-color-fg);
   width: 32px;
-  margin-bottom: 8px;
+  margin-bottom: 10px;
 }
 
 /* Link "Ver produtos" — some por padrão, some no hover, como na Alphaco */
@@ -315,8 +324,11 @@ ul.cat_nav li a:hover,
   opacity: 0;
   transform: translateY(6px);
   transition: opacity 0.3s ease, transform 0.3s ease;
+  display: inline-block;
 }
 .promotion_top:hover .promo_text > a,
+.promotion_top:hover .promo_text_bottom > a,
+.promotion_bottom:hover .promo_text > a,
 .promotion_bottom:hover .promo_text_bottom > a {
   opacity: 1;
   transform: translateY(0);
@@ -414,6 +426,27 @@ ul.cat_nav li a:hover,
 .tr-add-cart {
   background: rgba(255, 255, 255, 0.6);
 }
+/* Correção: nos "produtos relacionados" o wrapper usa .related-item / .item-img
+   em vez de .item (classe que style.css espera para revelar o overlay no
+   hover). Sem isso, os ícones de carrinho/favoritar/buscar nunca aparecem
+   nessa seção. Bug pré-existente, não introduzido pelo redesign. */
+.related-item:hover .tr-add-cart {
+  opacity: 1;
+  text-align: center;
+  transition: all 0.25s ease 0s;
+}
+.related-item:hover .tr-add-cart .fa.fa-shopping-cart.tr_cart {
+  left: 0px;
+}
+.related-item:hover .tr-add-cart .tr_text {
+  bottom: 0px;
+}
+.related-item:hover .tr-add-cart .fa.fa-heart.tr_heart {
+  top: 0px;
+}
+.related-item:hover .tr-add-cart .fa.fa-search.tr_search {
+  right: 0px;
+}
 .tr-add-cart > ul {
   background: rgba(255, 255, 255, 0.95);
 }
@@ -439,6 +472,17 @@ ul.cat_nav li a:hover,
 .single_t_to_b {
   background: var(--alpha-color-white);
 }
+/* Setas de navegação (bxSlider) — o CSS original as posiciona com right
+   negativo relativo à área de imagens, o que as empurra para fora da
+   coluna e cria a impressão de que pertencem à coluna vizinha. Realinha
+   para a borda direita da própria coluna, ao lado do título. */
+.single_t_to_b .bx-wrapper .bx-controls-direction a.bx-next {
+  right: 0;
+}
+.single_t_to_b .bx-wrapper .bx-controls-direction a.bx-prev {
+  right: 22px;
+}
+
 .single_t_to_b_slider h3 {
   font-family: var(--alpha-font-family);
   color: var(--alpha-color-fg);
@@ -500,6 +544,22 @@ ul.cat_nav li a:hover,
   background: var(--alpha-color-fg);
 }
 
+/* Setas de navegação do carrossel do blog (Bootstrap .carousel-control) */
+.carousel-control.left,
+.carousel-control.right {
+  background: var(--alpha-color-bg-secondary);
+}
+.carousel-control:hover {
+  background: var(--alpha-color-fg);
+  color: var(--alpha-color-white);
+}
+#blog-caro .carousel-control i {
+  color: var(--alpha-color-fg);
+}
+#blog-caro .carousel-control:hover i {
+  color: var(--alpha-color-white);
+}
+
 /* Depoimentos */
 .testimonial_area {
   background: var(--alpha-color-bg-secondary);
@@ -553,9 +613,16 @@ ul.cat_nav li a:hover,
 .footer_top_area {
   background: var(--alpha-color-fg);
 }
-.footer_top_left a i,
+.footer_top_left a i {
+  color: var(--alpha-color-white);
+}
 .footer_top_left > a {
   font-family: var(--alpha-font-family);
+  color: var(--alpha-color-white);
+}
+.footer_top_left > a:hover {
+  color: var(--alpha-color-white);
+  opacity: 0.8;
 }
 .footer_top_left > input[type="text"] {
   font-family: var(--alpha-font-family);
@@ -642,7 +709,7 @@ ul.wid_social li a:hover {
 }
 
 /* ---- Produto: seletor de cor ---- */
-.color-selector { display: flex; gap: 10px; align-items: center; margin: 10px 0 18px; flex-wrap: wrap; }
+.color-selector { display: flex; gap: 22px; align-items: center; margin: 10px 0 32px; flex-wrap: wrap; }
 .color-dot {
   width: 28px; height: 28px; border-radius: 50%; border: 3px solid transparent;
   cursor: pointer; box-shadow: 0 0 0 1px #ccc; transition: box-shadow 0.15s, transform 0.15s;
@@ -713,6 +780,7 @@ ul.wid_social li a:hover {
   transition: all 0.2s; margin-left: 8px;
 }
 .btn-fav-main:hover { background: var(--alpha-color-fg); color: #fff; }
+.btn-fav-main.is-favorito { background: var(--alpha-color-fg); color: #fff; }
 .qty-wrap { display: flex; align-items: center; gap: 0; margin-bottom: 16px; }
 .qty-wrap input[type=number] {
   width: 58px; text-align: center; border: 2px solid var(--alpha-color-border);
@@ -1062,4 +1130,469 @@ ul.wid_social li a:hover {
     vertical-align: top;
   }
   .cart-table .qty-ctrl { justify-content: flex-start; }
+}
+
+/* ==========================================================================
+   Etapa 11 — Carrinho lateral (drawer)
+   Abre ao clicar em qualquer "adicionar ao carrinho" do site. Estado
+   persistido em localStorage via cart.js (site não é SPA).
+   ========================================================================== */
+
+/* Sinalizador funcional — frete grátis conquistado (verde, à parte da
+   paleta preto/branco, mesmo raciocínio do vermelho para promoção) */
+:root {
+  --alpha-color-success: #2e7d32;
+}
+
+.cart-drawer-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.4);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.3s ease;
+  z-index: 9998;
+}
+.cart-drawer-overlay.is-open {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+body.cart-drawer-locked {
+  overflow: hidden;
+}
+
+.cart-drawer {
+  position: fixed;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  width: 400px;
+  max-width: 92vw;
+  background: var(--alpha-color-white);
+  box-shadow: -8px 0 30px rgba(0, 0, 0, 0.15);
+  z-index: 9999;
+  display: flex;
+  flex-direction: column;
+  transform: translateX(100%);
+  transition: transform 0.35s ease;
+  font-family: var(--alpha-font-family);
+}
+.cart-drawer.is-open {
+  transform: translateX(0);
+}
+
+.cart-drawer-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 20px 24px;
+  border-bottom: 1px solid var(--alpha-color-border);
+  flex-shrink: 0;
+}
+.cart-drawer-header h4 {
+  font-size: 16px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--alpha-color-fg);
+  margin: 0;
+}
+.cart-drawer-header h4 i {
+  margin-right: 8px;
+}
+.cart-drawer-close {
+  background: none;
+  border: none;
+  font-size: 18px;
+  color: var(--alpha-color-fg);
+  cursor: pointer;
+  padding: 4px;
+  line-height: 1;
+}
+.cart-drawer-close:hover {
+  color: var(--alpha-color-fg-muted);
+}
+
+.cart-drawer-shipping {
+  padding: 16px 24px;
+  border-bottom: 1px solid var(--alpha-color-border);
+  flex-shrink: 0;
+}
+.cart-drawer-shipping-msg {
+  font-size: 13px;
+  color: var(--alpha-color-fg-muted);
+  margin: 0 0 8px;
+}
+.cart-drawer-shipping-msg strong {
+  color: var(--alpha-color-fg);
+}
+.cart-drawer-shipping-msg.is-complete {
+  color: var(--alpha-color-success);
+  font-weight: 600;
+}
+.cart-drawer-shipping-msg.is-complete i {
+  margin-right: 4px;
+}
+.cart-drawer-shipping-bar {
+  height: 4px;
+  background: var(--alpha-color-border);
+  border-radius: 2px;
+  overflow: hidden;
+}
+.cart-drawer-shipping-bar-fill {
+  height: 100%;
+  width: 0;
+  background: var(--alpha-color-fg);
+  transition: width 0.4s ease;
+}
+
+.cart-drawer-items {
+  flex: 1;
+  overflow-y: auto;
+  padding: 8px 24px;
+}
+.cart-drawer-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 16px 0;
+  border-bottom: 1px solid #f0f0f0;
+}
+.cart-drawer-item-img {
+  width: 64px;
+  height: 64px;
+  object-fit: cover;
+  border-radius: 4px;
+  border: 1px solid var(--alpha-color-border);
+  flex-shrink: 0;
+}
+.cart-drawer-item-info {
+  flex: 1;
+  min-width: 0;
+}
+.cart-drawer-item-name {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--alpha-color-fg);
+  margin: 0 0 4px;
+}
+.cart-drawer-item-meta {
+  font-size: 11px;
+  color: var(--alpha-color-fg-subdued);
+  margin: 0 0 8px;
+}
+.cart-drawer-item-qty {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.cart-drawer-qty-btn {
+  width: 22px;
+  height: 22px;
+  border: 1px solid var(--alpha-color-border);
+  background: var(--alpha-color-bg-secondary);
+  color: var(--alpha-color-fg);
+  cursor: pointer;
+  font-size: 13px;
+  line-height: 1;
+  border-radius: 3px;
+}
+.cart-drawer-qty-btn:hover {
+  background: var(--alpha-color-fg);
+  color: var(--alpha-color-white);
+}
+.cart-drawer-item-qty span {
+  font-size: 13px;
+  font-weight: 600;
+  min-width: 16px;
+  text-align: center;
+}
+.cart-drawer-item-right {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 10px;
+  flex-shrink: 0;
+}
+.cart-drawer-item-remove {
+  background: none;
+  border: none;
+  color: #ccc;
+  cursor: pointer;
+  font-size: 14px;
+  padding: 0;
+}
+.cart-drawer-item-remove:hover {
+  color: var(--alpha-color-sale);
+}
+.cart-drawer-item-price {
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--alpha-color-fg);
+  white-space: nowrap;
+}
+
+.cart-drawer-empty {
+  flex: 1;
+  display: none;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  padding: 40px 32px;
+  text-align: center;
+}
+.cart-drawer-empty-title {
+  font-family: var(--alpha-font-family);
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--alpha-color-fg);
+  margin: 0;
+}
+.cart-drawer-empty-msg {
+  font-family: var(--alpha-font-family);
+  font-size: 13px;
+  line-height: 1.6;
+  color: var(--alpha-color-fg-muted);
+  margin: 0 0 8px;
+}
+.cart-drawer-empty-msg strong {
+  color: var(--alpha-color-fg);
+  letter-spacing: 0.03em;
+}
+.cart-drawer-empty-continue {
+  padding: 12px 28px;
+  background: var(--alpha-color-fg);
+  color: var(--alpha-color-white);
+  border: none;
+  font-family: var(--alpha-font-family);
+  font-size: 13px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  border-radius: 3px;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+.cart-drawer-empty-continue:hover {
+  background: var(--alpha-color-fg-muted);
+}
+
+.cart-drawer-footer {
+  padding: 20px 24px 24px;
+  border-top: 1px solid var(--alpha-color-border);
+  flex-shrink: 0;
+}
+.cart-drawer-total-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 14px;
+  color: var(--alpha-color-fg-muted);
+  margin-bottom: 14px;
+}
+.cart-drawer-total-row strong {
+  font-size: 18px;
+  color: var(--alpha-color-fg);
+}
+.cart-drawer-checkout-btn {
+  display: block;
+  width: 100%;
+  padding: 14px;
+  background: var(--alpha-color-fg);
+  color: var(--alpha-color-white) !important;
+  text-align: center;
+  font-size: 13px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  text-decoration: none !important;
+  border-radius: 3px;
+  transition: background 0.2s;
+  box-sizing: border-box;
+}
+.cart-drawer-checkout-btn:hover {
+  background: var(--alpha-color-fg-muted);
+}
+.cart-drawer-continue-btn {
+  display: block;
+  width: 100%;
+  background: none;
+  border: none;
+  color: var(--alpha-color-fg-muted);
+  font-size: 12px;
+  text-decoration: underline;
+  text-align: center;
+  margin-top: 12px;
+  cursor: pointer;
+  padding: 4px;
+}
+.cart-drawer-continue-btn:hover {
+  color: var(--alpha-color-fg);
+}
+
+@media only screen and (max-width: 480px) {
+  .cart-drawer {
+    width: 100%;
+    max-width: 100vw;
+  }
+}
+
+/* ==========================================================================
+   Etapa 12 — Loja: toggle ON/OFF do filtro lateral
+   ========================================================================== */
+.filter_cont > ul li a.active {
+  color: var(--alpha-color-fg);
+  font-weight: 700;
+  text-decoration: underline;
+}
+
+/* ==========================================================================
+   Etapa 13 — Checkout: opt-ins e endereço de faturamento
+   ========================================================================== */
+.checkout-optin {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+  font-family: var(--alpha-font-family);
+  font-size: 13px;
+  color: #555;
+  font-weight: 400;
+  text-transform: none;
+  letter-spacing: normal;
+  margin: 0 0 10px;
+}
+.checkout-optin input[type="checkbox"] {
+  width: 16px;
+  height: 16px;
+  accent-color: var(--alpha-color-fg);
+  flex-shrink: 0;
+}
+
+.billing-toggle {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+.billing-opt {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  border: 1px solid var(--alpha-color-border);
+  border-radius: 4px;
+  padding: 14px 16px;
+  cursor: pointer;
+  font-family: var(--alpha-font-family);
+  font-size: 13px;
+  color: #333;
+  transition: border-color 0.2s;
+}
+.billing-opt:hover { border-color: #ccc; }
+.billing-opt.selected { border-color: var(--alpha-color-fg); }
+.billing-radio {
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  border: 1px solid #bbb;
+  flex-shrink: 0;
+  position: relative;
+}
+.billing-opt.selected .billing-radio { border-color: var(--alpha-color-fg); }
+.billing-opt.selected .billing-radio::after {
+  content: "";
+  position: absolute;
+  top: 3px;
+  left: 3px;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--alpha-color-fg);
+}
+
+.billing-address-form {
+  display: none;
+  border-top: 1px solid var(--alpha-color-border);
+  padding-top: 20px;
+}
+.billing-address-form.open { display: block; }
+
+/* ==========================================================================
+   Etapa 14 — Favoritos
+   ========================================================================== */
+.tr_heart.is-favorito {
+  color: var(--alpha-color-sale);
+}
+
+/* Badge de contagem no header — sobrescreve o badge legado (dependia de uma imagem de fundo quebrada) */
+.header_right .w_likes {
+  background: var(--alpha-color-fg);
+  color: var(--alpha-color-white);
+  position: static;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 16px;
+  height: 16px;
+  min-width: 16px;
+  border-radius: 50%;
+  font-size: 10px;
+  font-weight: 700;
+  padding: 0;
+  margin-left: 6px;
+  vertical-align: middle;
+}
+.header_right .w_likes.is-empty {
+  display: none;
+}
+
+.favoritos-empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  gap: 10px;
+  padding: 80px 24px;
+}
+.favoritos-empty i {
+  font-size: 48px;
+  color: var(--alpha-color-fg-subdued);
+  margin-bottom: 8px;
+}
+.favoritos-empty-title {
+  font-family: var(--alpha-font-family);
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--alpha-color-fg);
+  margin: 0;
+}
+.favoritos-empty-msg {
+  font-family: var(--alpha-font-family);
+  font-size: 14px;
+  color: var(--alpha-color-fg-muted);
+  max-width: 360px;
+  margin: 0 0 12px;
+}
+.favoritos-empty-btn {
+  display: inline-block;
+  padding: 12px 28px;
+  background: var(--alpha-color-fg);
+  color: var(--alpha-color-white);
+  border: none;
+  font-family: var(--alpha-font-family);
+  font-size: 13px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  border-radius: 3px;
+  text-decoration: none;
+  transition: background 0.2s;
+}
+.favoritos-empty-btn:hover {
+  background: var(--alpha-color-fg-muted);
+  color: var(--alpha-color-white);
+  text-decoration: none;
 }

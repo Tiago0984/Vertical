@@ -37,9 +37,9 @@
                                             <img src="vertical/images/t_item1.jpg" alt="" />
                                             <div class="tr-add-cart">
                                                 <ul>
-                                                    <li><a class="fa fa-shopping-cart tr_cart" href="#"></a></li>
-                                                    <li><a class="tr_text" href="#">ADICIONAR AO CARRINHO</a></li>
-                                                    <li><a class="fa fa-heart tr_heart" href="#"></a></li>
+                                                    <li><a class="fa fa-shopping-cart tr_cart" href="#" data-add-to-cart></a></li>
+                                                    <li><a class="tr_text" href="#" data-add-to-cart>ADICIONAR AO CARRINHO</a></li>
+                                                    <li><a class="fa fa-heart-o tr_heart" href="#"></a></li>
                                                     <li><a class="fa fa-search tr_search" href="{{ route('produto') }}"></a></li>
                                                 </ul>
                                             </div>
@@ -56,9 +56,9 @@
                                             <img src="vertical/images/t_item2.jpg" alt="" />
                                             <div class="tr-add-cart">
                                                 <ul>
-                                                    <li><a class="fa fa-shopping-cart tr_cart" href="#"></a></li>
-                                                    <li><a class="tr_text" href="#">ADICIONAR AO CARRINHO</a></li>
-                                                    <li><a class="fa fa-heart tr_heart" href="#"></a></li>
+                                                    <li><a class="fa fa-shopping-cart tr_cart" href="#" data-add-to-cart></a></li>
+                                                    <li><a class="tr_text" href="#" data-add-to-cart>ADICIONAR AO CARRINHO</a></li>
+                                                    <li><a class="fa fa-heart-o tr_heart" href="#"></a></li>
                                                     <li><a class="fa fa-search tr_search" href="{{ route('produto') }}"></a></li>
                                                 </ul>
                                             </div>
@@ -78,9 +78,9 @@
                                             <img src="vertical/images/t_item3.jpg" alt="" />
                                             <div class="tr-add-cart">
                                                 <ul>
-                                                    <li><a class="fa fa-shopping-cart tr_cart" href="#"></a></li>
-                                                    <li><a class="tr_text" href="#">ADICIONAR AO CARRINHO</a></li>
-                                                    <li><a class="fa fa-heart tr_heart" href="#"></a></li>
+                                                    <li><a class="fa fa-shopping-cart tr_cart" href="#" data-add-to-cart></a></li>
+                                                    <li><a class="tr_text" href="#" data-add-to-cart>ADICIONAR AO CARRINHO</a></li>
+                                                    <li><a class="fa fa-heart-o tr_heart" href="#"></a></li>
                                                     <li><a class="fa fa-search tr_search" href="{{ route('produto') }}"></a></li>
                                                 </ul>
                                             </div>
@@ -97,9 +97,9 @@
                                             <img src="vertical/images/t_item4.jpg" alt="" />
                                             <div class="tr-add-cart">
                                                 <ul>
-                                                    <li><a class="fa fa-shopping-cart tr_cart" href="#"></a></li>
-                                                    <li><a class="tr_text" href="#">ADICIONAR AO CARRINHO</a></li>
-                                                    <li><a class="fa fa-heart tr_heart" href="#"></a></li>
+                                                    <li><a class="fa fa-shopping-cart tr_cart" href="#" data-add-to-cart></a></li>
+                                                    <li><a class="tr_text" href="#" data-add-to-cart>ADICIONAR AO CARRINHO</a></li>
+                                                    <li><a class="fa fa-heart-o tr_heart" href="#"></a></li>
                                                     <li><a class="fa fa-search tr_search" href="{{ route('produto') }}"></a></li>
                                                 </ul>
                                             </div>
@@ -116,9 +116,9 @@
                                             <img src="vertical/images/t_item1.jpg" alt="" />
                                             <div class="tr-add-cart">
                                                 <ul>
-                                                    <li><a class="fa fa-shopping-cart tr_cart" href="#"></a></li>
-                                                    <li><a class="tr_text" href="#">ADICIONAR AO CARRINHO</a></li>
-                                                    <li><a class="fa fa-heart tr_heart" href="#"></a></li>
+                                                    <li><a class="fa fa-shopping-cart tr_cart" href="#" data-add-to-cart></a></li>
+                                                    <li><a class="tr_text" href="#" data-add-to-cart>ADICIONAR AO CARRINHO</a></li>
+                                                    <li><a class="fa fa-heart-o tr_heart" href="#"></a></li>
                                                     <li><a class="fa fa-search tr_search" href="{{ route('produto') }}"></a></li>
                                                 </ul>
                                             </div>
@@ -138,9 +138,9 @@
                                             <img src="vertical/images/t_item2.jpg" alt="" />
                                             <div class="tr-add-cart">
                                                 <ul>
-                                                    <li><a class="fa fa-shopping-cart tr_cart" href="#"></a></li>
-                                                    <li><a class="tr_text" href="#">ADICIONAR AO CARRINHO</a></li>
-                                                    <li><a class="fa fa-heart tr_heart" href="#"></a></li>
+                                                    <li><a class="fa fa-shopping-cart tr_cart" href="#" data-add-to-cart></a></li>
+                                                    <li><a class="tr_text" href="#" data-add-to-cart>ADICIONAR AO CARRINHO</a></li>
+                                                    <li><a class="fa fa-heart-o tr_heart" href="#"></a></li>
                                                     <li><a class="fa fa-search tr_search" href="{{ route('produto') }}"></a></li>
                                                 </ul>
                                             </div>
@@ -160,9 +160,9 @@
                                             <img src="vertical/images/t_item3.jpg" alt="" />
                                             <div class="tr-add-cart">
                                                 <ul>
-                                                    <li><a class="fa fa-shopping-cart tr_cart" href="#"></a></li>
-                                                    <li><a class="tr_text" href="#">ADICIONAR AO CARRINHO</a></li>
-                                                    <li><a class="fa fa-heart tr_heart" href="#"></a></li>
+                                                    <li><a class="fa fa-shopping-cart tr_cart" href="#" data-add-to-cart></a></li>
+                                                    <li><a class="tr_text" href="#" data-add-to-cart>ADICIONAR AO CARRINHO</a></li>
+                                                    <li><a class="fa fa-heart-o tr_heart" href="#"></a></li>
                                                     <li><a class="fa fa-search tr_search" href="{{ route('produto') }}"></a></li>
                                                 </ul>
                                             </div>
@@ -179,9 +179,9 @@
                                             <img src="vertical/images/t_item12.jpg" alt="" />
                                             <div class="tr-add-cart">
                                                 <ul>
-                                                    <li><a class="fa fa-shopping-cart tr_cart" href="#"></a></li>
-                                                    <li><a class="tr_text" href="#">ADICIONAR AO CARRINHO</a></li>
-                                                    <li><a class="fa fa-heart tr_heart" href="#"></a></li>
+                                                    <li><a class="fa fa-shopping-cart tr_cart" href="#" data-add-to-cart></a></li>
+                                                    <li><a class="tr_text" href="#" data-add-to-cart>ADICIONAR AO CARRINHO</a></li>
+                                                    <li><a class="fa fa-heart-o tr_heart" href="#"></a></li>
                                                     <li><a class="fa fa-search tr_search" href="{{ route('produto') }}"></a></li>
                                                 </ul>
                                             </div>
@@ -198,9 +198,9 @@
                                             <img src="vertical/images/t_item13.jpg" alt="" />
                                             <div class="tr-add-cart">
                                                 <ul>
-                                                    <li><a class="fa fa-shopping-cart tr_cart" href="#"></a></li>
-                                                    <li><a class="tr_text" href="#">ADICIONAR AO CARRINHO</a></li>
-                                                    <li><a class="fa fa-heart tr_heart" href="#"></a></li>
+                                                    <li><a class="fa fa-shopping-cart tr_cart" href="#" data-add-to-cart></a></li>
+                                                    <li><a class="tr_text" href="#" data-add-to-cart>ADICIONAR AO CARRINHO</a></li>
+                                                    <li><a class="fa fa-heart-o tr_heart" href="#"></a></li>
                                                     <li><a class="fa fa-search tr_search" href="{{ route('produto') }}"></a></li>
                                                 </ul>
                                             </div>
@@ -229,9 +229,9 @@
                                             <img src="vertical/images/t_item1.jpg" alt="" />
                                             <div class="tr-add-cart">
                                                 <ul>
-                                                    <li><a class="fa fa-shopping-cart tr_cart" href="#"></a></li>
-                                                    <li><a class="tr_text" href="#">ADICIONAR AO CARRINHO</a></li>
-                                                    <li><a class="fa fa-heart tr_heart" href="#"></a></li>
+                                                    <li><a class="fa fa-shopping-cart tr_cart" href="#" data-add-to-cart></a></li>
+                                                    <li><a class="tr_text" href="#" data-add-to-cart>ADICIONAR AO CARRINHO</a></li>
+                                                    <li><a class="fa fa-heart-o tr_heart" href="#"></a></li>
                                                     <li><a class="fa fa-search tr_search" href="{{ route('produto') }}"></a></li>
                                                 </ul>
                                             </div>
@@ -248,9 +248,9 @@
                                             <img src="vertical/images/t_item7.jpg" alt="" />
                                             <div class="tr-add-cart">
                                                 <ul>
-                                                    <li><a class="fa fa-shopping-cart tr_cart" href="#"></a></li>
-                                                    <li><a class="tr_text" href="#">ADICIONAR AO CARRINHO</a></li>
-                                                    <li><a class="fa fa-heart tr_heart" href="#"></a></li>
+                                                    <li><a class="fa fa-shopping-cart tr_cart" href="#" data-add-to-cart></a></li>
+                                                    <li><a class="tr_text" href="#" data-add-to-cart>ADICIONAR AO CARRINHO</a></li>
+                                                    <li><a class="fa fa-heart-o tr_heart" href="#"></a></li>
                                                     <li><a class="fa fa-search tr_search" href="{{ route('produto') }}"></a></li>
                                                 </ul>
                                             </div>
@@ -270,9 +270,9 @@
                                             <img src="vertical/images/t_item14.jpg" alt="" />
                                             <div class="tr-add-cart">
                                                 <ul>
-                                                    <li><a class="fa fa-shopping-cart tr_cart" href="#"></a></li>
-                                                    <li><a class="tr_text" href="#">ADICIONAR AO CARRINHO</a></li>
-                                                    <li><a class="fa fa-heart tr_heart" href="#"></a></li>
+                                                    <li><a class="fa fa-shopping-cart tr_cart" href="#" data-add-to-cart></a></li>
+                                                    <li><a class="tr_text" href="#" data-add-to-cart>ADICIONAR AO CARRINHO</a></li>
+                                                    <li><a class="fa fa-heart-o tr_heart" href="#"></a></li>
                                                     <li><a class="fa fa-search tr_search" href="{{ route('produto') }}"></a></li>
                                                 </ul>
                                             </div>
@@ -292,9 +292,9 @@
                                             <img src="vertical/images/t_item5.jpg" alt="" />
                                             <div class="tr-add-cart">
                                                 <ul>
-                                                    <li><a class="fa fa-shopping-cart tr_cart" href="#"></a></li>
-                                                    <li><a class="tr_text" href="#">ADICIONAR AO CARRINHO</a></li>
-                                                    <li><a class="fa fa-heart tr_heart" href="#"></a></li>
+                                                    <li><a class="fa fa-shopping-cart tr_cart" href="#" data-add-to-cart></a></li>
+                                                    <li><a class="tr_text" href="#" data-add-to-cart>ADICIONAR AO CARRINHO</a></li>
+                                                    <li><a class="fa fa-heart-o tr_heart" href="#"></a></li>
                                                     <li><a class="fa fa-search tr_search" href="{{ route('produto') }}"></a></li>
                                                 </ul>
                                             </div>
@@ -311,9 +311,9 @@
                                             <img src="vertical/images/t_item6.jpg" alt="" />
                                             <div class="tr-add-cart">
                                                 <ul>
-                                                    <li><a class="fa fa-shopping-cart tr_cart" href="#"></a></li>
-                                                    <li><a class="tr_text" href="#">ADICIONAR AO CARRINHO</a></li>
-                                                    <li><a class="fa fa-heart tr_heart" href="#"></a></li>
+                                                    <li><a class="fa fa-shopping-cart tr_cart" href="#" data-add-to-cart></a></li>
+                                                    <li><a class="tr_text" href="#" data-add-to-cart>ADICIONAR AO CARRINHO</a></li>
+                                                    <li><a class="fa fa-heart-o tr_heart" href="#"></a></li>
                                                     <li><a class="fa fa-search tr_search" href="{{ route('produto') }}"></a></li>
                                                 </ul>
                                             </div>
@@ -330,9 +330,9 @@
                                             <img src="vertical/images/t_item7.jpg" alt="" />
                                             <div class="tr-add-cart">
                                                 <ul>
-                                                    <li><a class="fa fa-shopping-cart tr_cart" href="#"></a></li>
-                                                    <li><a class="tr_text" href="#">ADICIONAR AO CARRINHO</a></li>
-                                                    <li><a class="fa fa-heart tr_heart" href="#"></a></li>
+                                                    <li><a class="fa fa-shopping-cart tr_cart" href="#" data-add-to-cart></a></li>
+                                                    <li><a class="tr_text" href="#" data-add-to-cart>ADICIONAR AO CARRINHO</a></li>
+                                                    <li><a class="fa fa-heart-o tr_heart" href="#"></a></li>
                                                     <li><a class="fa fa-search tr_search" href="{{ route('produto') }}"></a></li>
                                                 </ul>
                                             </div>
@@ -352,9 +352,9 @@
                                             <img src="vertical/images/t_item15.jpg" alt="" />
                                             <div class="tr-add-cart">
                                                 <ul>
-                                                    <li><a class="fa fa-shopping-cart tr_cart" href="#"></a></li>
-                                                    <li><a class="tr_text" href="#">ADICIONAR AO CARRINHO</a></li>
-                                                    <li><a class="fa fa-heart tr_heart" href="#"></a></li>
+                                                    <li><a class="fa fa-shopping-cart tr_cart" href="#" data-add-to-cart></a></li>
+                                                    <li><a class="tr_text" href="#" data-add-to-cart>ADICIONAR AO CARRINHO</a></li>
+                                                    <li><a class="fa fa-heart-o tr_heart" href="#"></a></li>
                                                     <li><a class="fa fa-search tr_search" href="{{ route('produto') }}"></a></li>
                                                 </ul>
                                             </div>
@@ -371,9 +371,9 @@
                                             <img src="vertical/images/t_item8.jpg" alt="" />
                                             <div class="tr-add-cart">
                                                 <ul>
-                                                    <li><a class="fa fa-shopping-cart tr_cart" href="#"></a></li>
-                                                    <li><a class="tr_text" href="#">ADICIONAR AO CARRINHO</a></li>
-                                                    <li><a class="fa fa-heart tr_heart" href="#"></a></li>
+                                                    <li><a class="fa fa-shopping-cart tr_cart" href="#" data-add-to-cart></a></li>
+                                                    <li><a class="tr_text" href="#" data-add-to-cart>ADICIONAR AO CARRINHO</a></li>
+                                                    <li><a class="fa fa-heart-o tr_heart" href="#"></a></li>
                                                     <li><a class="fa fa-search tr_search" href="{{ route('produto') }}"></a></li>
                                                 </ul>
                                             </div>
@@ -393,9 +393,9 @@
                                             <img src="vertical/images/t_item9.jpg" alt="" />
                                             <div class="tr-add-cart">
                                                 <ul>
-                                                    <li><a class="fa fa-shopping-cart tr_cart" href="#"></a></li>
-                                                    <li><a class="tr_text" href="#">ADICIONAR AO CARRINHO</a></li>
-                                                    <li><a class="fa fa-heart tr_heart" href="#"></a></li>
+                                                    <li><a class="fa fa-shopping-cart tr_cart" href="#" data-add-to-cart></a></li>
+                                                    <li><a class="tr_text" href="#" data-add-to-cart>ADICIONAR AO CARRINHO</a></li>
+                                                    <li><a class="fa fa-heart-o tr_heart" href="#"></a></li>
                                                     <li><a class="fa fa-search tr_search" href="{{ route('produto') }}"></a></li>
                                                 </ul>
                                             </div>
@@ -421,9 +421,9 @@
                                             <img src="vertical/images/t_item10.jpg" alt="" />
                                             <div class="tr-add-cart">
                                                 <ul>
-                                                    <li><a class="fa fa-shopping-cart tr_cart" href="#"></a></li>
-                                                    <li><a class="tr_text" href="#">ADICIONAR AO CARRINHO</a></li>
-                                                    <li><a class="fa fa-heart tr_heart" href="#"></a></li>
+                                                    <li><a class="fa fa-shopping-cart tr_cart" href="#" data-add-to-cart></a></li>
+                                                    <li><a class="tr_text" href="#" data-add-to-cart>ADICIONAR AO CARRINHO</a></li>
+                                                    <li><a class="fa fa-heart-o tr_heart" href="#"></a></li>
                                                     <li><a class="fa fa-search tr_search" href="{{ route('produto') }}"></a></li>
                                                 </ul>
                                             </div>
@@ -443,9 +443,9 @@
                                             <img src="vertical/images/t_item16.jpg" alt="" />
                                             <div class="tr-add-cart">
                                                 <ul>
-                                                    <li><a class="fa fa-shopping-cart tr_cart" href="#"></a></li>
-                                                    <li><a class="tr_text" href="#">ADICIONAR AO CARRINHO</a></li>
-                                                    <li><a class="fa fa-heart tr_heart" href="#"></a></li>
+                                                    <li><a class="fa fa-shopping-cart tr_cart" href="#" data-add-to-cart></a></li>
+                                                    <li><a class="tr_text" href="#" data-add-to-cart>ADICIONAR AO CARRINHO</a></li>
+                                                    <li><a class="fa fa-heart-o tr_heart" href="#"></a></li>
                                                     <li><a class="fa fa-search tr_search" href="{{ route('produto') }}"></a></li>
                                                 </ul>
                                             </div>
@@ -465,9 +465,9 @@
                                             <img src="vertical/images/t_item4.jpg" alt="" />
                                             <div class="tr-add-cart">
                                                 <ul>
-                                                    <li><a class="fa fa-shopping-cart tr_cart" href="#"></a></li>
-                                                    <li><a class="tr_text" href="#">ADICIONAR AO CARRINHO</a></li>
-                                                    <li><a class="fa fa-heart tr_heart" href="#"></a></li>
+                                                    <li><a class="fa fa-shopping-cart tr_cart" href="#" data-add-to-cart></a></li>
+                                                    <li><a class="tr_text" href="#" data-add-to-cart>ADICIONAR AO CARRINHO</a></li>
+                                                    <li><a class="fa fa-heart-o tr_heart" href="#"></a></li>
                                                     <li><a class="fa fa-search tr_search" href="{{ route('produto') }}"></a></li>
                                                 </ul>
                                             </div>
@@ -487,9 +487,9 @@
                                             <img src="vertical/images/t_item11.jpg" alt="" />
                                             <div class="tr-add-cart">
                                                 <ul>
-                                                    <li><a class="fa fa-shopping-cart tr_cart" href="#"></a></li>
-                                                    <li><a class="tr_text" href="#">ADICIONAR AO CARRINHO</a></li>
-                                                    <li><a class="fa fa-heart tr_heart" href="#"></a></li>
+                                                    <li><a class="fa fa-shopping-cart tr_cart" href="#" data-add-to-cart></a></li>
+                                                    <li><a class="tr_text" href="#" data-add-to-cart>ADICIONAR AO CARRINHO</a></li>
+                                                    <li><a class="fa fa-heart-o tr_heart" href="#"></a></li>
                                                     <li><a class="fa fa-search tr_search" href="{{ route('produto') }}"></a></li>
                                                 </ul>
                                             </div>
@@ -509,9 +509,9 @@
                                             <img src="vertical/images/t_item1.jpg" alt="" />
                                             <div class="tr-add-cart">
                                                 <ul>
-                                                    <li><a class="fa fa-shopping-cart tr_cart" href="#"></a></li>
-                                                    <li><a class="tr_text" href="#">ADICIONAR AO CARRINHO</a></li>
-                                                    <li><a class="fa fa-heart tr_heart" href="#"></a></li>
+                                                    <li><a class="fa fa-shopping-cart tr_cart" href="#" data-add-to-cart></a></li>
+                                                    <li><a class="tr_text" href="#" data-add-to-cart>ADICIONAR AO CARRINHO</a></li>
+                                                    <li><a class="fa fa-heart-o tr_heart" href="#"></a></li>
                                                     <li><a class="fa fa-search tr_search" href="{{ route('produto') }}"></a></li>
                                                 </ul>
                                             </div>
@@ -531,9 +531,9 @@
                                             <img src="vertical/images/t_item12.jpg" alt="" />
                                             <div class="tr-add-cart">
                                                 <ul>
-                                                    <li><a class="fa fa-shopping-cart tr_cart" href="#"></a></li>
-                                                    <li><a class="tr_text" href="#">ADICIONAR AO CARRINHO</a></li>
-                                                    <li><a class="fa fa-heart tr_heart" href="#"></a></li>
+                                                    <li><a class="fa fa-shopping-cart tr_cart" href="#" data-add-to-cart></a></li>
+                                                    <li><a class="tr_text" href="#" data-add-to-cart>ADICIONAR AO CARRINHO</a></li>
+                                                    <li><a class="fa fa-heart-o tr_heart" href="#"></a></li>
                                                     <li><a class="fa fa-search tr_search" href="{{ route('produto') }}"></a></li>
                                                 </ul>
                                             </div>
@@ -553,9 +553,9 @@
                                             <img src="vertical/images/t_item3.jpg" alt="" />
                                             <div class="tr-add-cart">
                                                 <ul>
-                                                    <li><a class="fa fa-shopping-cart tr_cart" href="#"></a></li>
-                                                    <li><a class="tr_text" href="#">ADICIONAR AO CARRINHO</a></li>
-                                                    <li><a class="fa fa-heart tr_heart" href="#"></a></li>
+                                                    <li><a class="fa fa-shopping-cart tr_cart" href="#" data-add-to-cart></a></li>
+                                                    <li><a class="tr_text" href="#" data-add-to-cart>ADICIONAR AO CARRINHO</a></li>
+                                                    <li><a class="fa fa-heart-o tr_heart" href="#"></a></li>
                                                     <li><a class="fa fa-search tr_search" href="{{ route('produto') }}"></a></li>
                                                 </ul>
                                             </div>
@@ -575,9 +575,9 @@
                                             <img src="vertical/images/t_item2.jpg" alt="" />
                                             <div class="tr-add-cart">
                                                 <ul>
-                                                    <li><a class="fa fa-shopping-cart tr_cart" href="#"></a></li>
-                                                    <li><a class="tr_text" href="#">ADICIONAR AO CARRINHO</a></li>
-                                                    <li><a class="fa fa-heart tr_heart" href="#"></a></li>
+                                                    <li><a class="fa fa-shopping-cart tr_cart" href="#" data-add-to-cart></a></li>
+                                                    <li><a class="tr_text" href="#" data-add-to-cart>ADICIONAR AO CARRINHO</a></li>
+                                                    <li><a class="fa fa-heart-o tr_heart" href="#"></a></li>
                                                     <li><a class="fa fa-search tr_search" href="{{ route('produto') }}"></a></li>
                                                 </ul>
                                             </div>
@@ -597,9 +597,9 @@
                                             <img src="vertical/images/t_item3.jpg" alt="" />
                                             <div class="tr-add-cart">
                                                 <ul>
-                                                    <li><a class="fa fa-shopping-cart tr_cart" href="#"></a></li>
-                                                    <li><a class="tr_text" href="#">ADICIONAR AO CARRINHO</a></li>
-                                                    <li><a class="fa fa-heart tr_heart" href="#"></a></li>
+                                                    <li><a class="fa fa-shopping-cart tr_cart" href="#" data-add-to-cart></a></li>
+                                                    <li><a class="tr_text" href="#" data-add-to-cart>ADICIONAR AO CARRINHO</a></li>
+                                                    <li><a class="fa fa-heart-o tr_heart" href="#"></a></li>
                                                     <li><a class="fa fa-search tr_search" href="{{ route('produto') }}"></a></li>
                                                 </ul>
                                             </div>
@@ -628,9 +628,9 @@
                                             <img src="vertical/images/t_item1.jpg" alt="" />
                                             <div class="tr-add-cart">
                                                 <ul>
-                                                    <li><a class="fa fa-shopping-cart tr_cart" href="#"></a></li>
-                                                    <li><a class="tr_text" href="#">ADICIONAR AO CARRINHO</a></li>
-                                                    <li><a class="fa fa-heart tr_heart" href="#"></a></li>
+                                                    <li><a class="fa fa-shopping-cart tr_cart" href="#" data-add-to-cart></a></li>
+                                                    <li><a class="tr_text" href="#" data-add-to-cart>ADICIONAR AO CARRINHO</a></li>
+                                                    <li><a class="fa fa-heart-o tr_heart" href="#"></a></li>
                                                     <li><a class="fa fa-search tr_search" href="{{ route('produto') }}"></a></li>
                                                 </ul>
                                             </div>
@@ -647,9 +647,9 @@
                                             <img src="vertical/images/t_item2.jpg" alt="" />
                                             <div class="tr-add-cart">
                                                 <ul>
-                                                    <li><a class="fa fa-shopping-cart tr_cart" href="#"></a></li>
-                                                    <li><a class="tr_text" href="#">ADICIONAR AO CARRINHO</a></li>
-                                                    <li><a class="fa fa-heart tr_heart" href="#"></a></li>
+                                                    <li><a class="fa fa-shopping-cart tr_cart" href="#" data-add-to-cart></a></li>
+                                                    <li><a class="tr_text" href="#" data-add-to-cart>ADICIONAR AO CARRINHO</a></li>
+                                                    <li><a class="fa fa-heart-o tr_heart" href="#"></a></li>
                                                     <li><a class="fa fa-search tr_search" href="{{ route('produto') }}"></a></li>
                                                 </ul>
                                             </div>
@@ -669,9 +669,9 @@
                                             <img src="vertical/images/t_item7.jpg" alt="" />
                                             <div class="tr-add-cart">
                                                 <ul>
-                                                    <li><a class="fa fa-shopping-cart tr_cart" href="#"></a></li>
-                                                    <li><a class="tr_text" href="#">ADICIONAR AO CARRINHO</a></li>
-                                                    <li><a class="fa fa-heart tr_heart" href="#"></a></li>
+                                                    <li><a class="fa fa-shopping-cart tr_cart" href="#" data-add-to-cart></a></li>
+                                                    <li><a class="tr_text" href="#" data-add-to-cart>ADICIONAR AO CARRINHO</a></li>
+                                                    <li><a class="fa fa-heart-o tr_heart" href="#"></a></li>
                                                     <li><a class="fa fa-search tr_search" href="{{ route('produto') }}"></a></li>
                                                 </ul>
                                             </div>
@@ -691,9 +691,9 @@
                                             <img src="vertical/images/t_item4.jpg" alt="" />
                                             <div class="tr-add-cart">
                                                 <ul>
-                                                    <li><a class="fa fa-shopping-cart tr_cart" href="#"></a></li>
-                                                    <li><a class="tr_text" href="#">ADICIONAR AO CARRINHO</a></li>
-                                                    <li><a class="fa fa-heart tr_heart" href="#"></a></li>
+                                                    <li><a class="fa fa-shopping-cart tr_cart" href="#" data-add-to-cart></a></li>
+                                                    <li><a class="tr_text" href="#" data-add-to-cart>ADICIONAR AO CARRINHO</a></li>
+                                                    <li><a class="fa fa-heart-o tr_heart" href="#"></a></li>
                                                     <li><a class="fa fa-search tr_search" href="{{ route('produto') }}"></a></li>
                                                 </ul>
                                             </div>
@@ -710,9 +710,9 @@
                                             <img src="vertical/images/t_item1.jpg" alt="" />
                                             <div class="tr-add-cart">
                                                 <ul>
-                                                    <li><a class="fa fa-shopping-cart tr_cart" href="#"></a></li>
-                                                    <li><a class="tr_text" href="#">ADICIONAR AO CARRINHO</a></li>
-                                                    <li><a class="fa fa-heart tr_heart" href="#"></a></li>
+                                                    <li><a class="fa fa-shopping-cart tr_cart" href="#" data-add-to-cart></a></li>
+                                                    <li><a class="tr_text" href="#" data-add-to-cart>ADICIONAR AO CARRINHO</a></li>
+                                                    <li><a class="fa fa-heart-o tr_heart" href="#"></a></li>
                                                     <li><a class="fa fa-search tr_search" href="{{ route('produto') }}"></a></li>
                                                 </ul>
                                             </div>
@@ -729,9 +729,9 @@
                                             <img src="vertical/images/t_item2.jpg" alt="" />
                                             <div class="tr-add-cart">
                                                 <ul>
-                                                    <li><a class="fa fa-shopping-cart tr_cart" href="#"></a></li>
-                                                    <li><a class="tr_text" href="#">ADICIONAR AO CARRINHO</a></li>
-                                                    <li><a class="fa fa-heart tr_heart" href="#"></a></li>
+                                                    <li><a class="fa fa-shopping-cart tr_cart" href="#" data-add-to-cart></a></li>
+                                                    <li><a class="tr_text" href="#" data-add-to-cart>ADICIONAR AO CARRINHO</a></li>
+                                                    <li><a class="fa fa-heart-o tr_heart" href="#"></a></li>
                                                     <li><a class="fa fa-search tr_search" href="{{ route('produto') }}"></a></li>
                                                 </ul>
                                             </div>
@@ -748,9 +748,9 @@
                                             <img src="vertical/images/t_item3.jpg" alt="" />
                                             <div class="tr-add-cart">
                                                 <ul>
-                                                    <li><a class="fa fa-shopping-cart tr_cart" href="#"></a></li>
-                                                    <li><a class="tr_text" href="#">ADICIONAR AO CARRINHO</a></li>
-                                                    <li><a class="fa fa-heart tr_heart" href="#"></a></li>
+                                                    <li><a class="fa fa-shopping-cart tr_cart" href="#" data-add-to-cart></a></li>
+                                                    <li><a class="tr_text" href="#" data-add-to-cart>ADICIONAR AO CARRINHO</a></li>
+                                                    <li><a class="fa fa-heart-o tr_heart" href="#"></a></li>
                                                     <li><a class="fa fa-search tr_search" href="{{ route('produto') }}"></a></li>
                                                 </ul>
                                             </div>
@@ -770,9 +770,9 @@
                                             <img src="vertical/images/t_item12.jpg" alt="" />
                                             <div class="tr-add-cart">
                                                 <ul>
-                                                    <li><a class="fa fa-shopping-cart tr_cart" href="#"></a></li>
-                                                    <li><a class="tr_text" href="#">ADICIONAR AO CARRINHO</a></li>
-                                                    <li><a class="fa fa-heart tr_heart" href="#"></a></li>
+                                                    <li><a class="fa fa-shopping-cart tr_cart" href="#" data-add-to-cart></a></li>
+                                                    <li><a class="tr_text" href="#" data-add-to-cart>ADICIONAR AO CARRINHO</a></li>
+                                                    <li><a class="fa fa-heart-o tr_heart" href="#"></a></li>
                                                     <li><a class="fa fa-search tr_search" href="{{ route('produto') }}"></a></li>
                                                 </ul>
                                             </div>
@@ -789,9 +789,9 @@
                                             <img src="vertical/images/t_item14.jpg" alt="" />
                                             <div class="tr-add-cart">
                                                 <ul>
-                                                    <li><a class="fa fa-shopping-cart tr_cart" href="#"></a></li>
-                                                    <li><a class="tr_text" href="#">ADICIONAR AO CARRINHO</a></li>
-                                                    <li><a class="fa fa-heart tr_heart" href="#"></a></li>
+                                                    <li><a class="fa fa-shopping-cart tr_cart" href="#" data-add-to-cart></a></li>
+                                                    <li><a class="tr_text" href="#" data-add-to-cart>ADICIONAR AO CARRINHO</a></li>
+                                                    <li><a class="fa fa-heart-o tr_heart" href="#"></a></li>
                                                     <li><a class="fa fa-search tr_search" href="{{ route('produto') }}"></a></li>
                                                 </ul>
                                             </div>

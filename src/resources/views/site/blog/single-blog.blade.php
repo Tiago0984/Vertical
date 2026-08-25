@@ -10,7 +10,7 @@
         <div class="row">
             <div class="col-md-12 col-sm-12 col-xs-12">
                 <div class="blog_slider_box">
-                    <h2>Blog</h2>
+                    <h2>blog - post</h2>
                 </div>
             </div>
         </div>
@@ -27,7 +27,8 @@
                 <div class="bread_box">
                     <ul class="breadcumb">
                         <li><a href="{{ route('home') }}">Início <span>|</span></a></li>
-                        <li class="active"><a href="#">Blog</a></li>
+                        <li><a href="{{ route('blog') }}">Blog <span>|</span></a></li>
+                        <li class="active"><a href="#">Post do Blog</a></li>
                     </ul>
                 </div>
             </div>
@@ -36,7 +37,7 @@
 </div>
 
 {{-- ══════════════════════════════════════════
-     LISTAGEM DE POSTS
+     CONTEÚDO DO POST
 ══════════════════════════════════════════ --}}
 <section class="blog_page_area">
     <div class="container">
@@ -44,68 +45,108 @@
 
             {{-- Coluna principal --}}
             <div class="col-md-8 col-sm-8 col-xs-12">
-
                 <div class="single_blog_in_page">
-                    <div class="blog_img_l"><img src="{{ asset('vertical/images/blog_page1.jpg') }}" alt="" /></div>
+                    <div class="blog_img_l"><img src="{{ asset('vertical/images/blog_page2.jpg') }}" alt="" /></div>
                     <div class="blog_date_in_page">
                         <h2>_ <span>18</span></h2>
                         <p>abril 2025</p>
                     </div>
                     <div class="blog_text_in_page">
-                        <a href="{{ route('single-blog') }}"><h3>Trendy cloth designs made from our team</h3></a>
+                        <h3>Trendy cloth designs made from our team</h3>
                         <h4>Por <span>Admin</span>, comentários <span>23</span>, coleção verão</h4>
-                        <p>Camisetas com estampas exclusivas inspiradas na arte urbana e no streetwear contemporâneo. Malha premium de algodão de alta qualidade, com toque macio e conforto durante todo o dia. Ideal para compor looks casuais com personalidade [...]</p>
-                        <div class="read_more">
-                            <a class="read_more_blog" href="{{ route('single-blog') }}">Leia mais</a>
+                    </div>
+                    <div class="blog_detail_in_page">
+                        <p>Camisetas com estampas exclusivas inspiradas na arte urbana e no streetwear contemporâneo. Malha premium de algodão de alta qualidade, com toque macio e conforto durante todo o dia. Ideal para compor looks casuais com personalidade, unindo praticidade e estilo em cada peça da coleção.</p>
+                        <ul id="single_blog_nav">
+                            <li><a href=""><i class="fa fa-caret-right"></i> Modelagens pensadas para todos os tipos de corpo e ocasião.</a></li>
+                            <li><a href=""><i class="fa fa-caret-right"></i> Estampas exclusivas com tecnologia de sublimação de alta durabilidade.</a></li>
+                            <li><a href=""><i class="fa fa-caret-right"></i> Produção 100% nacional, do tecido ao acabamento final.</a></li>
+                        </ul>
+                        <p>Nossa equipe de design trabalha em cada coleção pensando em conforto, durabilidade e identidade visual. O processo criativo passa por pesquisa de tendências, testes de caimento e seleção cuidadosa de tecidos, garantindo que cada camiseta represente o melhor equilíbrio entre estilo e qualidade.<br><br>
+
+                        Acompanhamos de perto a produção para assegurar que cada lote mantenha o mesmo padrão de qualidade, desde a escolha do algodão até a aplicação das estampas. É esse cuidado que torna cada peça única e pronta para acompanhar o seu dia a dia.
+                        </p>
+                    </div>
+                    <div class="share">
+                        <span>12 compartilhamentos</span>
+                    </div>
+                    <div class="share_icons">
+                        <ul id="share_icon">
+                            <li><a class="fa fa-facebook" href=""></a></li>
+                            <li><a class="fa fa-twitter" href=""></a></li>
+                            <li><a class="fa fa-instagram" href=""></a></li>
+                            <li><a class="fa fa-linkedin" href=""></a></li>
+                        </ul>
+                    </div>
+                </div>
+
+                {{-- Comentários --}}
+                <div class="comments">
+                    <h2>Comentários (3)</h2>
+                    <div class="multi_line"></div>
+
+                    <div class="single_comment">
+                        <div class="comment_img">
+                            <img src="{{ asset('vertical/images/comment1.png') }}" alt="" />
+                        </div>
+                        <div class="comment_text">
+                            <div class="comment_name">
+                             <h3>MICHELE SANTOS   |   <span>18 de abril de 2025 às 17:00</span></h3>
+                            </div>
+                            <div class="reply"><span>Responder</span></div>
+                            <div class="comment-detail">
+                            <p>Muito bom o trabalho de vocês! Amei a qualidade do tecido e o caimento ficou perfeito. Com certeza vou comprar mais peças da coleção.</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="single_comment even">
+                        <div class="comment_img">
+                            <img src="{{ asset('vertical/images/comment1.png') }}" alt="" />
+                        </div>
+                        <div class="comment_text">
+                            <div class="comment_name">
+                             <h3>KARINA TALCA   |   <span>18 de abril de 2025 às 17:00</span></h3>
+                            </div>
+                            <div class="reply"><span>Responder</span></div>
+                            <div class="comment-detail">
+                            <p>Adorei o post! As estampas são realmente exclusivas e o algodão é super macio. Recomendo demais.</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="single_comment">
+                        <div class="comment_img">
+                            <img src="{{ asset('vertical/images/comment1.png') }}" alt="" />
+                        </div>
+                        <div class="comment_text">
+                            <div class="comment_name">
+                             <h3>ROQUE LANCER   |   <span>18 de abril de 2025 às 17:00</span></h3>
+                            </div>
+                            <div class="reply"><span>Responder</span></div>
+                            <div class="comment-detail">
+                            <p>Excelente qualidade, entrega rápida e embalagem impecável. Virei cliente fiel da marca.</p>
+                            </div>
                         </div>
                     </div>
                 </div>
 
-                <div class="single_blog_in_page">
-                    <div class="blog_img_l"><img src="{{ asset('vertical/images/blog_page2.jpg') }}" alt="" /></div>
-                    <div class="blog_date_in_page">
-                        <h2>_ <span>12</span></h2>
-                        <p>abril 2025</p>
+                {{-- Deixe um comentário --}}
+                <div class="leave_a_reply">
+                    <h2>deixe um comentário</h2>
+                    <div class="multi_line"></div>
+                    <div class="left_input">
+                        <p>Nome<span>*</span></p>
+                        <input type="text"/><br>
+                        <p>E-mail<span>*</span></p>
+                        <input type="text"/><br>
+                        <p>Telefone<span>*</span></p>
+                        <input type="text"/>
                     </div>
-                    <div class="blog_text_in_page">
-                        <a href="{{ route('single-blog') }}"><h3>Guia de cuidados para camisetas de algodão</h3></a>
-                        <h4>Por <span>Admin</span>, comentários <span>15</span>, dicas de cuidado</h4>
-                        <p>Lavar à mão ou em máquina fria, evitar alvejante e secar à sombra são alguns dos cuidados essenciais para manter a cor e a estampa das suas camisetas por muito mais tempo [...]</p>
-                        <div class="read_more">
-                            <a class="read_more_blog" href="{{ route('single-blog') }}">Leia mais</a>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="single_blog_in_page last_single_blog_in_page">
-                    <div class="blog_img_l"><img src="{{ asset('vertical/images/blog_page3.jpg') }}" alt="" /></div>
-                    <div class="blog_date_in_page">
-                        <h2>_ <span>05</span></h2>
-                        <p>abril 2025</p>
-                    </div>
-                    <div class="blog_text_in_page">
-                        <a href="{{ route('single-blog') }}"><h3>Como escolher o caimento ideal para o seu tipo de corpo</h3></a>
-                        <h4>Por <span>Admin</span>, comentários <span>9</span>, moda masculina</h4>
-                        <p>Regular fit, slim fit ou oversized? Entenda as diferenças entre as modelagens e descubra qual combina melhor com o seu estilo e conforto no dia a dia [...]</p>
-                        <div class="read_more">
-                            <a class="read_more_blog" href="{{ route('single-blog') }}">Leia mais</a>
-                        </div>
-                    </div>
-                </div>
-
-                {{-- Paginação --}}
-                <div class="row">
-                    <div class="col-md-12 col-sm-12 col-xs-12">
-                        <div class="pagi_line"></div>
-                        <div class="pagi_ul">
-                            <ul id="pagination">
-                                <li><a href="">Anterior</a></li>
-                                <li><a href="">1</a></li>
-                                <li><a href="">2</a></li>
-                                <li><a href="">3</a></li>
-                                <li><a href="">Próximo</a></li>
-                            </ul>
-                        </div>
+                    <div class="right_input">
+                        <p>Comentário</p>
+                        <textarea name="" cols="30" rows="10"></textarea>
+                        <input type="submit" value="publicar comentário" />
                     </div>
                 </div>
 
@@ -126,15 +167,15 @@
                     </div>
 
                     <div class="blog_categories">
-                        <h2>CATEGORIAS DO BLOG</h2>
+                        <h2>CATEGORIAS</h2>
                         <div class="multi_line"></div>
                         <ul id="blog_categories">
-                            <li><a href="#">Looks Estilosos</a></li>
-                            <li><a href="#">Moda da Semana</a></li>
-                            <li><a href="#">Coleção Verão</a></li>
-                            <li><a href="#">Ofertas e Descontos</a></li>
-                            <li><a href="#">Destaque do Dia</a></li>
-                            <li><a href="#">Melhores Avaliações</a></li>
+                            <li><a href="">Looks Estilosos</a></li>
+                            <li><a href="">Moda da Semana</a></li>
+                            <li><a href="">Coleção Verão</a></li>
+                            <li><a href="">Ofertas e Descontos</a></li>
+                            <li><a href="">Destaque do Dia</a></li>
+                            <li><a href="">Melhores Avaliações</a></li>
                         </ul>
                     </div>
 

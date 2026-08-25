@@ -3,7 +3,7 @@
 			<div class="row">
 			<div class="col-md-6 col-sm-6 col-xs-12">
 				<div class="header_top_left">
-					<img src="vertical/images/car.png" alt="Header Car Icon" />
+					<img src="{{ asset('vertical/images/car.png') }}" alt="Header Car Icon" />
 					<p>FRETE GRÁTIS EM PEDIDOS ACIMA DE <span>R$150</span></p>
 				</div>
 			</div>
@@ -47,12 +47,13 @@
 				<div class="col-md-3 col-sm-4 col-xs-12">
 					<div class="header_right floatright">
 						<ul class="checkout">
-							<li><a href="checkout.html"><i class="fa fa-heart-o"></i>favoritos</a></li>
-							<li class="mobi_right_li"><a href="checkout.html"><i class="fa fa-shopping-cart"></i>lista</a></li>
+							<li>
+								<a href="{{ route('favoritos') }}">
+									<i class="fa fa-heart-o"></i>favoritos
+									<span class="w_likes js-favoritos-count">0</span>
+								</a>
+							</li>
 						</ul>
-						<div class="w_likes">
-							<span>3</span>
-						</div>
 					</div>
 				</div>
 			</div>
@@ -100,7 +101,7 @@
 							</ul>
 						</div>
 					<div class="cat_img">
-						<img src="vertical/images/menu_cat.png" alt="" />
+						<img src="{{ asset('vertical/images/menu_cat.png') }}" alt="" />
 					</div>
 				</div>
 			</div>
@@ -118,79 +119,11 @@
 						</li>
 						<li><a href="{{ route('loja') }}">Loja</a></li>
 						<li><a href="{{ route('blog') }}">Blog</a></li>
-						<li><a href="{{ route('carrinho') }}">Carrinho</a></li>
 					</ul>
 				</nav>
 			</div>
 		<div class="nav_right floatright">
-			<a href="{{ route('carrinho') }}"><img src="vertical/images/bag.png" alt="Bag" />carrinho: 3 itens</a>
-				<div class="cart_menu">
-
-					{{-- Item 1 --}}
-					<div class="cart_items">
-						<div class="c_item_img floatleft">
-							<a href="{{ route('produto') }}"><img src="vertical/images/t_item2.jpg" alt="" /></a>
-						</div>
-						<div class="c_item_totals floatleft">
-							<div class="c_item_totals_detail floatleft">
-								<a href="{{ route('produto') }}"><h5>Camiseta Estampada Street Art</h5></a>
-								<span>1 x R$ 69,90</span>
-							</div>
-							<div class="close_icon_cart floatleft">
-								<img src="vertical/images/close.png" alt="" />
-							</div>
-						</div>
-					</div>
-
-					{{-- Item 2 --}}
-					<div class="cart_items">
-						<div class="c_item_img floatleft">
-							<a href="{{ route('produto') }}"><img src="vertical/images/t_item1.jpg" alt="" /></a>
-						</div>
-						<div class="c_item_totals floatleft">
-							<div class="c_item_totals_detail floatleft">
-								<a href="{{ route('produto') }}"><h5>Camiseta Básica Branca</h5></a>
-								<span>2 x R$ 49,90</span>
-							</div>
-							<div class="close_icon_cart floatleft">
-								<img src="vertical/images/close.png" alt="" />
-							</div>
-						</div>
-					</div>
-
-					{{-- Item 3 --}}
-					<div class="cart_items">
-						<div class="c_item_img floatleft">
-							<a href="{{ route('produto') }}"><img src="vertical/images/t_item4.jpg" alt="" /></a>
-						</div>
-						<div class="c_item_totals floatleft">
-							<div class="c_item_totals_detail floatleft">
-								<a href="{{ route('produto') }}"><h5>Camiseta Dry-Fit Sport</h5></a>
-								<span>1 x R$ 59,90</span>
-							</div>
-							<div class="close_icon_cart floatleft">
-								<img src="vertical/images/close.png" alt="" />
-							</div>
-						</div>
-					</div>
-
-					<div class="cart_totals">
-						<div class="c_totals_left floatleft">
-							<p>Frete grátis</p>
-						</div>
-						<div class="c_totals_right floatleft">
-							<p>total &nbsp; R$ 229,60</p>
-						</div>
-					</div>
-					<div class="cart_view_bottom">
-						<div class="c_totals_left floatleft">
-							<a href="{{ route('carrinho') }}">Ver Carrinho</a>
-						</div>
-						<div class="c_totals_right floatleft">
-							<a href="{{ route('checkout') }}">Finalizar Compra</a>
-						</div>
-					</div>
-				</div>
+			<a href="#" class="js-cart-open"><img src="{{ asset('vertical/images/bag.png') }}" alt="Bag" />carrinho: <span class="js-cart-count">0</span> itens</a>
 			</div>
 
 
@@ -253,7 +186,7 @@
 								<a href='{{ route('blog') }}'><span>Blog</span></a>
 							</li>
 							<li>
-								<a href='{{ route('carrinho') }}'><span>Carrinho</span></a>
+								<a href='#' class="js-cart-open"><span>Carrinho</span></a>
 							</li>
 						</ul>
 					</div>

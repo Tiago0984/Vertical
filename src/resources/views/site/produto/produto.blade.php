@@ -116,7 +116,7 @@
                     </div>
 
                     {{-- Seletor de TAMANHO --}}
-                    <div>
+                    <div style="margin-top: 12px;">
                         <p style="font-size:12px; font-weight:700; color:#333; text-transform:uppercase; margin-bottom:4px;">
                             Tamanho: <span id="tamanho-selecionado" style="color:#000; font-weight:400; text-transform:none;">—</span>
                         </p>
@@ -143,7 +143,11 @@
                             <button class="btn-cart-main" onclick="adicionarAoCarrinho()">
                                 <i class="fa fa-shopping-cart" style="margin-right:8px;"></i>ADICIONAR AO CARRINHO
                             </button>
-                            <button class="btn-fav-main" title="Adicionar aos favoritos" onclick="toggleFavorito(this)">
+                            <button class="btn-fav-main" title="Adicionar aos favoritos"
+                                    data-product-id="csa-001"
+                                    data-product-nome="Camiseta Estampada Street Art"
+                                    data-product-preco="69.90"
+                                    data-product-imagem="{{ asset('vertical/images/t_item2.jpg') }}">
                                 <i class="fa fa-heart-o"></i>
                             </button>
                         </div>
@@ -326,14 +330,18 @@
         <div class="row">
 
             <div class="col-md-3 col-sm-6 col-xs-12">
-                <div class="related-item">
+                <div class="related-item"
+                     data-product-id="cbb-003"
+                     data-product-nome="Camiseta Básica Branca"
+                     data-product-preco="49.90"
+                     data-product-imagem="{{ asset('vertical/images/t_item1.jpg') }}">
                     <div class="item-img">
                         <img src="{{ asset('vertical/images/t_item1.jpg') }}" alt="Camiseta Básica Branca" />
                         <div class="tr-add-cart">
                             <ul>
-                                <li><a class="fa fa-shopping-cart tr_cart" href="#"></a></li>
-                                <li><a class="tr_text" href="#">ADICIONAR AO CARRINHO</a></li>
-                                <li><a class="fa fa-heart tr_heart" href="#"></a></li>
+                                <li><a class="fa fa-shopping-cart tr_cart" href="#" data-add-to-cart></a></li>
+                                <li><a class="tr_text" href="#" data-add-to-cart>ADICIONAR AO CARRINHO</a></li>
+                                <li><a class="fa fa-heart-o tr_heart" href="#"></a></li>
                                 <li><a class="fa fa-search tr_search" href="{{ route('produto') }}"></a></li>
                             </ul>
                         </div>
@@ -344,14 +352,18 @@
             </div>
 
             <div class="col-md-3 col-sm-6 col-xs-12">
-                <div class="related-item">
+                <div class="related-item"
+                     data-product-id="cop-004"
+                     data-product-nome="Camiseta Oversized Preta"
+                     data-product-preco="79.90"
+                     data-product-imagem="{{ asset('vertical/images/t_item3.jpg') }}">
                     <div class="item-img">
                         <img src="{{ asset('vertical/images/t_item3.jpg') }}" alt="Camiseta Oversized Preta" />
                         <div class="tr-add-cart">
                             <ul>
-                                <li><a class="fa fa-shopping-cart tr_cart" href="#"></a></li>
-                                <li><a class="tr_text" href="#">ADICIONAR AO CARRINHO</a></li>
-                                <li><a class="fa fa-heart tr_heart" href="#"></a></li>
+                                <li><a class="fa fa-shopping-cart tr_cart" href="#" data-add-to-cart></a></li>
+                                <li><a class="tr_text" href="#" data-add-to-cart>ADICIONAR AO CARRINHO</a></li>
+                                <li><a class="fa fa-heart-o tr_heart" href="#"></a></li>
                                 <li><a class="fa fa-search tr_search" href="{{ route('produto') }}"></a></li>
                             </ul>
                         </div>
@@ -362,14 +374,18 @@
             </div>
 
             <div class="col-md-3 col-sm-6 col-xs-12">
-                <div class="related-item">
+                <div class="related-item"
+                     data-product-id="cgv-005"
+                     data-product-nome="Camiseta Gola V Azul"
+                     data-product-preco="54.90"
+                     data-product-imagem="{{ asset('vertical/images/t_item12.jpg') }}">
                     <div class="item-img">
                         <img src="{{ asset('vertical/images/t_item12.jpg') }}" alt="Camiseta Gola V Azul" />
                         <div class="tr-add-cart">
                             <ul>
-                                <li><a class="fa fa-shopping-cart tr_cart" href="#"></a></li>
-                                <li><a class="tr_text" href="#">ADICIONAR AO CARRINHO</a></li>
-                                <li><a class="fa fa-heart tr_heart" href="#"></a></li>
+                                <li><a class="fa fa-shopping-cart tr_cart" href="#" data-add-to-cart></a></li>
+                                <li><a class="tr_text" href="#" data-add-to-cart>ADICIONAR AO CARRINHO</a></li>
+                                <li><a class="fa fa-heart-o tr_heart" href="#"></a></li>
                                 <li><a class="fa fa-search tr_search" href="{{ route('produto') }}"></a></li>
                             </ul>
                         </div>
@@ -383,14 +399,18 @@
             </div>
 
             <div class="col-md-3 col-sm-6 col-xs-12">
-                <div class="related-item">
+                <div class="related-item"
+                     data-product-id="cds-007"
+                     data-product-nome="Camiseta Dry-Fit Sport"
+                     data-product-preco="59.90"
+                     data-product-imagem="{{ asset('vertical/images/t_item4.jpg') }}">
                     <div class="item-img">
                         <img src="{{ asset('vertical/images/t_item4.jpg') }}" alt="Camiseta Dry-Fit Sport" />
                         <div class="tr-add-cart">
                             <ul>
-                                <li><a class="fa fa-shopping-cart tr_cart" href="#"></a></li>
-                                <li><a class="tr_text" href="#">ADICIONAR AO CARRINHO</a></li>
-                                <li><a class="fa fa-heart tr_heart" href="#"></a></li>
+                                <li><a class="fa fa-shopping-cart tr_cart" href="#" data-add-to-cart></a></li>
+                                <li><a class="tr_text" href="#" data-add-to-cart>ADICIONAR AO CARRINHO</a></li>
+                                <li><a class="fa fa-heart-o tr_heart" href="#"></a></li>
                                 <li><a class="fa fa-search tr_search" href="{{ route('produto') }}"></a></li>
                             </ul>
                         </div>
@@ -517,29 +537,24 @@ function selecionarTamanho(el) {
 function adicionarAoCarrinho() {
     const tamanho = document.getElementById('tamanho-selecionado').textContent;
     const cor = document.getElementById('cor-selecionada').textContent;
-    const qty = document.getElementById('quantidade').value;
+    const qty = parseInt(document.getElementById('quantidade').value, 10) || 1;
 
     if (tamanho === '—') {
         alert('Por favor, selecione um tamanho antes de adicionar ao carrinho.');
         return;
     }
-    alert('Produto adicionado ao carrinho!\n\nCamiseta Estampada Street Art\nCor: ' + cor + ' | Tamanho: ' + tamanho + ' | Qty: ' + qty);
+
+    window.VerticalCart.add({
+        id: 'csa-001',
+        nome: 'Camiseta Estampada Street Art',
+        preco: 69.90,
+        imagem: '{{ asset("vertical/images/t_item2.jpg") }}',
+        cor: cor,
+        tamanho: tamanho,
+        qty: qty,
+    });
 }
 
-function toggleFavorito(btn) {
-    const icon = btn.querySelector('i');
-    if (icon.classList.contains('fa-heart-o')) {
-        icon.classList.replace('fa-heart-o', 'fa-heart');
-        btn.style.background = '#000';
-        btn.style.color = '#fff';
-        btn.title = 'Remover dos favoritos';
-    } else {
-        icon.classList.replace('fa-heart', 'fa-heart-o');
-        btn.style.background = '#fff';
-        btn.style.color = '#000';
-        btn.title = 'Adicionar aos favoritos';
-    }
-}
 </script>
 
 @endsection

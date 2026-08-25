@@ -8,7 +8,7 @@
         <div class="bread_box">
             <ul class="breadcumb">
                 <li><a href="{{ route('home') }}">Início <span>|</span></a></li>
-                <li><a href="{{ route('carrinho') }}">Carrinho <span>|</span></a></li>
+                <li><a href="#" class="js-cart-open">Carrinho <span>|</span></a></li>
                 <li class="active"><a href="#">Checkout</a></li>
             </ul>
         </div>
@@ -92,16 +92,15 @@
                             </div>
                             <div class="col-md-6">
                                 <div class="form-group-custom">
-                                    <label>CPF <span class="obrig">*</span></label>
-                                    <input type="text" id="id-cpf" class="form-control-custom" placeholder="000.000.000-00"
-                                           oninput="mascaraCPF(this)" maxlength="14" />
-                                </div>
-                            </div>
-                            <div class="col-md-6">
-                                <div class="form-group-custom">
                                     <label>Data de nascimento</label>
                                     <input type="date" id="id-nasc" class="form-control-custom" />
                                 </div>
+                            </div>
+                            <div class="col-md-12">
+                                <label class="checkout-optin">
+                                    <input type="checkbox" id="opt-novidades-email" checked />
+                                    Enviar novidades e ofertas para mim por e-mail
+                                </label>
                             </div>
                             <div class="col-md-12">
                                 <div style="background:#f5f5f5; border-radius:4px; padding:14px 16px; margin-top:4px;">
@@ -120,7 +119,7 @@
                         </div>
                     </div>
                     <div class="checkout-nav">
-                        <a href="{{ route('carrinho') }}" style="font-size:13px; color:#aaa; text-decoration:none;">
+                        <a href="#" class="js-cart-open" style="font-size:13px; color:#aaa; text-decoration:none;">
                             <i class="fa fa-arrow-left" style="margin-right:4px;"></i> Voltar ao carrinho
                         </a>
                         <button class="btn-next" onclick="irParaEtapa(2)">
@@ -207,6 +206,16 @@
                                     <label>Referência</label>
                                     <input type="text" id="end-ref" class="form-control-custom" placeholder="Ponto de referência" />
                                 </div>
+                            </div>
+                            <div class="col-md-12">
+                                <label class="checkout-optin">
+                                    <input type="checkbox" id="opt-salvar-info" />
+                                    Salvar minhas informações para a próxima vez
+                                </label>
+                                <label class="checkout-optin">
+                                    <input type="checkbox" id="opt-novidades-sms" />
+                                    Enviar novidades e ofertas para mim por SMS
+                                </label>
                             </div>
                         </div>
                     </div>
@@ -325,7 +334,7 @@
                                     {{-- QR Code placeholder em SVG --}}
                                     <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
                                         <rect width="100" height="100" fill="#fff"/>
-                                        <!-- Marcadores de canto --}}
+                                        {{-- Marcadores de canto --}}
                                         <rect x="5" y="5" width="25" height="25" fill="none" stroke="#000" stroke-width="3"/>
                                         <rect x="9" y="9" width="17" height="17" fill="#000"/>
                                         <rect x="70" y="5" width="25" height="25" fill="none" stroke="#000" stroke-width="3"/>
@@ -409,6 +418,99 @@
                         </div>
 
                     </div>
+
+                    {{-- Endereço de faturamento --}}
+                    <div class="checkout-card">
+                        <div class="checkout-card-title">
+                            <i class="fa fa-file-text-o" style="color:#000;"></i> Endereço de Faturamento
+                        </div>
+
+                        <div class="billing-toggle">
+                            <div class="billing-opt selected" id="billing-opt-mesmo" onclick="selecionarFaturamento('mesmo', this)">
+                                <span class="billing-radio"></span>
+                                Usar o endereço de entrega
+                            </div>
+                            <div class="billing-opt" id="billing-opt-diferente" onclick="selecionarFaturamento('diferente', this)">
+                                <span class="billing-radio"></span>
+                                Usar um endereço de faturamento diferente
+                            </div>
+                        </div>
+
+                        <div class="billing-address-form" id="billing-address-form">
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="form-group-custom">
+                                        <label>Nome <span class="obrig">*</span></label>
+                                        <input type="text" id="fat-nome" class="form-control-custom" placeholder="Nome" />
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group-custom">
+                                        <label>Sobrenome <span class="obrig">*</span></label>
+                                        <input type="text" id="fat-sobrenome" class="form-control-custom" placeholder="Sobrenome" />
+                                    </div>
+                                </div>
+                                <div class="col-md-5">
+                                    <div class="form-group-custom">
+                                        <label>CEP <span class="obrig">*</span></label>
+                                        <input type="text" id="fat-cep" class="form-control-custom" placeholder="00000-000" maxlength="9" oninput="mascaraCEP(this)" />
+                                    </div>
+                                </div>
+                                <div class="col-md-7">
+                                    <div class="form-group-custom">
+                                        <label>Endereço <span class="obrig">*</span></label>
+                                        <input type="text" id="fat-rua" class="form-control-custom" placeholder="Rua, Avenida, etc." />
+                                    </div>
+                                </div>
+                                <div class="col-md-3">
+                                    <div class="form-group-custom">
+                                        <label>Número <span class="obrig">*</span></label>
+                                        <input type="text" id="fat-num" class="form-control-custom" placeholder="Nº" />
+                                    </div>
+                                </div>
+                                <div class="col-md-5">
+                                    <div class="form-group-custom">
+                                        <label>Apartamento, bloco etc. <span style="color:#aaa; font-weight:400;">(opcional)</span></label>
+                                        <input type="text" id="fat-comp" class="form-control-custom" placeholder="Apto, Bloco, etc." />
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="form-group-custom">
+                                        <label>Bairro <span class="obrig">*</span></label>
+                                        <input type="text" id="fat-bairro" class="form-control-custom" placeholder="Bairro" />
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group-custom">
+                                        <label>Cidade <span class="obrig">*</span></label>
+                                        <input type="text" id="fat-cidade" class="form-control-custom" placeholder="Cidade" />
+                                    </div>
+                                </div>
+                                <div class="col-md-3">
+                                    <div class="form-group-custom">
+                                        <label>Estado <span class="obrig">*</span></label>
+                                        <select id="fat-uf" class="form-control-custom">
+                                            <option value="">UF</option>
+                                            <option>AC</option><option>AL</option><option>AP</option><option>AM</option>
+                                            <option>BA</option><option>CE</option><option>DF</option><option>ES</option>
+                                            <option>GO</option><option>MA</option><option>MT</option><option>MS</option>
+                                            <option>MG</option><option>PA</option><option>PB</option><option>PR</option>
+                                            <option>PE</option><option>PI</option><option>RJ</option><option>RN</option>
+                                            <option>RS</option><option>RO</option><option>RR</option><option>SC</option>
+                                            <option selected>SP</option><option>SE</option><option>TO</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="col-md-12">
+                                    <div class="form-group-custom" style="margin-bottom:0;">
+                                        <label>Telefone <span style="color:#aaa; font-weight:400;">(opcional)</span></label>
+                                        <input type="tel" id="fat-tel" class="form-control-custom" placeholder="(11) 99999-0000" oninput="mascaraTel(this)" maxlength="15" />
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
                     <div class="checkout-nav">
                         <button class="btn-prev" onclick="irParaEtapa(2)">
                             <i class="fa fa-arrow-left" style="margin-right:6px;"></i> Voltar
@@ -423,31 +525,24 @@
                 <div class="step-content" id="step-4">
                     <div class="checkout-card">
                         <div class="confirm-box">
-                            <i class="fa fa-check-circle confirm-icon"></i>
-                            <div class="confirm-title">Pedido Realizado com Sucesso!</div>
-                            <div class="confirm-sub">
-                                Obrigado pela sua compra! Você receberá um e-mail de confirmação em instantes.
+                            <i class="fa fa-check-circle confirm-icon" id="confirm-icon" style="color:#4caf50;"></i>
+                            <div class="confirm-title" id="confirm-title">Pedido Confirmado!</div>
+                            <div class="confirm-sub" id="confirm-sub">
+                                Pagamento aprovado! Você receberá um e-mail de confirmação em instantes.
                             </div>
                             <div class="confirm-num">
                                 Número do pedido: <strong>#CS-{{ rand(10000, 99999) }}</strong>
+                            </div>
+                            <div id="confirm-status-box" style="display:none; background:#fff8e1; border:1px solid #ffe082; border-radius:6px; padding:14px 18px; text-align:left; margin-bottom:20px;">
+                                <i class="fa fa-clock-o" style="color:#f5a623; margin-right:8px;"></i>
+                                <span id="confirm-status-text" style="font-size:13px; color:#8a6d00;"></span>
                             </div>
                             <div style="background:#f9f9f9; border-radius:6px; padding:20px 24px; text-align:left; margin-bottom:24px;">
                                 <h5 style="font-size:13px; font-weight:700; text-transform:uppercase; color:#333; margin-bottom:14px;">
                                     Próximos passos:
                                 </h5>
-                                <div style="display:flex; flex-direction:column; gap:10px;">
-                                    <div style="display:flex; gap:12px; align-items:flex-start;">
-                                        <span style="width:28px; height:28px; background:#000; border-radius:50%; color:#fff; display:flex; align-items:center; justify-content:center; font-size:12px; font-weight:700; flex-shrink:0;">1</span>
-                                        <div><strong style="font-size:13px;">Confirmação por e-mail</strong><br><span style="font-size:12px; color:#aaa;">Você receberá o comprovante em até 5 minutos</span></div>
-                                    </div>
-                                    <div style="display:flex; gap:12px; align-items:flex-start;">
-                                        <span style="width:28px; height:28px; background:#000; border-radius:50%; color:#fff; display:flex; align-items:center; justify-content:center; font-size:12px; font-weight:700; flex-shrink:0;">2</span>
-                                        <div><strong style="font-size:13px;">Separação e embalagem</strong><br><span style="font-size:12px; color:#aaa;">Seu pedido será separado em até 1 dia útil</span></div>
-                                    </div>
-                                    <div style="display:flex; gap:12px; align-items:flex-start;">
-                                        <span style="width:28px; height:28px; background:#000; border-radius:50%; color:#fff; display:flex; align-items:center; justify-content:center; font-size:12px; font-weight:700; flex-shrink:0;">3</span>
-                                        <div><strong style="font-size:13px;">Envio pelos Correios</strong><br><span style="font-size:12px; color:#aaa;">Prazo de entrega: 5–10 dias úteis</span></div>
-                                    </div>
+                                <div style="display:flex; flex-direction:column; gap:10px;" id="confirm-steps">
+                                    {{-- Preenchido dinamicamente conforme o método de pagamento --}}
                                 </div>
                             </div>
                             <div style="display:flex; gap:12px; justify-content:center; flex-wrap:wrap;">
@@ -469,46 +564,27 @@
                 <div class="side-summary">
                     <h5><i class="fa fa-shopping-bag" style="color:#000; margin-right:6px;"></i>Resumo do Pedido</h5>
 
-                    <div class="side-item">
-                        <img src="{{ asset('vertical/images/t_item2.jpg') }}" alt="" />
-                        <div class="side-item-info">
-                            <div class="side-item-name">Camiseta Estampada Street Art</div>
-                            <div class="side-item-meta">Tam: M · Cor: Preta · Qty: 1</div>
-                        </div>
-                        <div class="side-item-price">R$69,90</div>
+                    <div id="checkout-side-items">
+                        {{-- Preenchido dinamicamente via JS a partir do carrinho (cart.js) --}}
                     </div>
 
-                    <div class="side-item">
-                        <img src="{{ asset('vertical/images/t_item1.jpg') }}" alt="" />
-                        <div class="side-item-info">
-                            <div class="side-item-name">Camiseta Básica Branca</div>
-                            <div class="side-item-meta">Tam: G · Cor: Branca · Qty: 2</div>
-                        </div>
-                        <div class="side-item-price">R$99,80</div>
-                    </div>
-
-                    <div class="side-item">
-                        <img src="{{ asset('vertical/images/t_item4.jpg') }}" alt="" />
-                        <div class="side-item-info">
-                            <div class="side-item-name">Camiseta Dry-Fit Sport</div>
-                            <div class="side-item-meta">Tam: P · Cor: Azul · Qty: 1</div>
-                        </div>
-                        <div class="side-item-price">R$59,90</div>
+                    <div id="checkout-side-empty" style="display:none; padding: 16px 0; text-align:center; color:#aaa; font-size:13px;">
+                        Seu carrinho está vazio.
                     </div>
 
                     <hr class="side-divider">
 
                     <div class="side-total-row">
                         <span>Subtotal</span>
-                        <span>R$229,60</span>
+                        <span id="checkout-side-subtotal">R$ 0,00</span>
                     </div>
-                    <div class="side-total-row">
+                    <div class="side-total-row" id="checkout-side-frete-row">
                         <span><i class="fa fa-truck" style="color:#4caf50; margin-right:4px;"></i>Frete</span>
-                        <span class="green">GRÁTIS</span>
+                        <span class="green" id="checkout-side-frete">GRÁTIS</span>
                     </div>
                     <div class="side-total-row total">
                         <span>Total</span>
-                        <span>R$229,60</span>
+                        <span id="checkout-side-total">R$ 0,00</span>
                     </div>
 
                     <div style="margin-top:16px; padding:12px; background:#f0faf9; border-radius:4px; text-align:center;">
@@ -526,9 +602,77 @@
 let etapaAtual = 1;
 let pixInterval = null;
 let pixSecs = 14 * 60 + 59;
+let metodoPagamento = 'cartao';
+let faturamentoDiferente = false;
+
+/* ── Validação de campos obrigatórios por etapa ── */
+function validarEtapa(etapa) {
+    const camposPorEtapa = {
+        1: ['id-nome', 'id-sobrenome', 'id-email', 'id-tel'],
+        2: ['end-cep', 'end-rua', 'end-num', 'end-bairro', 'end-cidade', 'end-uf'],
+    };
+    const ids = camposPorEtapa[etapa] || [];
+
+    let valido = true;
+    let primeiroInvalido = null;
+
+    ids.forEach(id => {
+        const campo = document.getElementById(id);
+        if (!campo) return;
+        const vazio = !campo.value || !campo.value.trim();
+        campo.classList.toggle('error', vazio);
+        if (vazio) {
+            valido = false;
+            if (!primeiroInvalido) primeiroInvalido = campo;
+        }
+    });
+
+    if (etapa === 3) {
+        const pagamentoSelecionado = document.querySelector('.payment-opt.selected');
+        if (!pagamentoSelecionado) {
+            valido = false;
+        } else {
+            const tipo = pagamentoSelecionado.getAttribute('onclick').match(/'([a-z]+)'/)[1];
+            if (tipo === 'cartao') {
+                ['cc-num', 'cc-nome', 'cc-val', 'cc-cvv'].forEach(id => {
+                    const campo = document.getElementById(id);
+                    if (!campo) return;
+                    const vazio = !campo.value || !campo.value.trim();
+                    campo.classList.toggle('error', vazio);
+                    if (vazio) {
+                        valido = false;
+                        if (!primeiroInvalido) primeiroInvalido = campo;
+                    }
+                });
+            }
+        }
+
+        if (faturamentoDiferente) {
+            ['fat-nome', 'fat-sobrenome', 'fat-cep', 'fat-rua', 'fat-num', 'fat-bairro', 'fat-cidade', 'fat-uf'].forEach(id => {
+                const campo = document.getElementById(id);
+                if (!campo) return;
+                const vazio = !campo.value || !campo.value.trim();
+                campo.classList.toggle('error', vazio);
+                if (vazio) {
+                    valido = false;
+                    if (!primeiroInvalido) primeiroInvalido = campo;
+                }
+            });
+        }
+    }
+
+    if (!valido) {
+        if (primeiroInvalido) primeiroInvalido.focus();
+        alert('Preencha todos os campos obrigatórios antes de continuar.');
+    }
+
+    return valido;
+}
 
 /* ── Navegação entre etapas ── */
 function irParaEtapa(n) {
+    if (n > etapaAtual && !validarEtapa(etapaAtual)) return;
+
     document.getElementById('step-' + etapaAtual).classList.remove('active');
     atualizarIndicador(etapaAtual, n);
     etapaAtual = n;
@@ -536,7 +680,10 @@ function irParaEtapa(n) {
     window.scrollTo({ top: 0, behavior: 'smooth' });
 
     if (n === 3) iniciarPixTimer();
-    if (n === 4) document.getElementById('side-summary-col').style.display = 'none';
+    if (n === 4) {
+        document.getElementById('side-summary-col').style.display = 'none';
+        renderConfirmacao();
+    }
 }
 
 function atualizarIndicador(de, para) {
@@ -595,12 +742,63 @@ function buscarCEP() {
 
 /* ── Formas de pagamento ── */
 function selecionarPagamento(tipo, el) {
+    metodoPagamento = tipo;
     document.querySelectorAll('.payment-opt').forEach(o => o.classList.remove('selected'));
     el.classList.add('selected');
     document.querySelectorAll('.payment-panel').forEach(p => p.classList.remove('active'));
     document.getElementById('panel-' + tipo).classList.add('active');
     if (tipo === 'pix') iniciarPixTimer();
     else pararPixTimer();
+}
+
+/* ── Endereço de faturamento: mesmo endereço da entrega, ou um diferente ── */
+function selecionarFaturamento(tipo, el) {
+    faturamentoDiferente = tipo === 'diferente';
+    document.querySelectorAll('.billing-opt').forEach(o => o.classList.remove('selected'));
+    el.classList.add('selected');
+    document.getElementById('billing-address-form').classList.toggle('open', faturamentoDiferente);
+}
+
+/* ── Tela de confirmação — muda conforme o método de pagamento ──
+   Cartão: aprovação imediata, pedido confirmado.
+   PIX / Boleto: pagamento assíncrono, pedido fica pendente até a confirmação. */
+function renderConfirmacao() {
+    const icon = document.getElementById('confirm-icon');
+    const title = document.getElementById('confirm-title');
+    const sub = document.getElementById('confirm-sub');
+    const statusBox = document.getElementById('confirm-status-box');
+    const statusText = document.getElementById('confirm-status-text');
+    const stepsEl = document.getElementById('confirm-steps');
+
+    if (metodoPagamento === 'cartao') {
+        icon.style.color = '#4caf50';
+        icon.className = 'fa fa-check-circle confirm-icon';
+        title.textContent = 'Pedido Confirmado!';
+        sub.textContent = 'Pagamento aprovado! Você receberá um e-mail de confirmação em instantes.';
+        statusBox.style.display = 'none';
+        stepsEl.innerHTML = passoConfirmacao(1, 'Confirmação por e-mail', 'Você receberá o comprovante em até 5 minutos')
+            + passoConfirmacao(2, 'Separação e embalagem', 'Seu pedido será separado em até 1 dia útil')
+            + passoConfirmacao(3, 'Envio pelos Correios', 'Prazo de entrega: 5–10 dias úteis');
+    } else {
+        icon.style.color = '#f5a623';
+        icon.className = 'fa fa-clock-o confirm-icon';
+        title.textContent = 'Pedido Recebido — Pagamento Pendente';
+        sub.textContent = 'Falta só o pagamento para confirmarmos seu pedido.';
+        statusBox.style.display = 'block';
+        statusText.textContent = metodoPagamento === 'pix'
+            ? 'Aguardando pagamento via PIX. Assim que identificarmos o pagamento, seu pedido será confirmado automaticamente.'
+            : 'Aguardando compensação do boleto (1–2 dias úteis). Seu pedido só será separado após a confirmação do pagamento.';
+        stepsEl.innerHTML = passoConfirmacao(1, 'Aguardando pagamento', metodoPagamento === 'pix' ? 'Confirmação em poucos minutos após o pagamento' : 'Compensação em até 2 dias úteis')
+            + passoConfirmacao(2, 'Separação e embalagem', 'Iniciada somente após confirmação do pagamento')
+            + passoConfirmacao(3, 'Envio pelos Correios', 'Prazo de entrega: 5–10 dias úteis após a separação');
+    }
+}
+
+function passoConfirmacao(numero, titulo, texto) {
+    return '<div style="display:flex; gap:12px; align-items:flex-start;">'
+        + '<span style="width:28px; height:28px; background:#000; border-radius:50%; color:#fff; display:flex; align-items:center; justify-content:center; font-size:12px; font-weight:700; flex-shrink:0;">' + numero + '</span>'
+        + '<div><strong style="font-size:13px;">' + titulo + '</strong><br><span style="font-size:12px; color:#aaa;">' + texto + '</span></div>'
+        + '</div>';
 }
 
 /* ── Timer PIX ── */
@@ -636,13 +834,6 @@ function mascaraTel(el) {
     else if (v.length > 0) v = '(' + v;
     el.value = v;
 }
-function mascaraCPF(el) {
-    let v = el.value.replace(/\D/g, '').slice(0, 11);
-    if (v.length > 9)      v = v.slice(0,3) + '.' + v.slice(3,6) + '.' + v.slice(6,9) + '-' + v.slice(9);
-    else if (v.length > 6) v = v.slice(0,3) + '.' + v.slice(3,6) + '.' + v.slice(6);
-    else if (v.length > 3) v = v.slice(0,3) + '.' + v.slice(3);
-    el.value = v;
-}
 function mascaraCEP(el) {
     let v = el.value.replace(/\D/g, '').slice(0, 8);
     if (v.length > 5) v = v.slice(0,5) + '-' + v.slice(5);
@@ -667,6 +858,54 @@ document.addEventListener('DOMContentLoaded', () => {
         document.getElementById('senha-wrap').style.display = this.checked ? 'block' : 'none';
     });
 });
+
+/* ── Resumo do pedido — lê os itens reais do carrinho (VerticalCart / localStorage) ── */
+const FRETE_GRATIS_MINIMO = 150;
+
+function renderResumoCheckout() {
+    if (!window.VerticalCart) return;
+
+    const itens = window.VerticalCart.load();
+    const itemsEl = document.getElementById('checkout-side-items');
+    const emptyEl = document.getElementById('checkout-side-empty');
+    const freteRowEl = document.getElementById('checkout-side-frete-row');
+
+    if (itens.length === 0) {
+        itemsEl.innerHTML = '';
+        emptyEl.style.display = 'block';
+        freteRowEl.style.display = 'none';
+    } else {
+        emptyEl.style.display = 'none';
+        freteRowEl.style.display = 'flex';
+        itemsEl.innerHTML = itens.map(item => {
+            const meta = [];
+            if (item.tamanho) meta.push('Tam: ' + item.tamanho);
+            if (item.cor) meta.push('Cor: ' + item.cor);
+            meta.push('Qty: ' + item.qty);
+            return `
+                <div class="side-item">
+                    <img src="${item.imagem}" alt="" />
+                    <div class="side-item-info">
+                        <div class="side-item-name">${item.nome}</div>
+                        <div class="side-item-meta">${meta.join(' · ')}</div>
+                    </div>
+                    <div class="side-item-price">${window.VerticalCart.formatBRL(item.preco * item.qty)}</div>
+                </div>
+            `;
+        }).join('');
+    }
+
+    const subtotal = window.VerticalCart.subtotal(itens);
+    const freteGratis = itens.length === 0 || subtotal >= FRETE_GRATIS_MINIMO;
+    const frete = freteGratis ? 0 : 19.90;
+    const total = subtotal + frete;
+
+    document.getElementById('checkout-side-subtotal').textContent = window.VerticalCart.formatBRL(subtotal);
+    document.getElementById('checkout-side-frete').textContent = freteGratis ? 'GRÁTIS' : window.VerticalCart.formatBRL(frete);
+    document.getElementById('checkout-side-total').textContent = window.VerticalCart.formatBRL(total);
+}
+
+document.addEventListener('DOMContentLoaded', renderResumoCheckout);
 </script>
 
 @endsection

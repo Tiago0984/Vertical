@@ -25,7 +25,7 @@
 												<h4>trendy cloth designs made from<br> our team</h4>
 												<p>Trendy Collection</p>
 												<div class="view_post">
-													<a class="" href="">view post
+													<a class="" href="{{ route('single-blog') }}">view post
 													<i class="fa fa-long-arrow-right"></i> 
 													</a>
 												</div>
@@ -48,7 +48,7 @@
 												<h4>trendy cloth designs made from<br> our team</h4>
 												<p>Trendy Collection</p>
 												<div class="view_post">
-													<a class="" href="">view post
+													<a class="" href="{{ route('single-blog') }}">view post
 													<i class="fa fa-long-arrow-right"></i> 
 													</a>
 												</div>
@@ -75,7 +75,7 @@
 												<h4>trendy cloth designs made from<br> our team</h4>
 												<p>Trendy Collection</p>
 												<div class="view_post">
-													<a class="" href="">view post
+													<a class="" href="{{ route('single-blog') }}">view post
 													<i class="fa fa-long-arrow-right"></i> 
 													</a>
 												</div>
@@ -98,7 +98,7 @@
 												<h4>trendy cloth designs made from<br> our team</h4>
 												<p>Trendy Collection</p>
 												<div class="view_post">
-													<a class="" href="">view post
+													<a class="" href="{{ route('single-blog') }}">view post
 													<i class="fa fa-long-arrow-right"></i> 
 													</a>
 												</div>

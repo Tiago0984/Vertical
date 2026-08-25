@@ -1,50 +1,21 @@
-@extends('layout.site')
-
-@section('content')
-
 {{-- ══════════════════════════════════════════
-     TOPO
-══════════════════════════════════════════ --}}
-<section class="breadcumb_top_area">
-    <div class="container">
-        <div class="row">
-            <div class="col-md-12 col-sm-12 col-xs-12">
-                <div class="bread_top_box">
-                    <h2>Camisetas</h2>
-                </div>
-            </div>
-        </div>
-    </div>
-</section>
-
-{{-- ══════════════════════════════════════════
-     BREADCRUMB
-══════════════════════════════════════════ --}}
-<div class="breadcumb_area">
-    <div class="container">
-        <div class="row">
-            <div class="col-md-12 col-sm-12 col-xs-12">
-                <div class="bread_box">
-                    <ul class="breadcumb">
-                        <li><a href="{{ route('home') }}">Início <span>|</span></a></li>
-                        <li class="active"><a href="#">Camisetas</a></li>
-                    </ul>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
-
-{{-- ══════════════════════════════════════════
-     BARRA DE ORDENAÇÃO (sem filtro — página sem sidebar)
+     BARRA DE FILTRO / ORDENAÇÃO
 ══════════════════════════════════════════ --}}
 <div class="filter_area">
     <div class="container">
         <div class="row">
             <div class="col-md-6 col-sm-8 col-xs-12">
                 <div class="filter_box_left">
+                    <p>FILTRAR:</p>
+                    <div class="filter_cont">
+                        <ul>
+                            <li><a href="#" id="filtro-toggle-on" class="active">on</a></li>
+                            <li><img src="{{ asset('vertical/images/filter_ico.png') }}" id="filtro-toggle-icon" alt="" /></li>
+                            <li><a href="#" id="filtro-toggle-off">off</a></li>
+                        </ul>
+                    </div>
                     <div class="s_results">
-                        <p>exibindo 1-16 de 30 resultados</p>
+                        <p><span>|</span> exibindo 1-12 de 30 resultados</p>
                     </div>
                 </div>
             </div>
@@ -64,48 +35,152 @@
 </div>
 
 {{-- ══════════════════════════════════════════
-     GRID DE PRODUTOS (sem sidebar de filtros)
+     GRID DE PRODUTOS + FILTROS LATERAIS
 ══════════════════════════════════════════ --}}
 <section class="main_category_area">
     <div class="container">
         <div class="row">
-            <div class="col-md-12 col-sm-12 col-xs-12">
-                <div class="main_category_right cat-2">
-                    <div class="row">
 
-                        <div class="col-md-3 col-sm-4 col-xs-12">
-                            <div class="main_cat_item">
-                                <div class="item"
-                                     data-product-id="cft-013"
-                                     data-product-nome="Camiseta Tie-Dye Colorida"
-                                     data-product-preco="74.90"
-                                     data-product-imagem="{{ asset('vertical/images/t_item13.jpg') }}">
-                                    <div class="item-img">
-                                        <img src="{{ asset('vertical/images/t_item13.jpg') }}" alt="" />
-                                        <div class="tr-add-cart">
-                                            <ul>
-                                                <li><a class="fa fa-shopping-cart tr_cart" href="#" data-add-to-cart></a></li>
-                                                <li><a class="tr_text" href="#" data-add-to-cart>ADICIONAR AO CARRINHO</a></li>
-                                                <li><a class="fa fa-heart-o tr_heart" href="#"></a></li>
-                                                <li><a class="fa fa-search tr_search" href="{{ route('produto') }}"></a></li>
-                                            </ul>
-                                        </div>
-                                    </div>
-                                    <div class="item-new">
-                                        <p>Oferta</p>
-                                    </div>
-                                    <div class="item-sub">
-                                        <a href="{{ route('produto') }}"><h5>Camiseta Tie-Dye Colorida</h5></a>
-                                        <p>R$ 74,90 <span><del>R$ 89,90</del></span></p>
+            {{-- Filtros laterais --}}
+            <div class="col-md-3 col-sm-4 col-xs-12" id="filtros-sidebar-col">
+                <div class="main_category_left">
+
+                    <div class="panel-group" id="home-accordion" role="tablist" aria-multiselectable="true">
+
+                        {{-- Categorias --}}
+                        <div class="panel panel-default">
+                            <div class="panel-heading" role="tab" id="headingCatOne">
+                                <h4 class="panel-title">
+                                    <a data-toggle="collapse" data-parent="#home-accordion" href="#collapseCatOne" aria-expanded="true" aria-controls="collapseCatOne">
+                                        CATEGORIAS
+                                        <span class="floatright"><i class="fa fa-minus"></i></span>
+                                    </a>
+                                </h4>
+                            </div>
+                            <div id="collapseCatOne" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="headingCatOne">
+                                <div class="panel-body">
+                                    <ul id="c_tab1">
+                                        <li><a href="#">Camisetas Básicas (24)</a></li>
+                                        <li><a href="#">Camisetas Estampadas (38)</a></li>
+                                        <li><a href="#">Camisetas Esportivas (19)</a></li>
+                                        <li><a href="#">Camisetas Premium (15)</a></li>
+                                        <li><a href="#">Gola V (12)</a></li>
+                                        <li><a href="#">Manga Longa (9)</a></li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+
+                        {{-- Filtro de preço --}}
+                        <div class="panel panel-default">
+                            <div class="panel-heading" role="tab" id="headingCatTwo">
+                                <h4 class="panel-title">
+                                    <a class="collapsed" data-toggle="collapse" data-parent="#home-accordion" href="#collapseCatTwo" aria-expanded="false" aria-controls="collapseCatTwo">
+                                        FAIXA DE PREÇO
+                                        <span class="floatright"><i class="fa fa-plus"></i></span>
+                                    </a>
+                                </h4>
+                            </div>
+                            <div id="collapseCatTwo" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingCatTwo">
+                                <div class="panel-body">
+                                    <div id="slider-range"></div>
+                                    <div class="cat_filter_box">
+                                        <p>
+                                            <label for="amount">Filtro</label>
+                                            <input type="text" id="amount" readonly style="border:0; color:#000; font-weight:bold;">
+                                        </p>
                                     </div>
                                 </div>
                             </div>
                         </div>
 
-                        <div class="col-md-3 col-sm-4 col-xs-12">
+                        {{-- Cores --}}
+                        <div class="panel panel-default">
+                            <div class="panel-heading" role="tab" id="headingCatThree">
+                                <h4 class="panel-title">
+                                    <a class="collapsed" data-toggle="collapse" data-parent="#home-accordion" href="#collapseCatThree" aria-expanded="false" aria-controls="collapseCatThree">
+                                        CORES
+                                        <span class="floatright"><i class="fa fa-plus"></i></span>
+                                    </a>
+                                </h4>
+                            </div>
+                            <div id="collapseCatThree" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingCatThree">
+                                <div class="panel-body colors_cat">
+                                    <ul id="cat_color">
+                                        <li><a class="col-1" href="#"></a></li>
+                                        <li><a class="col-2" href="#"></a></li>
+                                        <li><a class="col-3" href="#"></a></li>
+                                        <li><a class="col-4" href="#"></a></li>
+                                        <li><a class="col-5" href="#"></a></li>
+                                        <li><a class="col-6" href="#"></a></li>
+                                        <li><a class="col-7" href="#"></a></li>
+                                        <li><a class="col-8" href="#"></a></li>
+                                        <li><a class="col-9" href="#"></a></li>
+                                        <li><a class="col-10" href="#"></a></li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+
+                        {{-- Tamanho --}}
+                        <div class="panel panel-default">
+                            <div class="panel-heading" role="tab" id="headingCatFour">
+                                <h4 class="panel-title">
+                                    <a class="collapsed" data-toggle="collapse" data-parent="#home-accordion" href="#collapseCatFour" aria-expanded="false" aria-controls="collapseCatFour">
+                                        TAMANHO
+                                        <span class="floatright"><i class="fa fa-plus"></i></span>
+                                    </a>
+                                </h4>
+                            </div>
+                            <div id="collapseCatFour" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingCatFour">
+                                <div class="panel-body">
+                                    <ul id="cat_size">
+                                        <li><a href="#">pp</a></li>
+                                        <li><a href="#">p</a></li>
+                                        <li><a href="#">m</a></li>
+                                        <li><a href="#">g</a></li>
+                                        <li><a href="#">gg</a></li>
+                                        <li><a href="#">xgg</a></li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+
+                        {{-- Marcas --}}
+                        <div class="panel panel-default">
+                            <div class="panel-heading" role="tab" id="headingCatFive">
+                                <h4 class="panel-title">
+                                    <a class="collapsed" data-toggle="collapse" data-parent="#home-accordion" href="#collapseCatFive" aria-expanded="false" aria-controls="collapseCatFive">
+                                        MARCAS
+                                        <span class="floatright"><i class="fa fa-plus"></i></span>
+                                    </a>
+                                </h4>
+                            </div>
+                            <div id="collapseCatFive" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingCatFive">
+                                <div class="panel-body">
+                                    <ul id="c_tab2">
+                                        <li><a href="#">Vertical Basics (72)</a></li>
+                                        <li><a href="#">Urban Street (14)</a></li>
+                                        <li><a href="#">Active Sport (23)</a></li>
+                                        <li><a href="#">Premium Line (19)</a></li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+
+            {{-- Grid de produtos --}}
+            <div class="col-md-9 col-sm-8 col-xs-12" id="produtos-grid-col">
+                <div class="main_category_right">
+                    <div class="row">
+
+                        <div class="col-md-4 col-sm-6 col-xs-12 produto-col">
                             <div class="main_cat_item">
                                 <div class="item"
-                                     data-product-id="ces-001b"
+                                     data-product-id="ces-001"
                                      data-product-nome="Camiseta Estampada Street Art"
                                      data-product-preco="69.90"
                                      data-product-imagem="{{ asset('vertical/images/t_item1.jpg') }}">
@@ -132,10 +207,10 @@
                             </div>
                         </div>
 
-                        <div class="col-md-3 col-sm-4 col-xs-12">
+                        <div class="col-md-4 col-sm-6 col-xs-12 produto-col">
                             <div class="main_cat_item">
                                 <div class="item"
-                                     data-product-id="cgv-002b"
+                                     data-product-id="cgv-002"
                                      data-product-nome="Camiseta Gola V Azul"
                                      data-product-preco="54.90"
                                      data-product-imagem="{{ asset('vertical/images/t_item2.jpg') }}">
@@ -161,10 +236,10 @@
                             </div>
                         </div>
 
-                        <div class="col-md-3 col-sm-4 col-xs-12">
+                        <div class="col-md-4 col-sm-6 col-xs-12 produto-col">
                             <div class="main_cat_item">
                                 <div class="item"
-                                     data-product-id="cop-003b"
+                                     data-product-id="cop-003"
                                      data-product-nome="Camiseta Oversized Preta"
                                      data-product-preco="79.90"
                                      data-product-imagem="{{ asset('vertical/images/t_item3.jpg') }}">
@@ -190,39 +265,10 @@
                             </div>
                         </div>
 
-                        <div class="col-md-3 col-sm-4 col-xs-12">
+                        <div class="col-md-4 col-sm-6 col-xs-12 produto-col">
                             <div class="main_cat_item">
                                 <div class="item"
-                                     data-product-id="cft-014"
-                                     data-product-nome="Camiseta Manga Longa Listrada"
-                                     data-product-preco="84.90"
-                                     data-product-imagem="{{ asset('vertical/images/t_item14.jpg') }}">
-                                    <div class="item-img">
-                                        <img src="{{ asset('vertical/images/t_item14.jpg') }}" alt="" />
-                                        <div class="tr-add-cart">
-                                            <ul>
-                                                <li><a class="fa fa-shopping-cart tr_cart" href="#" data-add-to-cart></a></li>
-                                                <li><a class="tr_text" href="#" data-add-to-cart>ADICIONAR AO CARRINHO</a></li>
-                                                <li><a class="fa fa-heart-o tr_heart" href="#"></a></li>
-                                                <li><a class="fa fa-search tr_search" href="{{ route('produto') }}"></a></li>
-                                            </ul>
-                                        </div>
-                                    </div>
-                                    <div class="item-new">
-                                        <p>Novo</p>
-                                    </div>
-                                    <div class="item-sub">
-                                        <a href="{{ route('produto') }}"><h5>Camiseta Manga Longa Listrada</h5></a>
-                                        <p>R$ 84,90</p>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="col-md-3 col-sm-4 col-xs-12">
-                            <div class="main_cat_item">
-                                <div class="item"
-                                     data-product-id="cds-005b"
+                                     data-product-id="cds-005"
                                      data-product-nome="Camiseta Dry-Fit Sport"
                                      data-product-preco="59.90"
                                      data-product-imagem="{{ asset('vertical/images/t_item5.jpg') }}">
@@ -248,10 +294,10 @@
                             </div>
                         </div>
 
-                        <div class="col-md-3 col-sm-4 col-xs-12">
+                        <div class="col-md-4 col-sm-6 col-xs-12 produto-col">
                             <div class="main_cat_item">
                                 <div class="item"
-                                     data-product-id="clm-006b"
+                                     data-product-id="clm-006"
                                      data-product-nome="Camiseta Long Line"
                                      data-product-preco="74.90"
                                      data-product-imagem="{{ asset('vertical/images/t_item6.jpg') }}">
@@ -278,10 +324,10 @@
                             </div>
                         </div>
 
-                        <div class="col-md-3 col-sm-4 col-xs-12">
+                        <div class="col-md-4 col-sm-6 col-xs-12 produto-col">
                             <div class="main_cat_item">
                                 <div class="item"
-                                     data-product-id="ceg-007b"
+                                     data-product-id="ceg-007"
                                      data-product-nome="Camiseta Estampada Geométrica"
                                      data-product-preco="64.90"
                                      data-product-imagem="{{ asset('vertical/images/t_item7.jpg') }}">
@@ -307,40 +353,10 @@
                             </div>
                         </div>
 
-                        <div class="col-md-3 col-sm-4 col-xs-12">
+                        <div class="col-md-4 col-sm-6 col-xs-12 produto-col">
                             <div class="main_cat_item">
                                 <div class="item"
-                                     data-product-id="cft-015"
-                                     data-product-nome="Camiseta Retrô Vintage"
-                                     data-product-preco="69.90"
-                                     data-product-imagem="{{ asset('vertical/images/t_item15.jpg') }}">
-                                    <div class="item-img">
-                                        <img src="{{ asset('vertical/images/t_item15.jpg') }}" alt="" />
-                                        <div class="tr-add-cart">
-                                            <ul>
-                                                <li><a class="fa fa-shopping-cart tr_cart" href="#" data-add-to-cart></a></li>
-                                                <li><a class="tr_text" href="#" data-add-to-cart>ADICIONAR AO CARRINHO</a></li>
-                                                <li><a class="fa fa-heart-o tr_heart" href="#"></a></li>
-                                                <li><a class="fa fa-search tr_search" href="{{ route('produto') }}"></a></li>
-                                            </ul>
-                                        </div>
-                                    </div>
-                                    <div class="item-new">
-                                        <p>Novo</p>
-                                        <span>-20%</span>
-                                    </div>
-                                    <div class="item-sub">
-                                        <a href="{{ route('produto') }}"><h5>Camiseta Retrô Vintage</h5></a>
-                                        <p>R$ 69,90 <span><del>R$ 87,90</del></span></p>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="col-md-3 col-sm-4 col-xs-12">
-                            <div class="main_cat_item">
-                                <div class="item"
-                                     data-product-id="cbm-008b"
+                                     data-product-id="cbm-008"
                                      data-product-nome="Camiseta Básica Cinza Mescla"
                                      data-product-preco="49.90"
                                      data-product-imagem="{{ asset('vertical/images/t_item8.jpg') }}">
@@ -366,10 +382,10 @@
                             </div>
                         </div>
 
-                        <div class="col-md-3 col-sm-4 col-xs-12">
+                        <div class="col-md-4 col-sm-6 col-xs-12 produto-col">
                             <div class="main_cat_item">
                                 <div class="item"
-                                     data-product-id="cps-009b"
+                                     data-product-id="cps-009"
                                      data-product-nome="Camiseta Premium Slim Fit"
                                      data-product-preco="99.90"
                                      data-product-imagem="{{ asset('vertical/images/t_item9.jpg') }}">
@@ -396,10 +412,10 @@
                             </div>
                         </div>
 
-                        <div class="col-md-3 col-sm-4 col-xs-12">
+                        <div class="col-md-4 col-sm-6 col-xs-12 produto-col">
                             <div class="main_cat_item">
                                 <div class="item"
-                                     data-product-id="cbb-010b"
+                                     data-product-id="cbb-010"
                                      data-product-nome="Camiseta Básica Branca"
                                      data-product-preco="39.90"
                                      data-product-imagem="{{ asset('vertical/images/t_item10.jpg') }}">
@@ -425,39 +441,10 @@
                             </div>
                         </div>
 
-                        <div class="col-md-3 col-sm-4 col-xs-12">
+                        <div class="col-md-4 col-sm-6 col-xs-12 produto-col">
                             <div class="main_cat_item">
                                 <div class="item"
-                                     data-product-id="cft-016"
-                                     data-product-nome="Camiseta Estampa Minimalista"
-                                     data-product-preco="64.90"
-                                     data-product-imagem="{{ asset('vertical/images/t_item16.jpg') }}">
-                                    <div class="item-img">
-                                        <img src="{{ asset('vertical/images/t_item16.jpg') }}" alt="" />
-                                        <div class="tr-add-cart">
-                                            <ul>
-                                                <li><a class="fa fa-shopping-cart tr_cart" href="#" data-add-to-cart></a></li>
-                                                <li><a class="tr_text" href="#" data-add-to-cart>ADICIONAR AO CARRINHO</a></li>
-                                                <li><a class="fa fa-heart-o tr_heart" href="#"></a></li>
-                                                <li><a class="fa fa-search tr_search" href="{{ route('produto') }}"></a></li>
-                                            </ul>
-                                        </div>
-                                    </div>
-                                    <div class="item-new">
-                                        <p>Novo</p>
-                                    </div>
-                                    <div class="item-sub">
-                                        <a href="{{ route('produto') }}"><h5>Camiseta Estampa Minimalista</h5></a>
-                                        <p>R$ 64,90</p>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="col-md-3 col-sm-4 col-xs-12">
-                            <div class="main_cat_item">
-                                <div class="item"
-                                     data-product-id="cbc-004b"
+                                     data-product-id="cbc-004"
                                      data-product-nome="Camiseta Dry-Fit Preta"
                                      data-product-preco="63.90"
                                      data-product-imagem="{{ asset('vertical/images/t_item4.jpg') }}">
@@ -483,10 +470,10 @@
                             </div>
                         </div>
 
-                        <div class="col-md-3 col-sm-4 col-xs-12">
+                        <div class="col-md-4 col-sm-6 col-xs-12 produto-col">
                             <div class="main_cat_item">
                                 <div class="item"
-                                     data-product-id="ceg2-011b"
+                                     data-product-id="ceg2-011"
                                      data-product-nome="Camiseta Estampada Geométrica Azul"
                                      data-product-preco="59.90"
                                      data-product-imagem="{{ asset('vertical/images/t_item11.jpg') }}">
@@ -512,10 +499,10 @@
                             </div>
                         </div>
 
-                        <div class="col-md-3 col-sm-4 col-xs-12">
+                        <div class="col-md-4 col-sm-6 col-xs-12 produto-col">
                             <div class="main_cat_item">
                                 <div class="item"
-                                     data-product-id="cps2-012b"
+                                     data-product-id="cps2-012"
                                      data-product-nome="Camiseta Premium Manga Longa"
                                      data-product-preco="89.90"
                                      data-product-imagem="{{ asset('vertical/images/t_item12.jpg') }}">
@@ -561,8 +548,56 @@
                     </div>
                 </div>
             </div>
+
         </div>
     </div>
 </section>
 
-@endsection
+<script>
+/* ── Toggle ON/OFF do filtro lateral (category-1 vs category-2 do template original) ── */
+document.addEventListener('DOMContentLoaded', function () {
+    var btnOn = document.getElementById('filtro-toggle-on');
+    var btnOff = document.getElementById('filtro-toggle-off');
+    var icon = document.getElementById('filtro-toggle-icon');
+    var sidebar = document.getElementById('filtros-sidebar-col');
+    var gridCol = document.getElementById('produtos-grid-col');
+    var produtoCols = document.querySelectorAll('.produto-col');
+
+    if (!btnOn || !btnOff || !sidebar || !gridCol) return;
+
+    function setFiltro(ativo) {
+        btnOn.classList.toggle('active', ativo);
+        btnOff.classList.toggle('active', !ativo);
+        icon.src = ativo
+            ? '{{ asset("vertical/images/filter_ico.png") }}'
+            : '{{ asset("vertical/images/filter_ico_off.png") }}';
+
+        if (ativo) {
+            sidebar.style.display = '';
+            gridCol.classList.remove('col-md-12');
+            gridCol.classList.add('col-md-9');
+            produtoCols.forEach(function (col) {
+                col.classList.remove('col-md-3');
+                col.classList.add('col-md-4');
+            });
+        } else {
+            sidebar.style.display = 'none';
+            gridCol.classList.remove('col-md-9');
+            gridCol.classList.add('col-md-12');
+            produtoCols.forEach(function (col) {
+                col.classList.remove('col-md-4');
+                col.classList.add('col-md-3');
+            });
+        }
+    }
+
+    btnOn.addEventListener('click', function (e) {
+        e.preventDefault();
+        setFiltro(true);
+    });
+    btnOff.addEventListener('click', function (e) {
+        e.preventDefault();
+        setFiltro(false);
+    });
+});
+</script>
