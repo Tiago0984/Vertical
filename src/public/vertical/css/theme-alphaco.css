@@ -1874,3 +1874,20 @@ body.cart-drawer-locked {
 .item-img {
   overflow: hidden;
 }
+
+/* ==========================================================================
+   Etapa 21 — Página de Contato: campos de e-mail e telefone
+   O CSS original só estiliza input[type="text"]; os campos de e-mail/telefone
+   usam type="email"/"tel" (correto semanticamente) e ficavam sem estilo.
+   ========================================================================== */
+.input_left > input[type="email"],
+.input_left > input[type="tel"] {
+  background: none repeat scroll 0 0 #f7f8f9;
+  border: 1px solid #e8e8e8;
+  color: #777777;
+  font-size: 13px;
+  margin-bottom: 13px;
+  padding: 10px 16px;
+  text-transform: inherit;
+  width: 100%;
+}
