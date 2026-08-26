@@ -5,7 +5,7 @@
     @include('partials.head')
 </head>
 
-<body>
+<body data-logged-in="{{ auth()->check() ? '1' : '0' }}" data-just-logged-in="{{ session('just_logged_in') ? '1' : '0' }}">
     <div class="page-wrapper">
         @include('partials.header')
 

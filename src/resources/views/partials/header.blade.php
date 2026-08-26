@@ -9,7 +9,17 @@
 			</div>
 			<div class="col-md-6 col-sm-6 col-xs-12">
 				<div class="header_top_right floatright">
-					<p><a href="">entrar</a> / <a href="">criar conta</a></p>
+					<p>
+						@guest
+							<a href="{{ route('login') }}">entrar</a> / <a href="{{ route('register') }}">criar conta</a>
+						@else
+							olá, <a href="{{ route('conta.index') }}">{{ explode(' ', auth()->user()->name)[0] }}</a> /
+							<a href="#" onclick="event.preventDefault(); document.getElementById('form-sair').submit();">sair</a>
+							<form id="form-sair" action="{{ route('logout') }}" method="POST" style="display:none;">
+								@csrf
+							</form>
+						@endguest
+					</p>
 					<nav class="currency alignleft">
 						<ul>
 							<li>
@@ -62,7 +72,7 @@
 	<section class="nav_area">
 		<div class="container">
 			<div class="nav_left floatleft">
-				<a href="{{ route('categorias') }}">categorias<i class="fa fa-bars"></i></a>
+				<a href="#" onclick="return false;">categorias<i class="fa fa-bars"></i></a>
 				<ul id="sub-menu3">
 					<li><a href="{{ route('home') }}">Início</a></li>
 					<li><a href="{{ route('categorias') }}">Camisetas</a></li>

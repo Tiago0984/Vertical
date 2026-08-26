@@ -6,6 +6,58 @@
     'use strict';
 
     var STORAGE_KEY = 'vertical_favoritos';
+    var AUTH = {
+        loggedIn: document.body.dataset.loggedIn === '1',
+        justLoggedIn: document.body.dataset.justLoggedIn === '1',
+    };
+
+    function isNumericId(id) {
+        return /^\d+$/.test(String(id));
+    }
+
+    function csrfToken() {
+        var meta = document.querySelector('meta[name="csrf-token"]');
+        return meta ? meta.getAttribute('content') : '';
+    }
+
+    function syncToggle(product) {
+        if (!AUTH.loggedIn || !isNumericId(product.id)) return;
+        fetch('/favoritos/toggle', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json', 'X-CSRF-TOKEN': csrfToken() },
+            body: JSON.stringify({ id: product.id }),
+        }).catch(function () {});
+    }
+
+    /**
+     * Na primeira página após login, manda os favoritos do localStorage pra
+     * mesclar com os do servidor; nas demais páginas, só busca do servidor
+     * (fonte da verdade), sem reenviar nada.
+     */
+    function syncFromServer() {
+        if (!AUTH.loggedIn) return;
+
+        if (AUTH.justLoggedIn) {
+            var items = loadFavoritos().filter(function (it) { return isNumericId(it.id); });
+            fetch('/favoritos/mesclar', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json', 'X-CSRF-TOKEN': csrfToken() },
+                body: JSON.stringify({ items: items }),
+            }).then(function (r) { return r.json(); }).then(function (serverItems) {
+                saveFavoritos(serverItems);
+                atualizarCoracoes();
+                render();
+            }).catch(function () {});
+        } else {
+            fetch('/favoritos/sincronizar', {
+                headers: { 'X-CSRF-TOKEN': csrfToken() },
+            }).then(function (r) { return r.json(); }).then(function (serverItems) {
+                saveFavoritos(serverItems);
+                atualizarCoracoes();
+                render();
+            }).catch(function () {});
+        }
+    }
 
     function loadFavoritos() {
         try {
@@ -42,6 +94,7 @@
         }
         saveFavoritos(items);
         atualizarCoracoes();
+        syncToggle(product);
         return favoritado;
     }
 
@@ -182,6 +235,7 @@
     document.addEventListener('DOMContentLoaded', function () {
         atualizarCoracoes();
         render();
+        syncFromServer();
 
         document.body.addEventListener('click', function (e) {
             var heart = e.target.closest('.tr_heart');

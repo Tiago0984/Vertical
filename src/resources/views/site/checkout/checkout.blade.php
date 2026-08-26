@@ -68,13 +68,13 @@
                             <div class="col-md-6">
                                 <div class="form-group-custom">
                                     <label>Nome <span class="obrig">*</span></label>
-                                    <input type="text" id="id-nome" class="form-control-custom" placeholder="Seu nome completo" />
+                                    <input type="text" id="id-nome" class="form-control-custom" placeholder="Nome" />
                                 </div>
                             </div>
                             <div class="col-md-6">
                                 <div class="form-group-custom">
                                     <label>Sobrenome <span class="obrig">*</span></label>
-                                    <input type="text" id="id-sobrenome" class="form-control-custom" placeholder="Seu sobrenome" />
+                                    <input type="text" id="id-sobrenome" class="form-control-custom" placeholder="Sobrenome" />
                                 </div>
                             </div>
                             <div class="col-md-6">
@@ -531,7 +531,7 @@
                                 Pagamento aprovado! Você receberá um e-mail de confirmação em instantes.
                             </div>
                             <div class="confirm-num">
-                                Número do pedido: <strong>#CS-{{ rand(10000, 99999) }}</strong>
+                                Número do pedido: <strong id="confirm-num-value">—</strong>
                             </div>
                             <div id="confirm-status-box" style="display:none; background:#fff8e1; border:1px solid #ffe082; border-radius:6px; padding:14px 18px; text-align:left; margin-bottom:20px;">
                                 <i class="fa fa-clock-o" style="color:#f5a623; margin-right:8px;"></i>
@@ -673,6 +673,11 @@ function validarEtapa(etapa) {
 function irParaEtapa(n) {
     if (n > etapaAtual && !validarEtapa(etapaAtual)) return;
 
+    if (n === 4) {
+        finalizarPedido();
+        return;
+    }
+
     document.getElementById('step-' + etapaAtual).classList.remove('active');
     atualizarIndicador(etapaAtual, n);
     etapaAtual = n;
@@ -680,10 +685,96 @@ function irParaEtapa(n) {
     window.scrollTo({ top: 0, behavior: 'smooth' });
 
     if (n === 3) iniciarPixTimer();
-    if (n === 4) {
-        document.getElementById('side-summary-col').style.display = 'none';
-        renderConfirmacao();
+}
+
+/* ── Envia o pedido pro servidor (grava Order/OrderItem de verdade) ── */
+let ultimoPedido = null;
+
+function csrfToken() {
+    const meta = document.querySelector('meta[name="csrf-token"]');
+    return meta ? meta.getAttribute('content') : '';
+}
+
+function coletarDadosPedido() {
+    const itens = window.VerticalCart ? window.VerticalCart.load() : [];
+
+    const enderecoEntrega = {
+        cep: document.getElementById('end-cep').value,
+        rua: document.getElementById('end-rua').value,
+        numero: document.getElementById('end-num').value,
+        complemento: document.getElementById('end-comp').value,
+        bairro: document.getElementById('end-bairro').value,
+        cidade: document.getElementById('end-cidade').value,
+        uf: document.getElementById('end-uf').value,
+        referencia: document.getElementById('end-ref').value,
+    };
+
+    let enderecoFaturamento = null;
+    if (faturamentoDiferente) {
+        enderecoFaturamento = {
+            nome: document.getElementById('fat-nome').value,
+            sobrenome: document.getElementById('fat-sobrenome').value,
+            cep: document.getElementById('fat-cep').value,
+            rua: document.getElementById('fat-rua').value,
+            numero: document.getElementById('fat-num').value,
+            complemento: document.getElementById('fat-comp').value,
+            bairro: document.getElementById('fat-bairro').value,
+            cidade: document.getElementById('fat-cidade').value,
+            uf: document.getElementById('fat-uf').value,
+            telefone: document.getElementById('fat-tel').value,
+        };
     }
+
+    return {
+        nome: document.getElementById('id-nome').value,
+        sobrenome: document.getElementById('id-sobrenome').value,
+        email: document.getElementById('id-email').value,
+        telefone: document.getElementById('id-tel').value,
+        forma_pagamento: metodoPagamento,
+        endereco_entrega: enderecoEntrega,
+        endereco_faturamento: enderecoFaturamento,
+        items: itens.map(item => ({ id: item.id, cor: item.cor, tamanho: item.tamanho, qty: item.qty })),
+    };
+}
+
+function finalizarPedido() {
+    const itens = window.VerticalCart ? window.VerticalCart.load() : [];
+    if (itens.length === 0) {
+        alert('Seu carrinho está vazio.');
+        return;
+    }
+
+    const btn = document.querySelector('#step-3 .btn-next');
+    if (btn) { btn.disabled = true; btn.style.opacity = '0.6'; }
+
+    fetch('{{ route('checkout.finalizar') }}', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'Accept': 'application/json',
+            'X-CSRF-TOKEN': csrfToken(),
+        },
+        body: JSON.stringify(coletarDadosPedido()),
+    })
+        .then(r => r.ok ? r.json() : r.json().then(err => { throw err; }))
+        .then(resultado => {
+            ultimoPedido = resultado;
+            if (window.VerticalCart) window.VerticalCart.clear();
+
+            document.getElementById('step-3').classList.remove('active');
+            atualizarIndicador(3, 4);
+            etapaAtual = 4;
+            document.getElementById('step-4').classList.add('active');
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+            document.getElementById('side-summary-col').style.display = 'none';
+            renderConfirmacao();
+        })
+        .catch(err => {
+            alert((err && err.message) || 'Não foi possível finalizar o pedido. Verifique os dados e tente novamente.');
+        })
+        .finally(() => {
+            if (btn) { btn.disabled = false; btn.style.opacity = ''; }
+        });
 }
 
 function atualizarIndicador(de, para) {
@@ -769,6 +860,8 @@ function renderConfirmacao() {
     const statusBox = document.getElementById('confirm-status-box');
     const statusText = document.getElementById('confirm-status-text');
     const stepsEl = document.getElementById('confirm-steps');
+    const numEl = document.getElementById('confirm-num-value');
+    if (numEl) numEl.textContent = '#' + (ultimoPedido ? ultimoPedido.numero_pedido : '—');
 
     if (metodoPagamento === 'cartao') {
         icon.style.color = '#4caf50';

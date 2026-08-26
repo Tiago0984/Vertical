@@ -1595,3 +1595,282 @@ body.cart-drawer-locked {
     top: -70px;
   }
 }
+
+/* ==========================================================================
+   Etapa 16 — Popover de seleção de tamanho (cards de listagem)
+   ========================================================================== */
+.size-picker-popover {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(255, 255, 255, 0.97);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 14px;
+  z-index: 30;
+  padding: 20px;
+  text-align: center;
+}
+.size-picker-close {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  width: 24px;
+  height: 24px;
+  border: none;
+  background: none;
+  color: var(--alpha-color-fg-muted);
+  font-size: 20px;
+  line-height: 1;
+  cursor: pointer;
+}
+.size-picker-close:hover {
+  color: var(--alpha-color-fg);
+}
+.size-picker-title {
+  font-family: var(--alpha-font-family);
+  font-size: 12px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--alpha-color-fg);
+  margin: 0;
+}
+.size-picker-grid {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 8px;
+  max-width: 220px;
+}
+.size-picker-btn {
+  min-width: 40px;
+  padding: 8px 6px;
+  border: 1px solid var(--alpha-color-border);
+  background: var(--alpha-color-white);
+  color: var(--alpha-color-fg);
+  font-family: var(--alpha-font-family);
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+.size-picker-btn:hover {
+  background: var(--alpha-color-fg);
+  color: var(--alpha-color-white);
+  border-color: var(--alpha-color-fg);
+}
+
+/* ==========================================================================
+   Etapa 17 — Página 404
+   ========================================================================== */
+.btn-voltar-inicio {
+  display: inline-block;
+  padding: 12px 28px;
+  background: var(--alpha-color-fg);
+  color: var(--alpha-color-white);
+  border: none;
+  font-family: var(--alpha-font-family);
+  font-size: 13px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  border-radius: 3px;
+  text-decoration: none;
+  transition: background 0.2s;
+}
+.btn-voltar-inicio:hover {
+  background: var(--alpha-color-fg-muted);
+  color: var(--alpha-color-white);
+  text-decoration: none;
+}
+
+/* ==========================================================================
+   Etapa 18 — Altura fixa no nome do produto (grid)
+   Nomes reais têm tamanhos variados; sem isso, cards com nome de 1 linha
+   ficam mais baixos que os de 2 linhas e o grid (baseado em float, sem
+   flexbox) desalinha as linhas seguintes.
+   ========================================================================== */
+.item-sub a h5 {
+  min-height: 30px;
+  line-height: 15px;
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+}
+
+/* ==========================================================================
+   Etapa 19 — Área do Cliente (Minha Conta)
+   ========================================================================== */
+.conta-sidebar {
+  background: var(--alpha-color-white);
+  border: 1px solid var(--alpha-color-border);
+  border-radius: 6px;
+  overflow: hidden;
+  margin-bottom: 20px;
+}
+.conta-sidebar-user {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 20px 18px;
+  background: var(--alpha-color-fg);
+  color: var(--alpha-color-white);
+}
+.conta-sidebar-user i { font-size: 30px; opacity: 0.85; }
+.conta-sidebar-user div { display: flex; flex-direction: column; min-width: 0; }
+.conta-sidebar-user strong { font-size: 13px; text-transform: uppercase; letter-spacing: 0.03em; }
+.conta-sidebar-user span {
+  font-size: 11px;
+  opacity: 0.7;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.conta-sidebar-nav { list-style: none; margin: 0; padding: 8px 0; }
+.conta-sidebar-nav li a {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 11px 18px;
+  font-size: 13px;
+  color: var(--alpha-color-fg-muted);
+  text-decoration: none;
+  border-left: 3px solid transparent;
+  transition: all 0.15s;
+}
+.conta-sidebar-nav li a i { width: 16px; text-align: center; }
+.conta-sidebar-nav li a:hover { background: var(--alpha-color-bg-secondary); color: var(--alpha-color-fg); }
+.conta-sidebar-nav li.active a {
+  color: var(--alpha-color-fg);
+  border-left-color: var(--alpha-color-fg);
+  background: var(--alpha-color-bg-secondary);
+  font-weight: 600;
+}
+
+.conta-alert-sucesso {
+  background: #eefaf0;
+  border: 1px solid #b7e8bf;
+  color: #1f7a34;
+  padding: 12px 16px;
+  border-radius: 4px;
+  font-size: 13px;
+  margin-bottom: 16px;
+}
+
+.conta-resumo-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  padding: 20px 10px;
+  background: var(--alpha-color-bg-secondary);
+  border-radius: 6px;
+  text-decoration: none;
+  color: var(--alpha-color-fg);
+  margin-bottom: 16px;
+  transition: background 0.15s;
+}
+.conta-resumo-card:hover { background: #eeeeee; color: var(--alpha-color-fg); text-decoration: none; }
+.conta-resumo-card i { font-size: 20px; margin-bottom: 4px; color: var(--alpha-color-fg-muted); }
+.conta-resumo-card strong { font-size: 22px; }
+.conta-resumo-card span { font-size: 11px; text-transform: uppercase; letter-spacing: 0.04em; color: var(--alpha-color-fg-subdued); }
+
+.conta-tabela-pedidos { margin-top: 10px; }
+.conta-pedido-linha {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 14px 0;
+  border-bottom: 1px solid var(--alpha-color-border);
+  flex-wrap: wrap;
+}
+.conta-pedido-linha:last-child { border-bottom: none; }
+.conta-pedido-linha > div { display: flex; flex-direction: column; gap: 2px; }
+.conta-pedido-linha strong { font-size: 13px; }
+.conta-pedido-data { font-size: 11px; color: var(--alpha-color-fg-subdued); }
+.conta-pedido-total { font-size: 13px; font-weight: 700; margin-left: auto; }
+.conta-pedido-ver { font-size: 12px; color: var(--alpha-color-fg); text-decoration: underline; }
+
+.conta-status-badge {
+  display: inline-block;
+  padding: 4px 10px;
+  border-radius: 20px;
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+  white-space: nowrap;
+}
+.conta-status-pendente_pagamento { background: #fff3cd; color: #8a6d00; }
+.conta-status-pago { background: #e3f2e6; color: #1f7a34; }
+.conta-status-confirmado { background: #e3f2e6; color: #1f7a34; }
+.conta-status-cancelado { background: #fde3e3; color: #b12b2b; }
+
+.conta-endereco-card {
+  border: 1px solid var(--alpha-color-border);
+  border-radius: 6px;
+  padding: 16px;
+  margin-bottom: 16px;
+  position: relative;
+  font-size: 13px;
+}
+.conta-endereco-card strong { display: block; margin-bottom: 6px; font-size: 13px; }
+.conta-endereco-card p { color: var(--alpha-color-fg-muted); line-height: 1.7; margin-bottom: 10px; }
+.conta-endereco-padrao {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  background: var(--alpha-color-fg);
+  color: var(--alpha-color-white);
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+  padding: 3px 8px;
+  border-radius: 3px;
+}
+.conta-endereco-acoes { display: flex; gap: 14px; flex-wrap: wrap; }
+.conta-endereco-acoes a { font-size: 12px; color: var(--alpha-color-fg); text-decoration: underline; }
+.conta-link-btn {
+  background: none;
+  border: none;
+  padding: 0;
+  font-size: 12px;
+  color: var(--alpha-color-fg);
+  text-decoration: underline;
+  cursor: pointer;
+}
+.conta-link-btn-danger { color: var(--alpha-color-sale); }
+
+.conta-pedido-itens { margin-top: 16px; }
+.conta-pedido-item {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 12px 0;
+  border-bottom: 1px solid var(--alpha-color-border);
+}
+.conta-pedido-item img { width: 56px; height: 72px; object-fit: cover; border-radius: 4px; background: var(--alpha-color-bg-secondary); }
+.conta-pedido-item-info { flex: 1; min-width: 0; }
+.conta-pedido-item-nome { font-size: 13px; font-weight: 600; }
+.conta-pedido-item-meta { font-size: 11px; color: var(--alpha-color-fg-subdued); margin-top: 2px; }
+.conta-pedido-item-preco { font-size: 13px; font-weight: 700; }
+
+.conta-pedido-totais { margin-top: 16px; padding-top: 12px; border-top: 1px solid var(--alpha-color-border); }
+.conta-pedido-totais > div { display: flex; justify-content: space-between; font-size: 13px; color: var(--alpha-color-fg-muted); padding: 4px 0; }
+.conta-pedido-total-final { font-size: 15px !important; font-weight: 700; color: var(--alpha-color-fg) !important; margin-top: 4px; }
+
+/* ==========================================================================
+   Etapa 20 — Correção de overflow horizontal no mobile
+   Os ícones de "adicionar/buscar" dos cards ficam posicionados fora da área
+   visível por padrão (efeito de slide-in no hover) e nada corta esse excesso,
+   o que empurra a largura da página inteira em telas pequenas.
+   ========================================================================== */
+.item-img {
+  overflow: hidden;
+}

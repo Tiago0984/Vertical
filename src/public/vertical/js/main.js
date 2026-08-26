@@ -184,8 +184,16 @@
 			navigation:true,
 			navigationText:["<i class='fa fa-angle-left'></i>","<i class='fa fa-angle-right'></i>"]
 		});
+
+		// Owl Carousel dentro de abas escondidas (display:none) calcula largura zero na
+		// inicialização e nunca se recalcula sozinho ao trocar de aba — força um resize
+		// pra ele redesenhar assim que a aba fica visível.
+		$('a[data-toggle="tab"]').on('shown.bs.tab', function () {
+			$(window).trigger('resize');
+		});
+
 		// accordion
-		
+
 		$('.collapse').on('shown.bs.collapse', function(){
 			$(this).parent().find(".fa-plus").removeClass("fa-plus").addClass("fa-minus");
 			}).on('hidden.bs.collapse', function(){

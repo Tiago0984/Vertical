@@ -14,7 +14,7 @@
                         <li><a href="{{ route('home') }}">Início <span>|</span></a></li>
                         <li><a href="{{ route('loja') }}">Loja <span>|</span></a></li>
                         <li><a href="{{ route('categorias') }}">Camisetas <span>|</span></a></li>
-                        <li class="active"><a href="#">Camiseta Estampada Street Art</a></li>
+                        <li class="active"><a href="#">{{ $produto->nome }}</a></li>
                     </ul>
                 </div>
             </div>
@@ -34,30 +34,10 @@
                 <div class="product_detail_img">
 
                     {{-- Imagem principal --}}
-                    <div id="img-principal" style="border: 1px solid #f0f0f0; border-radius: 4px; overflow: hidden; margin-bottom: 12px;">
-                        <img id="foto-principal" src="{{ asset('vertical/images/product_detail_lg.png') }}"
-                             alt="Camiseta Estampada Street Art"
+                    <div id="img-principal" style="border: 1px solid #f0f0f0; border-radius: 4px; overflow: hidden;">
+                        <img id="foto-principal" src="{{ asset($produto->imagem) }}"
+                             alt="{{ $produto->nome }}"
                              style="width:100%; display:block; transition: opacity 0.2s;" />
-                    </div>
-
-                    {{-- Miniaturas --}}
-                    <div style="display:flex; gap:8px; flex-wrap:wrap;">
-                        <img src="{{ asset('vertical/images/product_detail.png') }}"
-                             alt="thumb 1"
-                             onclick="document.getElementById('foto-principal').src=this.src.replace('product_detail','product_detail_lg')"
-                             style="width:70px; height:70px; object-fit:cover; border:2px solid #000; border-radius:3px; cursor:pointer;" />
-                        <img src="{{ asset('vertical/images/product_detail2.png') }}"
-                             alt="thumb 2"
-                             onclick="document.getElementById('foto-principal').src=this.src.replace('product_detail2','product_detail_lg2')"
-                             style="width:70px; height:70px; object-fit:cover; border:2px solid #ddd; border-radius:3px; cursor:pointer;" />
-                        <img src="{{ asset('vertical/images/product_detail3.png') }}"
-                             alt="thumb 3"
-                             onclick="document.getElementById('foto-principal').src=this.src.replace('product_detail3','product_detail_lg3')"
-                             style="width:70px; height:70px; object-fit:cover; border:2px solid #ddd; border-radius:3px; cursor:pointer;" />
-                        <img src="{{ asset('vertical/images/product_detail_05.png') }}"
-                             alt="thumb 4"
-                             onclick="document.getElementById('foto-principal').src=this.src"
-                             style="width:70px; height:70px; object-fit:cover; border:2px solid #ddd; border-radius:3px; cursor:pointer;" />
                     </div>
 
                 </div>
@@ -68,11 +48,15 @@
                 <div class="product_detail_text" style="padding-left: 20px;">
 
                     {{-- Badge --}}
-                    <span style="display:inline-block; background:#000; color:#fff; font-size:11px; font-weight:700; padding:4px 12px; border-radius:20px; letter-spacing:1px; margin-bottom:12px;">NOVO</span>
+                    @if ($produto->is_novo || $produto->is_promocao)
+                        <span style="display:inline-block; background:#000; color:#fff; font-size:11px; font-weight:700; padding:4px 12px; border-radius:20px; letter-spacing:1px; margin-bottom:12px;">
+                            {{ $produto->is_novo ? 'NOVO' : 'OFERTA' }}
+                        </span>
+                    @endif
 
                     {{-- Nome --}}
                     <h2 style="font-size:26px; font-weight:700; color:#232323; margin:0 0 6px;">
-                        Camiseta Estampada Street Art
+                        {{ $produto->nome }}
                     </h2>
 
                     {{-- Avaliação --}}
@@ -87,9 +71,13 @@
 
                     {{-- Preço --}}
                     <div style="margin-bottom: 18px;">
-                        <span style="font-size:28px; font-weight:700; color:#000;">R$69,90</span>
-                        <span style="font-size:16px; color:#aaa; margin-left:10px; text-decoration:line-through;">R$89,90</span>
-                        <span style="background:#d90000; color:#fff; font-size:11px; font-weight:700; padding:3px 8px; border-radius:3px; margin-left:8px;">-22%</span>
+                        <span style="font-size:28px; font-weight:700; color:#000;">R$ {{ number_format($produto->preco, 2, ',', '.') }}</span>
+                        @if ($produto->is_promocao)
+                            <span style="font-size:16px; color:#aaa; margin-left:10px; text-decoration:line-through;">R$ {{ number_format($produto->preco_promocional, 2, ',', '.') }}</span>
+                            <span style="background:#d90000; color:#fff; font-size:11px; font-weight:700; padding:3px 8px; border-radius:3px; margin-left:8px;">
+                                -{{ round((($produto->preco_promocional - $produto->preco) / $produto->preco_promocional) * 100) }}%
+                            </span>
+                        @endif
                     </div>
 
                     <hr style="border-color:#f0f0f0; margin: 0 0 16px;">
@@ -144,10 +132,10 @@
                                 <i class="fa fa-shopping-cart" style="margin-right:8px;"></i>ADICIONAR AO CARRINHO
                             </button>
                             <button class="btn-fav-main" title="Adicionar aos favoritos"
-                                    data-product-id="csa-001"
-                                    data-product-nome="Camiseta Estampada Street Art"
-                                    data-product-preco="69.90"
-                                    data-product-imagem="{{ asset('vertical/images/t_item2.jpg') }}">
+                                    data-product-id="{{ $produto->id }}"
+                                    data-product-nome="{{ $produto->nome }}"
+                                    data-product-preco="{{ $produto->preco }}"
+                                    data-product-imagem="{{ asset($produto->imagem) }}">
                                 <i class="fa fa-heart-o"></i>
                             </button>
                         </div>
@@ -211,10 +199,10 @@
                             <div class="row">
                                 <div class="col-md-8">
                                     <p style="font-size:15px; color:#555; line-height:1.8; margin-bottom:16px;">
-                                        Camiseta com estampa exclusiva inspirada na arte urbana. Malha premium de algodão de alta qualidade, com toque macio e conforto durante todo o dia. Ideal para compor looks casuais com personalidade.
+                                        {{ $produto->descricao ?: $produto->nome . '. Malha premium de algodão de alta qualidade, com toque macio e conforto durante todo o dia. Ideal para compor looks casuais com personalidade.' }}
                                     </p>
                                     <p style="font-size:15px; color:#555; line-height:1.8;">
-                                        Disponível em 6 cores e todos os tamanhos, do PP ao XGG. As estampas são aplicadas com tecnologia de sublimação resistente a múltiplas lavagens, mantendo a cor e o brilho originais por muito mais tempo.
+                                        Disponível em 6 cores e todos os tamanhos, do PP ao XGG.
                                     </p>
                                 </div>
                             </div>
@@ -329,96 +317,37 @@
         </div>
         <div class="row">
 
-            <div class="col-md-3 col-sm-6 col-xs-12">
-                <div class="related-item"
-                     data-product-id="cbb-003"
-                     data-product-nome="Camiseta Básica Branca"
-                     data-product-preco="49.90"
-                     data-product-imagem="{{ asset('vertical/images/t_item1.jpg') }}">
-                    <div class="item-img">
-                        <img src="{{ asset('vertical/images/t_item1.jpg') }}" alt="Camiseta Básica Branca" />
-                        <div class="tr-add-cart">
-                            <ul>
-                                <li><a class="fa fa-shopping-cart tr_cart" href="#" data-add-to-cart></a></li>
-                                <li><a class="tr_text" href="#" data-add-to-cart>ADICIONAR AO CARRINHO</a></li>
-                                <li><a class="fa fa-heart-o tr_heart" href="#"></a></li>
-                                <li><a class="fa fa-search tr_search" href="{{ route('produto') }}"></a></li>
-                            </ul>
+            @foreach ($relacionados as $rel)
+                <div class="col-md-3 col-sm-6 col-xs-12">
+                    <div class="related-item"
+                         data-product-id="{{ $rel->id }}"
+                         data-product-nome="{{ $rel->nome }}"
+                         data-product-preco="{{ $rel->preco }}"
+                         data-product-imagem="{{ asset($rel->imagem) }}">
+                        <div class="item-img">
+                            <img src="{{ asset($rel->imagem) }}" alt="{{ $rel->nome }}" />
+                            <div class="tr-add-cart">
+                                <ul>
+                                    <li><a class="fa fa-shopping-cart tr_cart" href="#" data-add-to-cart></a></li>
+                                    <li><a class="tr_text" href="#" data-add-to-cart>ADICIONAR AO CARRINHO</a></li>
+                                    <li><a class="fa fa-heart-o tr_heart" href="#"></a></li>
+                                    <li><a class="fa fa-search tr_search" href="{{ route('produto', $rel->slug) }}"></a></li>
+                                </ul>
+                            </div>
                         </div>
+                        <h5><a href="{{ route('produto', $rel->slug) }}" style="color:#333; text-decoration:none;">{{ $rel->nome }}</a></h5>
+                        <p class="preco">
+                            R$ {{ number_format($rel->preco, 2, ',', '.') }}
+                            @if ($rel->is_promocao)
+                                <del>R$ {{ number_format($rel->preco_promocional, 2, ',', '.') }}</del>
+                                <span style="background:#d90000; color:#fff; font-size:10px; padding:2px 6px; border-radius:3px; margin-left:4px;">
+                                    -{{ round((($rel->preco_promocional - $rel->preco) / $rel->preco_promocional) * 100) }}%
+                                </span>
+                            @endif
+                        </p>
                     </div>
-                    <h5><a href="{{ route('produto') }}" style="color:#333; text-decoration:none;">Camiseta Básica Branca</a></h5>
-                    <p class="preco">R$49,90</p>
                 </div>
-            </div>
-
-            <div class="col-md-3 col-sm-6 col-xs-12">
-                <div class="related-item"
-                     data-product-id="cop-004"
-                     data-product-nome="Camiseta Oversized Preta"
-                     data-product-preco="79.90"
-                     data-product-imagem="{{ asset('vertical/images/t_item3.jpg') }}">
-                    <div class="item-img">
-                        <img src="{{ asset('vertical/images/t_item3.jpg') }}" alt="Camiseta Oversized Preta" />
-                        <div class="tr-add-cart">
-                            <ul>
-                                <li><a class="fa fa-shopping-cart tr_cart" href="#" data-add-to-cart></a></li>
-                                <li><a class="tr_text" href="#" data-add-to-cart>ADICIONAR AO CARRINHO</a></li>
-                                <li><a class="fa fa-heart-o tr_heart" href="#"></a></li>
-                                <li><a class="fa fa-search tr_search" href="{{ route('produto') }}"></a></li>
-                            </ul>
-                        </div>
-                    </div>
-                    <h5><a href="{{ route('produto') }}" style="color:#333; text-decoration:none;">Camiseta Oversized Preta</a></h5>
-                    <p class="preco">R$79,90</p>
-                </div>
-            </div>
-
-            <div class="col-md-3 col-sm-6 col-xs-12">
-                <div class="related-item"
-                     data-product-id="cgv-005"
-                     data-product-nome="Camiseta Gola V Azul"
-                     data-product-preco="54.90"
-                     data-product-imagem="{{ asset('vertical/images/t_item12.jpg') }}">
-                    <div class="item-img">
-                        <img src="{{ asset('vertical/images/t_item12.jpg') }}" alt="Camiseta Gola V Azul" />
-                        <div class="tr-add-cart">
-                            <ul>
-                                <li><a class="fa fa-shopping-cart tr_cart" href="#" data-add-to-cart></a></li>
-                                <li><a class="tr_text" href="#" data-add-to-cart>ADICIONAR AO CARRINHO</a></li>
-                                <li><a class="fa fa-heart-o tr_heart" href="#"></a></li>
-                                <li><a class="fa fa-search tr_search" href="{{ route('produto') }}"></a></li>
-                            </ul>
-                        </div>
-                    </div>
-                    <h5><a href="{{ route('produto') }}" style="color:#333; text-decoration:none;">Camiseta Gola V Azul</a></h5>
-                    <p class="preco">
-                        R$54,90 <del>R$74,90</del>
-                        <span style="background:#d90000; color:#fff; font-size:10px; padding:2px 6px; border-radius:3px; margin-left:4px;">-26%</span>
-                    </p>
-                </div>
-            </div>
-
-            <div class="col-md-3 col-sm-6 col-xs-12">
-                <div class="related-item"
-                     data-product-id="cds-007"
-                     data-product-nome="Camiseta Dry-Fit Sport"
-                     data-product-preco="59.90"
-                     data-product-imagem="{{ asset('vertical/images/t_item4.jpg') }}">
-                    <div class="item-img">
-                        <img src="{{ asset('vertical/images/t_item4.jpg') }}" alt="Camiseta Dry-Fit Sport" />
-                        <div class="tr-add-cart">
-                            <ul>
-                                <li><a class="fa fa-shopping-cart tr_cart" href="#" data-add-to-cart></a></li>
-                                <li><a class="tr_text" href="#" data-add-to-cart>ADICIONAR AO CARRINHO</a></li>
-                                <li><a class="fa fa-heart-o tr_heart" href="#"></a></li>
-                                <li><a class="fa fa-search tr_search" href="{{ route('produto') }}"></a></li>
-                            </ul>
-                        </div>
-                    </div>
-                    <h5><a href="{{ route('produto') }}" style="color:#333; text-decoration:none;">Camiseta Dry-Fit Sport</a></h5>
-                    <p class="preco">R$59,90</p>
-                </div>
-            </div>
+            @endforeach
 
         </div>
     </div>
@@ -545,10 +474,10 @@ function adicionarAoCarrinho() {
     }
 
     window.VerticalCart.add({
-        id: 'csa-001',
-        nome: 'Camiseta Estampada Street Art',
-        preco: 69.90,
-        imagem: '{{ asset("vertical/images/t_item2.jpg") }}',
+        id: '{{ $produto->id }}',
+        nome: '{{ addslashes($produto->nome) }}',
+        preco: {{ $produto->preco }},
+        imagem: '{{ asset($produto->imagem) }}',
         cor: cor,
         tamanho: tamanho,
         qty: qty,

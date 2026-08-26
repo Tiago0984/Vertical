@@ -7,6 +7,68 @@
 
     var STORAGE_KEY = 'vertical_cart';
     var FREE_SHIPPING_THRESHOLD = 150;
+    var SIZES = ['PP', 'P', 'M', 'G', 'GG', 'XGG'];
+    var AUTH = {
+        loggedIn: document.body.dataset.loggedIn === '1',
+        justLoggedIn: document.body.dataset.justLoggedIn === '1',
+    };
+
+    function isNumericId(id) {
+        return /^\d+$/.test(String(id));
+    }
+
+    function csrfToken() {
+        var meta = document.querySelector('meta[name="csrf-token"]');
+        return meta ? meta.getAttribute('content') : '';
+    }
+
+    /** Envia pro servidor o item com a quantidade final (upsert, não incremento). */
+    function syncUpsert(item) {
+        if (!AUTH.loggedIn || !isNumericId(item.id)) return;
+        fetch('/carrinho/item', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json', 'X-CSRF-TOKEN': csrfToken() },
+            body: JSON.stringify({ id: item.id, cor: item.cor || '', tamanho: item.tamanho || '', qty: item.qty }),
+        }).catch(function () {});
+    }
+
+    function syncRemove(item) {
+        if (!AUTH.loggedIn || !isNumericId(item.id)) return;
+        fetch('/carrinho/item', {
+            method: 'DELETE',
+            headers: { 'Content-Type': 'application/json', 'X-CSRF-TOKEN': csrfToken() },
+            body: JSON.stringify({ id: item.id, cor: item.cor || '', tamanho: item.tamanho || '' }),
+        }).catch(function () {});
+    }
+
+    /**
+     * Ao carregar a página logado: na primeira página após o login, manda o
+     * carrinho do localStorage pra mesclar com o do servidor (soma quantidades);
+     * nas demais páginas, só busca o carrinho do servidor (fonte da verdade),
+     * sem reenviar nada — evita duplicar quantidade a cada navegação.
+     */
+    function syncFromServer() {
+        if (!AUTH.loggedIn) return;
+
+        if (AUTH.justLoggedIn) {
+            var items = loadCart().filter(function (it) { return isNumericId(it.id); });
+            fetch('/carrinho/mesclar', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json', 'X-CSRF-TOKEN': csrfToken() },
+                body: JSON.stringify({ items: items }),
+            }).then(function (r) { return r.json(); }).then(function (serverItems) {
+                saveCart(serverItems);
+                render();
+            }).catch(function () {});
+        } else {
+            fetch('/carrinho/sincronizar', {
+                headers: { 'X-CSRF-TOKEN': csrfToken() },
+            }).then(function (r) { return r.json(); }).then(function (serverItems) {
+                saveCart(serverItems);
+                render();
+            }).catch(function () {});
+        }
+    }
 
     function loadCart() {
         try {
@@ -37,10 +99,12 @@
     function addItem(product) {
         var items = loadCart();
         var idx = findItemIndex(items, product.id, product.cor || '', product.tamanho || '');
+        var finalItem;
         if (idx >= 0) {
             items[idx].qty += product.qty || 1;
+            finalItem = items[idx];
         } else {
-            items.push({
+            finalItem = {
                 id: product.id,
                 nome: product.nome,
                 preco: product.preco,
@@ -48,18 +112,27 @@
                 cor: product.cor || '',
                 tamanho: product.tamanho || '',
                 qty: product.qty || 1,
-            });
+            };
+            items.push(finalItem);
         }
         saveCart(items);
         render();
         open();
+        syncUpsert(finalItem);
+    }
+
+    function clearCart() {
+        saveCart([]);
+        render();
     }
 
     function removeItem(index) {
         var items = loadCart();
+        var removed = items[index];
         items.splice(index, 1);
         saveCart(items);
         render();
+        if (removed) syncRemove(removed);
     }
 
     function updateQty(index, qty) {
@@ -69,6 +142,7 @@
         items[index].qty = qty;
         saveCart(items);
         render();
+        syncUpsert(items[index]);
     }
 
     function cartCount(items) {
@@ -218,8 +292,45 @@
         };
     }
 
+    function closeSizePicker() {
+        var open = document.querySelector('.size-picker-popover');
+        if (open) open.remove();
+    }
+
+    /**
+     * Abre um popover de seleção de tamanho ancorado no card do produto
+     * (dentro de .item-img, que já é position:relative). Usado sempre que
+     * "adicionar ao carrinho" é clicado a partir de uma listagem — o produto
+     * só é adicionado depois que um tamanho é escolhido.
+     */
+    function showSizePicker(trigger, product) {
+        closeSizePicker();
+
+        var anchor = trigger.closest('.item-img');
+        if (!anchor) {
+            // sem card pra ancorar (ex.: botão principal da página de produto) — adiciona direto
+            addItem(product);
+            return;
+        }
+
+        var popover = document.createElement('div');
+        popover.className = 'size-picker-popover';
+        popover.innerHTML =
+            '<button type="button" class="size-picker-close" aria-label="Fechar">&times;</button>' +
+            '<p class="size-picker-title">Escolha o tamanho</p>' +
+            '<div class="size-picker-grid">' +
+            SIZES.map(function (s) {
+                return '<button type="button" class="size-picker-btn" data-size="' + s + '">' + s + '</button>';
+            }).join('') +
+            '</div>';
+        popover.__product = product;
+
+        anchor.appendChild(popover);
+    }
+
     document.addEventListener('DOMContentLoaded', function () {
         render();
+        syncFromServer();
 
         document.getElementById('cart-drawer-close').addEventListener('click', close);
         document.getElementById('cart-drawer-overlay').addEventListener('click', close);
@@ -227,6 +338,24 @@
 
         // delega clique em qualquer elemento com [data-add-to-cart] ou que abra/feche o drawer
         document.body.addEventListener('click', function (e) {
+            var sizeBtn = e.target.closest('.size-picker-btn');
+            if (sizeBtn) {
+                e.preventDefault();
+                var popover = sizeBtn.closest('.size-picker-popover');
+                var product = popover.__product;
+                product.tamanho = sizeBtn.getAttribute('data-size');
+                addItem(product);
+                popover.remove();
+                return;
+            }
+
+            var closePickerBtn = e.target.closest('.size-picker-close');
+            if (closePickerBtn) {
+                e.preventDefault();
+                closeSizePicker();
+                return;
+            }
+
             var openTrigger = e.target.closest('.js-cart-open');
             if (openTrigger) {
                 e.preventDefault();
@@ -246,11 +375,17 @@
             var trigger = e.target.closest('[data-add-to-cart]');
             if (trigger) {
                 e.preventDefault();
-                var product = readProductFromTrigger(trigger);
-                if (product && product.id) {
-                    addItem(product);
+                var newProduct = readProductFromTrigger(trigger);
+                if (newProduct && newProduct.id) {
+                    showSizePicker(trigger, newProduct);
                 }
                 return;
+            }
+
+            // clique fora de um popover aberto fecha ele
+            var openPopover = document.querySelector('.size-picker-popover');
+            if (openPopover && !e.target.closest('.size-picker-popover')) {
+                openPopover.remove();
             }
 
             var qtyBtn = e.target.closest('.cart-drawer-qty-btn');
@@ -272,7 +407,10 @@
         });
 
         document.addEventListener('keydown', function (e) {
-            if (e.key === 'Escape') close();
+            if (e.key === 'Escape') {
+                closeSizePicker();
+                close();
+            }
         });
     });
 
@@ -282,6 +420,7 @@
         save: saveCart,
         add: addItem,
         remove: removeItem,
+        clear: clearCart,
         updateQty: updateQty,
         open: open,
         close: close,

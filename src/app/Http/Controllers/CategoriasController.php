@@ -2,12 +2,14 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
+use App\Models\Product;
 
 class CategoriasController extends Controller
 {
     public function categorias()
     {
-        return view('site.categorias.categorias');
+        $produtos = Product::orderBy('nome')->get();
+
+        return view('site.categorias.categorias', compact('produtos'));
     }
 }

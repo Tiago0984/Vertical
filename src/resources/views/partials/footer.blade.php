@@ -71,12 +71,16 @@
                         <h5>Minha Conta</h5>
                         <div class="wid_line"></div>
                         <ul class="widget_nav">
-                            <li><a href="#">Minha Conta</a></li>
-                            <li><a href="#">Dados Pessoais</a></li>
-                            <li><a href="#">Endereços</a></li>
-                            <li><a href="#">Cupons e Descontos</a></li>
-                            <li><a href="#">Histórico de Pedidos</a></li>
-                            <li><a href="#">Lista de Desejos</a></li>
+                            @auth
+                                <li><a href="{{ route('conta.index') }}">Minha Conta</a></li>
+                                <li><a href="{{ route('conta.dados-pessoais') }}">Dados Pessoais</a></li>
+                                <li><a href="{{ route('conta.enderecos.index') }}">Endereços</a></li>
+                                <li><a href="{{ route('conta.pedidos.index') }}">Histórico de Pedidos</a></li>
+                                <li><a href="{{ route('favoritos') }}">Lista de Desejos</a></li>
+                            @else
+                                <li><a href="{{ route('login') }}">Entrar</a></li>
+                                <li><a href="{{ route('register') }}">Criar Conta</a></li>
+                            @endauth
                         </ul>
                     </div>
                 </div>
@@ -87,7 +91,7 @@
                         <h5>Atendimento ao Cliente</h5>
                         <div class="wid_line"></div>
                         <ul class="widget_nav">
-                            <li><a href="#">Ajuda e Contato</a></li>
+                            <li><a href="{{ route('contato') }}">Ajuda e Contato</a></li>
                             <li><a href="#">Trocas e Devoluções</a></li>
                             <li><a href="#">Prazo de Entrega</a></li>
                             <li><a href="#">Política de Privacidade</a></li>
