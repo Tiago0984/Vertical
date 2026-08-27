@@ -9,6 +9,7 @@ set -euo pipefail
 cd "$(dirname "$0")/.."
 
 MATCHES=$(grep -rnE 'href="http://|src="http://|url\(.?http://' resources/views \
+  --exclude='*.bak*' \
   | grep -v -e 'http://schema.org' -e 'http://www.w3.org' || true)
 
 if [ -n "$MATCHES" ]; then
