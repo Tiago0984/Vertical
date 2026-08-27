@@ -1048,7 +1048,8 @@ text-transform: uppercase;
   position: relative;
   transition:.25s;
 }
-.fa.fa-heart.tr_heart {
+.fa.fa-heart.tr_heart,
+.fa.fa-heart-o.tr_heart {
   position: relative;
   top: -161px;
   transition:.25s;
@@ -1103,7 +1104,8 @@ transition: all 0.25s ease 0s;
   bottom: 0px;
   transition:.35s;
 }
-.item:hover .tr-add-cart .fa.fa-heart.tr_heart {
+.item:hover .tr-add-cart .fa.fa-heart.tr_heart,
+.item:hover .tr-add-cart .fa.fa-heart-o.tr_heart {
   top: 0px;
   transition:.25s;
 }

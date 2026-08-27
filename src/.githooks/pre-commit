@@ -1,0 +1,5 @@
+#!/usr/bin/env bash
+# Enable with: git config core.hooksPath src/.githooks   (run once per clone)
+set -euo pipefail
+cd "$(dirname "$0")/.."
+./scripts/check-mixed-content.sh

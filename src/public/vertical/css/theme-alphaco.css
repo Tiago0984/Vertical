@@ -426,7 +426,8 @@ a:hover {
 .related-item:hover .tr-add-cart .tr_text {
   bottom: 0px;
 }
-.related-item:hover .tr-add-cart .fa.fa-heart.tr_heart {
+.related-item:hover .tr-add-cart .fa.fa-heart.tr_heart,
+.related-item:hover .tr-add-cart .fa.fa-heart-o.tr_heart {
   top: 0px;
 }
 .related-item:hover .tr-add-cart .fa.fa-search.tr_search {
