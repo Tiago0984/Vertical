@@ -22,7 +22,7 @@
         @if ($product->is_novo || $product->is_promocao)
             <div class="item-new">
                 <p>{{ $product->is_novo ? 'Novo' : 'Oferta' }}</p>
-                @if ($product->is_promocao)
+                @if ($product->is_promocao && $product->preco_promocional)
                     <span>-{{ round((($product->preco_promocional - $product->preco) / $product->preco_promocional) * 100) }}%</span>
                 @endif
             </div>
@@ -31,7 +31,7 @@
             <a href="{{ route('produto', $product->slug) }}"><h5>{{ $product->nome }}</h5></a>
             <p>
                 R$ {{ number_format($product->preco, 2, ',', '.') }}
-                @if ($product->is_promocao)
+                @if ($product->is_promocao && $product->preco_promocional)
                     <span><del>R$ {{ number_format($product->preco_promocional, 2, ',', '.') }}</del></span>
                 @endif
             </p>

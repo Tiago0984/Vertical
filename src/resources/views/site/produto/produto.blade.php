@@ -72,7 +72,7 @@
                     {{-- Preço --}}
                     <div style="margin-bottom: 18px;">
                         <span style="font-size:28px; font-weight:700; color:#000;">R$ {{ number_format($produto->preco, 2, ',', '.') }}</span>
-                        @if ($produto->is_promocao)
+                        @if ($produto->is_promocao && $produto->preco_promocional)
                             <span style="font-size:16px; color:#aaa; margin-left:10px; text-decoration:line-through;">R$ {{ number_format($produto->preco_promocional, 2, ',', '.') }}</span>
                             <span style="background:#d90000; color:#fff; font-size:11px; font-weight:700; padding:3px 8px; border-radius:3px; margin-left:8px;">
                                 -{{ round((($produto->preco_promocional - $produto->preco) / $produto->preco_promocional) * 100) }}%
@@ -338,7 +338,7 @@
                         <h5><a href="{{ route('produto', $rel->slug) }}" style="color:#333; text-decoration:none;">{{ $rel->nome }}</a></h5>
                         <p class="preco">
                             R$ {{ number_format($rel->preco, 2, ',', '.') }}
-                            @if ($rel->is_promocao)
+                            @if ($rel->is_promocao && $rel->preco_promocional)
                                 <del>R$ {{ number_format($rel->preco_promocional, 2, ',', '.') }}</del>
                                 <span style="background:#d90000; color:#fff; font-size:10px; padding:2px 6px; border-radius:3px; margin-left:4px;">
                                     -{{ round((($rel->preco_promocional - $rel->preco) / $rel->preco_promocional) * 100) }}%
