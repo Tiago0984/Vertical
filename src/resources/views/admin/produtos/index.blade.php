@@ -57,11 +57,12 @@
                             <td>{{ $produto->nome }}</td>
                             <td>{{ $produto->category?->nome ?? '—' }}</td>
                             <td>
+                                R$ {{ number_format($produto->preco, 2, ',', '.') }}
                                 @if ($produto->preco_promocional)
-                                    <span class="text-decoration-line-through text-secondary">R$ {{ number_format($produto->preco, 2, ',', '.') }}</span>
-                                    <br>R$ {{ number_format($produto->preco_promocional, 2, ',', '.') }}
-                                @else
-                                    R$ {{ number_format($produto->preco, 2, ',', '.') }}
+                                    <br>
+                                    <span class="text-decoration-line-through text-secondary">
+                                        R$ {{ number_format($produto->preco_promocional, 2, ',', '.') }}
+                                    </span>
                                 @endif
                             </td>
                             <td>

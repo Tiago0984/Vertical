@@ -20,10 +20,11 @@
         <div class="row">
             <div class="col-md-6">
                 <div class="mb-3">
-                    <label for="preco" class="form-label">Preço (R$) <span class="text-danger">*</span></label>
+                    <label for="preco" class="form-label">Preço Atual (R$) <span class="text-danger">*</span></label>
                     <input type="number" step="0.01" min="0" name="preco" id="preco"
                            class="form-control @error('preco') is-invalid @enderror"
                            value="{{ old('preco', $produto->preco ?? '') }}" required>
+                    <div class="form-text">O valor que o cliente paga. Aparece em destaque na loja.</div>
                     @error('preco')
                         <div class="invalid-feedback">{{ $message }}</div>
                     @enderror
@@ -31,10 +32,14 @@
             </div>
             <div class="col-md-6">
                 <div class="mb-3">
-                    <label for="preco_promocional" class="form-label">Preço Promocional (R$)</label>
+                    <label for="preco_promocional" class="form-label">Preço Antes da Promoção (R$)</label>
                     <input type="number" step="0.01" min="0" name="preco_promocional" id="preco_promocional"
                            class="form-control @error('preco_promocional') is-invalid @enderror"
                            value="{{ old('preco_promocional', $produto->preco_promocional ?? '') }}">
+                    <div class="form-text">
+                        Só preencha se marcar "Promoção" abaixo. É o preço original, exibido riscado
+                        — precisa ser maior que o Preço Atual.
+                    </div>
                     @error('preco_promocional')
                         <div class="invalid-feedback">{{ $message }}</div>
                     @enderror

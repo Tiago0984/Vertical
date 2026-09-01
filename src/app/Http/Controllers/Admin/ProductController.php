@@ -95,7 +95,7 @@ class ProductController extends Controller
             'preco' => ['required', 'numeric', 'min:0'],
             'preco_promocional' => [
                 Rule::requiredIf($request->boolean('is_promocao')),
-                'nullable', 'numeric', 'min:0', 'lt:preco',
+                'nullable', 'numeric', 'min:0', 'gt:preco',
             ],
             'imagem' => [$ignoreId ? 'nullable' : 'required', 'image', 'mimes:jpg,jpeg,png,webp', 'max:2048'],
         ]);
