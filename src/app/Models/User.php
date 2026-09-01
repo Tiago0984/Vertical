@@ -30,6 +30,7 @@ class User extends Authenticatable
             'data_nascimento' => 'date',
             'newsletter_email' => 'boolean',
             'newsletter_sms' => 'boolean',
+            'is_admin' => 'boolean',
             'password' => 'hashed',
         ];
     }

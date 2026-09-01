@@ -18,6 +18,11 @@ use App\Http\Controllers\FavoritosSyncController;
 use App\Http\Controllers\AccountController;
 use App\Http\Controllers\AddressController;
 use App\Http\Controllers\AccountOrderController;
+use App\Http\Controllers\Admin\CategoryController as AdminCategoryController;
+use App\Http\Controllers\Admin\CustomerController as AdminCustomerController;
+use App\Http\Controllers\Admin\DashboardController as AdminDashboardController;
+use App\Http\Controllers\Admin\OrderController as AdminOrderController;
+use App\Http\Controllers\Admin\ProductController as AdminProductController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', [HomeController::class, 'home'])->name('home');
@@ -70,4 +75,18 @@ Route::middleware('auth')->prefix('minha-conta')->name('conta.')->group(function
 
     Route::get('/pedidos', [AccountOrderController::class, 'index'])->name('pedidos.index');
     Route::get('/pedidos/{pedido}', [AccountOrderController::class, 'show'])->name('pedidos.show');
+});
+
+Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(function () {
+    Route::get('/', [AdminDashboardController::class, 'index'])->name('dashboard');
+
+    Route::resource('produtos', AdminProductController::class)->parameters(['produtos' => 'produto'])->except('show');
+    Route::resource('categorias', AdminCategoryController::class)->parameters(['categorias' => 'categoria'])->except('show');
+
+    Route::get('pedidos', [AdminOrderController::class, 'index'])->name('pedidos.index');
+    Route::get('pedidos/{pedido}', [AdminOrderController::class, 'show'])->name('pedidos.show');
+    Route::patch('pedidos/{pedido}/status', [AdminOrderController::class, 'updateStatus'])->name('pedidos.status');
+
+    Route::get('clientes', [AdminCustomerController::class, 'index'])->name('clientes.index');
+    Route::get('clientes/{cliente}', [AdminCustomerController::class, 'show'])->name('clientes.show');
 });

@@ -26,6 +26,13 @@ class Order extends Model
     public const PAGAMENTO_PIX = 'pix';
     public const PAGAMENTO_BOLETO = 'boleto';
 
+    public const STATUSES = [
+        self::STATUS_PENDENTE,
+        self::STATUS_PAGO,
+        self::STATUS_CONFIRMADO,
+        self::STATUS_CANCELADO,
+    ];
+
     protected function casts(): array
     {
         return [

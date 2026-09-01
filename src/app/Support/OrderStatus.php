@@ -16,4 +16,14 @@ class OrderStatus
             default => ucfirst(str_replace('_', ' ', $status)),
         };
     }
+
+    public static function badgeClass(string $status): string
+    {
+        return match ($status) {
+            Order::STATUS_PENDENTE => 'text-bg-warning',
+            Order::STATUS_PAGO, Order::STATUS_CONFIRMADO => 'text-bg-success',
+            Order::STATUS_CANCELADO => 'text-bg-danger',
+            default => 'text-bg-secondary',
+        };
+    }
 }
