@@ -79,8 +79,18 @@
         }
     }
 
+    /**
+     * Sempre grava ids como string: o servidor devolve id numerico
+     * (product_id do banco), mas o clique no card le data-product-id
+     * do DOM, que e sempre string. Sem essa normalizacao, "23" !== 23
+     * faz findItemIndex nunca achar o item existente e duplicar a
+     * linha em vez de somar a quantidade.
+     */
     function saveCart(items) {
-        localStorage.setItem(STORAGE_KEY, JSON.stringify(items));
+        var normalized = items.map(function (it) {
+            return Object.assign({}, it, { id: String(it.id) });
+        });
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(normalized));
     }
 
     function formatBRL(v) {
