@@ -26,4 +26,22 @@ return [
         'janela_cobertura_dias' => 90,
     ],
 
+    /*
+    |--------------------------------------------------------------------------
+    | Limiares do painel financeiro
+    |--------------------------------------------------------------------------
+    |
+    | cobertura_custo_minima: fração (0 a 1) dos produtos vendidos no período
+    | que precisa ter "custo" cadastrado pra margem/CMV serem exibidos como
+    | número confiável. Abaixo disso, o service retorna cmv/lucro_bruto como
+    | NULL e margem_confiavel=false -- em vez de, por exemplo, tratar custo
+    | ausente como 0 e mostrar 100% de margem (que parece ótimo e ninguém
+    | questiona, ao contrário de um alerta óbvio de estoque zerado).
+    |
+    */
+
+    'financeiro' => [
+        'cobertura_custo_minima' => 0.8,
+    ],
+
 ];

@@ -129,16 +129,9 @@ class DashboardService
      */
     public function vendasPorMes(Carbon $inicio, Carbon $fim): Collection
     {
-        // DATE_FORMAT() é só MySQL (produção); os testes rodam em SQLite
-        // (phpunit.xml), que usa strftime() -- sem essa checagem o método
-        // funciona em produção e quebra em qualquer teste que o exercite.
-        $mesExpr = DB::connection()->getDriverName() === 'sqlite'
-            ? "strftime('%Y-%m', created_at)"
-            : "DATE_FORMAT(created_at, '%Y-%m')";
-
         $porMes = Order::where('status', Order::STATUS_PAGO)
             ->whereBetween('created_at', [$inicio, $fim])
-            ->selectRaw("{$mesExpr} as mes, SUM(total) as faturamento, COUNT(*) as pedidos")
+            ->selectRaw($this->mesExpressaoSql('created_at')." as mes, SUM(total) as faturamento, COUNT(*) as pedidos")
             ->groupBy('mes')
             ->get()
             ->keyBy('mes');
@@ -299,5 +292,140 @@ class DashboardService
                 'qtd_vendida' => (int) $linha->qtd_vendida,
                 'receita' => round((float) $linha->receita, 2),
             ]);
+    }
+
+    /**
+     * Série mensal de receita, CMV e lucro bruto -- e a defesa que não é
+     * opcional: em produção custo é NULL nos 16 produtos hoje. Com
+     * COALESCE(custo, 0) sem mais nada, a margem daria 100% em tudo -- pior
+     * que o alerta falso de estoque, porque "repor tudo" salta aos olhos e
+     * alguém investiga, enquanto "100% de margem" parece ótimo e ninguém
+     * questiona. Número errado com cara de certo é pior que número ausente.
+     *
+     * Por isso todo retorno inclui 'cobertura_custo' (quantos produtos
+     * vendidos no período têm custo cadastrado) e, se a cobertura ficar
+     * abaixo do mínimo configurável (dashboard.financeiro.cobertura_custo_
+     * minima, default 80%), cmv/lucro_bruto voltam NULL com
+     * 'margem_confiavel' => false -- a tela deve mostrar o aviso, não o
+     * número.
+     *
+     * Custo operacional fica de fora por padrão (não existe tabela de
+     * despesas, e inventar percentual fixo aqui repetiria o erro da
+     * planilha original, onde CMV+operacional chutados faziam a margem dar
+     * sempre ~40% e o gráfico virar uma linha reta que não informava nada).
+     * Só entra se o chamador passar $percentualCustoOperacionalEstimado
+     * explicitamente -- aí sim vira lucro_liquido_estimado, rotulado como
+     * estimativa. Sem o parâmetro, essas chaves saem null.
+     *
+     * @return array{
+     *   margem_confiavel: bool,
+     *   cobertura_custo: array{
+     *     produtos_vendidos: int, produtos_com_custo: int,
+     *     produtos_sem_custo: int, percentual: float, minimo_exigido: float
+     *   },
+     *   serie_mensal: Collection<int, array{
+     *     mes: string, receita: float, cmv: ?float, lucro_bruto: ?float,
+     *     custo_operacional_estimado: ?float, lucro_liquido_estimado: ?float
+     *   }>
+     * }
+     */
+    public function financeiro(Carbon $inicio, Carbon $fim, ?float $percentualCustoOperacionalEstimado = null): array
+    {
+        $coberturaMinima = (float) config('dashboard.financeiro.cobertura_custo_minima');
+
+        $itensVendidosPorProduto = OrderItem::query()
+            ->join('orders', 'orders.id', '=', 'order_items.order_id')
+            ->leftJoin('products', 'products.id', '=', 'order_items.product_id')
+            ->where('orders.status', Order::STATUS_PAGO)
+            ->whereBetween('orders.created_at', [$inicio, $fim])
+            ->selectRaw('order_items.product_id, COALESCE(products.nome, order_items.nome) as produto, MAX(products.custo) as custo')
+            ->groupBy('order_items.product_id', 'produto')
+            ->get();
+
+        $produtosVendidos = $itensVendidosPorProduto->count();
+        $produtosComCusto = $itensVendidosPorProduto->filter(fn ($p) => $p->custo !== null)->count();
+        $produtosSemCusto = $produtosVendidos - $produtosComCusto;
+        $coberturaCusto = $produtosVendidos > 0 ? round($produtosComCusto / $produtosVendidos, 4) : 0.0;
+
+        // sem produto vendido no período também não é "confiável" -- não há
+        // nada pra calcular margem a partir de zero histórico.
+        $margemConfiavel = $produtosVendidos > 0 && $coberturaCusto >= $coberturaMinima;
+
+        $porMes = OrderItem::query()
+            ->join('orders', 'orders.id', '=', 'order_items.order_id')
+            ->leftJoin('products', 'products.id', '=', 'order_items.product_id')
+            ->where('orders.status', Order::STATUS_PAGO)
+            ->whereBetween('orders.created_at', [$inicio, $fim])
+            ->selectRaw(
+                $this->mesExpressaoSql('orders.created_at').' as mes, '
+                .'SUM(order_items.subtotal) as receita, '
+                .'SUM(order_items.quantidade * COALESCE(products.custo, 0)) as cmv'
+            )
+            ->groupBy('mes')
+            ->get()
+            ->keyBy('mes');
+
+        $periodo = CarbonPeriod::create(
+            $inicio->copy()->startOfMonth(),
+            '1 month',
+            $fim->copy()->startOfMonth()
+        );
+
+        $serieMensal = collect($periodo)->map(function (Carbon $mes) use ($porMes, $margemConfiavel, $percentualCustoOperacionalEstimado) {
+            $chave = $mes->format('Y-m');
+            $linha = $porMes->get($chave);
+
+            // rótulo obrigatório na UI: "Receita de produtos" (sem frete) --
+            // mesma regra de rotulagem do ranking, esta chave nunca inclui frete.
+            $receita = round((float) ($linha->receita ?? 0), 2);
+
+            // sem cobertura de custo suficiente: NULL explícito, não 0 nem
+            // "100%" -- a tela mostra o aviso de dado não confiável, nunca
+            // um número que parece certo e não é.
+            $cmv = $margemConfiavel ? round((float) ($linha->cmv ?? 0), 2) : null;
+            $lucroBruto = $margemConfiavel ? round($receita - $cmv, 2) : null;
+
+            $custoOperacionalEstimado = null;
+            $lucroLiquidoEstimado = null;
+            if ($margemConfiavel && $percentualCustoOperacionalEstimado !== null) {
+                $custoOperacionalEstimado = round($receita * $percentualCustoOperacionalEstimado, 2);
+                $lucroLiquidoEstimado = round($lucroBruto - $custoOperacionalEstimado, 2);
+            }
+
+            return [
+                'mes' => $chave,
+                'receita' => $receita,
+                'cmv' => $cmv,
+                'lucro_bruto' => $lucroBruto,
+                // só preenchido se o chamador passou a estimativa explicitamente.
+                'custo_operacional_estimado' => $custoOperacionalEstimado,
+                'lucro_liquido_estimado' => $lucroLiquidoEstimado,
+            ];
+        })->values();
+
+        return [
+            'margem_confiavel' => $margemConfiavel,
+            'cobertura_custo' => [
+                'produtos_vendidos' => $produtosVendidos,
+                'produtos_com_custo' => $produtosComCusto,
+                'produtos_sem_custo' => $produtosSemCusto,
+                'percentual' => $coberturaCusto,
+                'minimo_exigido' => $coberturaMinima,
+            ],
+            'serie_mensal' => $serieMensal,
+        ];
+    }
+
+    /**
+     * DATE_FORMAT() é só MySQL (produção); os testes rodam em SQLite
+     * (phpunit.xml), que usa strftime() -- sem essa checagem, todo método
+     * que agrupa por mês funciona em produção e quebra em qualquer teste
+     * que o exercite.
+     */
+    private function mesExpressaoSql(string $coluna): string
+    {
+        return DB::connection()->getDriverName() === 'sqlite'
+            ? "strftime('%Y-%m', {$coluna})"
+            : "DATE_FORMAT({$coluna}, '%Y-%m')";
     }
 }
