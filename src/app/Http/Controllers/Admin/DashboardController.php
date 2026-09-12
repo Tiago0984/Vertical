@@ -33,6 +33,32 @@ class DashboardController extends Controller
             ? $service->vendasPorDia($inicio, $fim)
             : $service->vendasPorMes($inicio, $fim);
 
+        // Série inteira zerada (ex.: produção sem nenhum pedido pago ainda) --
+        // desenhar um gráfico de R$0 a R$5 com grade fingindo escala é o
+        // mesmo problema do "0 de 0 produtos" do financeiro: parece dado
+        // real e não é. Decisão feita aqui, não depois de já ter renderizado.
+        $graficoVendasVazio = $vendas->sum('faturamento') <= 0.0;
+
+        // ApexCharts com xaxis.type 'datetime' deriva os ticks sozinho a
+        // partir de pares [timestamp_ms, valor] na série -- funciona bem.
+        // Mas com xaxis.type 'category' ele NÃO deriva rótulo nenhum desses
+        // pares (cai pra índice numérico 1,2,3... e ainda repete algum) --
+        // categoria precisa vir em xaxis.categories à parte, por isso as
+        // duas granularidades têm formato de série diferente aqui.
+        if ($granularidadeDiaria) {
+            $vendasSerie = $vendas->map(fn (array $linha) => [
+                Carbon::createFromFormat('Y-m-d', $linha['data'], 'UTC')->getTimestamp() * 1000,
+                $linha['faturamento'],
+            ])->values();
+            $vendasCategorias = null;
+        } else {
+            // Rótulo 'mm/aaaa' formatado aqui, não no JS.
+            $vendasCategorias = $vendas->map(
+                fn (array $linha) => Carbon::createFromFormat('Y-m', $linha['mes'], 'UTC')->format('m/Y')
+            )->values();
+            $vendasSerie = $vendas->pluck('faturamento')->values();
+        }
+
         return view('admin.dashboard.index', [
             'periodo' => $periodo,
             'inicio' => $inicio,
@@ -43,8 +69,10 @@ class DashboardController extends Controller
             'clientes' => $clientes,
             'estoque' => $estoque,
             'estoqueContagem' => $estoque['produtos']->countBy('status'),
-            'vendas' => $vendas,
             'vendasGranularidade' => $granularidadeDiaria ? 'dia' : 'mes',
+            'vendasSerie' => $vendasSerie,
+            'vendasCategorias' => $vendasCategorias,
+            'graficoVendasVazio' => $graficoVendasVazio,
             'receitaProdutos' => round($ranking->sum('receita'), 2),
             // zona de estado atual -- fora do alcance do filtro de período.
             'totalProdutos' => Product::count(),

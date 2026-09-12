@@ -106,7 +106,11 @@
                 <h3 class="card-title">Vendas {{ $vendasGranularidade === 'dia' ? 'por dia' : 'por mês' }}</h3>
             </div>
             <div class="card-body">
-                <div id="grafico-vendas"></div>
+                @if ($graficoVendasVazio)
+                    <p class="text-center text-secondary py-4 mb-0">Sem vendas no período.</p>
+                @else
+                    <div id="grafico-vendas"></div>
+                @endif
             </div>
         </div>
 
@@ -158,7 +162,12 @@
                 <h3 class="card-title">Financeiro</h3>
             </div>
             <div class="card-body">
-                @if (! $financeiro['margem_confiavel'])
+                @if ($financeiro['cobertura_custo']['produtos_vendidos'] === 0)
+                    {{-- Sem venda nenhuma no período, "0 de 0 produtos com custo" não é
+                         alerta de dado em falta -- é ausência de dado pra calcular
+                         qualquer coisa. Cor de alerta aqui seria falso positivo. --}}
+                    <p class="text-secondary small mb-3">Sem vendas no período.</p>
+                @elseif (! $financeiro['margem_confiavel'])
                     <div class="alert alert-danger">
                         <strong>Margem não confiável neste período.</strong>
                         Só {{ $financeiro['cobertura_custo']['produtos_com_custo'] }} de
@@ -332,18 +341,39 @@
 @endsection
 
 @section('scripts')
+@unless ($graficoVendasVazio)
 <script src="https://cdn.jsdelivr.net/npm/apexcharts@3.37.1/dist/apexcharts.min.js" crossorigin="anonymous"></script>
 <script>
-    const vendasCategorias = @json($vendas->pluck($vendasGranularidade === 'dia' ? 'data' : 'mes'));
-    const vendasFaturamento = @json($vendas->pluck('faturamento'));
+    const vendasGranularidade = @json($vendasGranularidade);
+    // 'dia': pares [timestamp_ms, faturamento], eixo datetime deriva os
+    // ticks sozinho. 'mes': só os valores -- os rótulos 'mm/aaaa' vêm à
+    // parte em vendasCategorias (eixo category não deriva rótulo de par).
+    const vendasSerie = @json($vendasSerie);
+    const vendasCategorias = @json($vendasCategorias);
+
+    // Mesmo tickAmount nos 4 períodos do filtro (7/30/90/365 dias) e em
+    // telas estreitas, em vez de deixar o ApexCharts decidir sozinho quantos
+    // rótulos cabem -- isso varia por navegador/resolução e foi o que
+    // produziu o eixo ilegível de 31 rótulos 'YYYY-MM-DD' encostados.
+    const tickAmount = Math.min(vendasSerie.length, 8);
 
     new ApexCharts(document.querySelector('#grafico-vendas'), {
-        series: [{ name: 'Faturamento (com frete)', data: vendasFaturamento }],
+        series: [{ name: 'Faturamento (com frete)', data: vendasSerie }],
         chart: { type: 'area', height: 280, toolbar: { show: false } },
         colors: ['#0d6efd'],
         dataLabels: { enabled: false },
         stroke: { curve: 'smooth' },
-        xaxis: { categories: vendasCategorias },
+        xaxis: vendasGranularidade === 'dia'
+            ? {
+                type: 'datetime',
+                tickAmount,
+                labels: { datetimeUTC: false, format: 'dd/MM' },
+            }
+            : {
+                type: 'category',
+                categories: vendasCategorias,
+                tickAmount,
+            },
         yaxis: {
             labels: {
                 formatter: (v) => 'R$ ' + Number(v).toLocaleString('pt-BR', { minimumFractionDigits: 0 }),
@@ -356,4 +386,5 @@
         },
     }).render();
 </script>
+@endunless
 @endsection
