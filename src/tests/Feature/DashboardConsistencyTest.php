@@ -116,13 +116,88 @@ class DashboardConsistencyTest extends TestCase
         $this->assertEquals(119.90, $porMes->get('2025-03')['faturamento']);
     }
 
-    private function criarProduto(): Product
+    public function test_item_orfao_conta_como_sem_custo_na_cobertura_do_financeiro(): void
+    {
+        $service = new DashboardService();
+
+        $produtoComCusto = $this->criarProduto(custo: 30.00);   // preco 100,00 -- entra como "com custo"
+        $produtoSemCusto = $this->criarProduto(custo: null);    // "sem custo cadastrado" -- caso já coberto antes
+
+        $this->criarPedido($produtoComCusto, Carbon::create(2025, 1, 10), Order::STATUS_PAGO, qty: 1);
+        $this->criarPedido($produtoSemCusto, Carbon::create(2025, 1, 11), Order::STATUS_PAGO, qty: 1);
+
+        // Simula produto EXCLUÍDO do catálogo: order_items.product_id NULL
+        // (o que nullOnDelete faz de verdade), nome preservado via snapshot
+        // em order_items.nome -- exatamente o cenário provado manualmente na
+        // fase 5C pro ranking. A pergunta da 7C é se financeiro() trata esse
+        // item órfão como "sem custo" (correto) ou simplesmente o ignora,
+        // fazendo a cobertura parecer melhor do que a realidade.
+        $pedidoOrfao = Order::create([
+            'user_id' => null,
+            'numero_pedido' => 'TEST-'.strtoupper(uniqid()),
+            'nome' => 'Cliente',
+            'sobrenome' => 'Teste',
+            'email' => 'cliente.'.uniqid().'@exemplo.test',
+            'telefone' => '(11) 90000-0000',
+            'subtotal' => 50.00,
+            'frete' => self::FRETE,
+            'total' => 50.00 + self::FRETE,
+            'cupom' => null,
+            'forma_pagamento' => Order::PAGAMENTO_PIX,
+            'status' => Order::STATUS_PAGO,
+            'endereco_entrega' => [
+                'cep' => '00000-000', 'rua' => 'Rua Teste', 'numero' => '1',
+                'complemento' => null, 'bairro' => 'Centro', 'cidade' => 'Cidade Teste',
+                'uf' => 'SP', 'referencia' => null,
+            ],
+            'endereco_faturamento' => null,
+        ]);
+        $pedidoOrfao->created_at = Carbon::create(2025, 1, 12);
+        $pedidoOrfao->updated_at = Carbon::create(2025, 1, 12);
+        $pedidoOrfao->save();
+
+        $itemOrfao = $pedidoOrfao->items()->create([
+            'product_id' => null, // produto já excluído do catálogo
+            'nome' => 'Produto Excluído Do Catálogo',
+            'preco' => 50.00,
+            'cor' => null,
+            'tamanho' => null,
+            'quantidade' => 1,
+            'subtotal' => 50.00,
+        ]);
+        $itemOrfao->created_at = Carbon::create(2025, 1, 12);
+        $itemOrfao->updated_at = Carbon::create(2025, 1, 12);
+        $itemOrfao->save();
+
+        $inicio = Carbon::create(2025, 1, 1)->startOfDay();
+        $fim = Carbon::create(2025, 1, 31)->endOfDay();
+
+        $fin = $service->financeiro($inicio, $fim);
+
+        // 3 produtos vendidos: com custo, sem custo cadastrado, e o órfão --
+        // se o órfão fosse ignorado, isso viria 2, não 3.
+        $this->assertEquals(3, $fin['cobertura_custo']['produtos_vendidos']);
+        $this->assertEquals(1, $fin['cobertura_custo']['produtos_com_custo']);
+        // 2 sem custo: o produto sem custo cadastrado E o órfão -- se o
+        // órfão fosse ignorado (nem contado, nem descontado), isso viria 1.
+        $this->assertEquals(2, $fin['cobertura_custo']['produtos_sem_custo']);
+        $this->assertEqualsWithDelta(1 / 3, $fin['cobertura_custo']['percentual'], 0.0001);
+
+        // 33% de cobertura fica bem abaixo do mínimo (80% default) --
+        // margem_confiavel deve cair e cmv/lucro_bruto devem sair null.
+        $this->assertFalse($fin['margem_confiavel']);
+        $this->assertNull($fin['serie_mensal']->first()['cmv']);
+        $this->assertNull($fin['serie_mensal']->first()['lucro_bruto']);
+    }
+
+    private function criarProduto(?float $custo = null): Product
     {
         return Product::create([
             'nome' => 'Produto Teste Dashboard',
             'slug' => 'produto-teste-dashboard-'.uniqid(),
             'descricao' => null,
             'preco' => 100.00,
+            'custo' => $custo,
             'imagem' => 'vertical/images/teste.jpg',
             'is_novo' => false,
             'is_promocao' => false,
