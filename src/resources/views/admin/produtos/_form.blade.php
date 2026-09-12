@@ -47,6 +47,50 @@
             </div>
         </div>
 
+        <div class="row">
+            <div class="col-md-4">
+                <div class="mb-3">
+                    <label for="custo" class="form-label">Custo (R$)</label>
+                    <input type="number" step="0.01" min="0" name="custo" id="custo"
+                           class="form-control @error('custo') is-invalid @enderror"
+                           value="{{ old('custo', $produto->custo ?? '') }}">
+                    <div class="form-text">
+                        Opcional. Sem custo cadastrado, este produto não entra no cálculo de
+                        margem e o painel financeiro marca a margem como não confiável.
+                    </div>
+                    @error('custo')
+                        <div class="invalid-feedback">{{ $message }}</div>
+                    @enderror
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="mb-3">
+                    <label for="estoque" class="form-label">Estoque</label>
+                    <input type="number" step="1" min="0" name="estoque" id="estoque"
+                           class="form-control @error('estoque') is-invalid @enderror"
+                           value="{{ old('estoque', $produto->estoque ?? 0) }}">
+                    @error('estoque')
+                        <div class="invalid-feedback">{{ $message }}</div>
+                    @enderror
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="mb-3">
+                    <label for="estoque_minimo" class="form-label">Estoque Mínimo</label>
+                    <input type="number" step="1" min="0" name="estoque_minimo" id="estoque_minimo"
+                           class="form-control @error('estoque_minimo') is-invalid @enderror"
+                           value="{{ old('estoque_minimo', $produto->estoque_minimo ?? 0) }}">
+                    <div class="form-text">
+                        Deixe em 0 para "não configurado" — o produto fica neutro no painel e não
+                        gera alerta de reposição. Para receber alerta, informe um mínimo maior que zero.
+                    </div>
+                    @error('estoque_minimo')
+                        <div class="invalid-feedback">{{ $message }}</div>
+                    @enderror
+                </div>
+            </div>
+        </div>
+
         <div class="mb-3">
             <div class="form-check">
                 <input type="checkbox" name="is_novo" id="is_novo" class="form-check-input" value="1"

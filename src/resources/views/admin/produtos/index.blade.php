@@ -44,6 +44,7 @@
                         <th>Categoria</th>
                         <th>Preço</th>
                         <th>Status</th>
+                        <th>Estoque</th>
                         <th class="text-end">Ações</th>
                     </tr>
                 </thead>
@@ -73,6 +74,15 @@
                                     <span class="badge text-bg-danger">Promoção</span>
                                 @endif
                             </td>
+                            <td>
+                                @php
+                                    $estoqueStatus = \App\Support\EstoqueStatus::calcular((int) $produto->estoque, (int) $produto->estoque_minimo);
+                                @endphp
+                                {{ $produto->estoque }}
+                                <span class="badge {{ \App\Support\EstoqueStatus::badgeClass($estoqueStatus) }}">
+                                    {{ \App\Support\EstoqueStatus::label($estoqueStatus) }}
+                                </span>
+                            </td>
                             <td class="text-end">
                                 <a href="{{ route('admin.produtos.edit', $produto) }}" class="btn btn-sm btn-outline-secondary">
                                     <i class="bi bi-pencil"></i>
@@ -89,7 +99,7 @@
                         </tr>
                     @empty
                         <tr>
-                            <td colspan="6" class="text-center text-secondary py-4">Nenhum produto encontrado.</td>
+                            <td colspan="7" class="text-center text-secondary py-4">Nenhum produto encontrado.</td>
                         </tr>
                     @endforelse
                 </tbody>

@@ -98,10 +98,20 @@ class ProductController extends Controller
                 'nullable', 'numeric', 'min:0', 'gt:preco',
             ],
             'imagem' => [$ignoreId ? 'nullable' : 'required', 'image', 'mimes:jpg,jpeg,png,webp', 'max:2048'],
+            'custo' => ['nullable', 'numeric', 'min:0'],
+            'estoque' => ['nullable', 'integer', 'min:0'],
+            'estoque_minimo' => ['nullable', 'integer', 'min:0'],
         ]);
 
         $data['is_novo'] = $request->boolean('is_novo');
         $data['is_promocao'] = $request->boolean('is_promocao');
+
+        // custo vazio precisa virar null, não 0 -- 0 significa "custa zero" e
+        // entraria como produto "com custo cadastrado" na cobertura do
+        // financeiro() (fase 6D), mascarando a defesa de margem não confiável.
+        $data['custo'] = $request->filled('custo') ? (float) $request->input('custo') : null;
+        $data['estoque'] = $request->filled('estoque') ? (int) $request->input('estoque') : 0;
+        $data['estoque_minimo'] = $request->filled('estoque_minimo') ? (int) $request->input('estoque_minimo') : 0;
 
         return $data;
     }

@@ -5,6 +5,7 @@ namespace App\Services;
 use App\Models\Order;
 use App\Models\OrderItem;
 use App\Models\Product;
+use App\Support\EstoqueStatus;
 use Carbon\CarbonPeriod;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Collection;
@@ -185,7 +186,6 @@ class DashboardService
      */
     public function estoque(): array
     {
-        $multiplicadorAtencao = (float) config('dashboard.estoque.multiplicador_atencao');
         $janelaCoberturaDias = (int) config('dashboard.estoque.janela_cobertura_dias');
 
         $fimJanela = Carbon::now();
@@ -201,19 +201,10 @@ class DashboardService
             ->selectRaw('order_items.product_id, SUM(order_items.quantidade) as qtd_vendida')
             ->pluck('qtd_vendida', 'product_id');
 
-        $produtos = Product::orderBy('nome')->get()->map(function (Product $produto) use ($vendidoPorProduto, $mesesNaJanela, $multiplicadorAtencao) {
+        $produtos = Product::orderBy('nome')->get()->map(function (Product $produto) use ($vendidoPorProduto, $mesesNaJanela) {
             $estoque = (int) $produto->estoque;
             $estoqueMinimo = (int) $produto->estoque_minimo;
-
-            if ($estoqueMinimo === 0) {
-                $status = self::ESTOQUE_NAO_CONFIGURADO;
-            } elseif ($estoque <= $estoqueMinimo) {
-                $status = self::ESTOQUE_REPOR;
-            } elseif ($estoque <= $estoqueMinimo * $multiplicadorAtencao) {
-                $status = self::ESTOQUE_ATENCAO;
-            } else {
-                $status = self::ESTOQUE_OK;
-            }
+            $status = EstoqueStatus::calcular($estoque, $estoqueMinimo);
 
             $qtdVendida = (int) ($vendidoPorProduto[$produto->id] ?? 0);
             $mediaMensalVendida = round($qtdVendida / $mesesNaJanela, 2);

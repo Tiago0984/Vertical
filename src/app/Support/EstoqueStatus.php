@@ -10,6 +10,31 @@ use App\Services\DashboardService;
  */
 class EstoqueStatus
 {
+    /**
+     * Regra única de "qual status esse produto tem", usada tanto pelo
+     * DashboardService::estoque() quanto pela listagem de Produtos do admin
+     * -- centralizada aqui pra não correr o risco das duas telas divergirem
+     * um dia por alguém mexer só numa delas.
+     */
+    public static function calcular(int $estoque, int $estoqueMinimo): string
+    {
+        $multiplicadorAtencao = (float) config('dashboard.estoque.multiplicador_atencao');
+
+        if ($estoqueMinimo === 0) {
+            return DashboardService::ESTOQUE_NAO_CONFIGURADO;
+        }
+
+        if ($estoque <= $estoqueMinimo) {
+            return DashboardService::ESTOQUE_REPOR;
+        }
+
+        if ($estoque <= $estoqueMinimo * $multiplicadorAtencao) {
+            return DashboardService::ESTOQUE_ATENCAO;
+        }
+
+        return DashboardService::ESTOQUE_OK;
+    }
+
     public static function label(string $status): string
     {
         return match ($status) {
