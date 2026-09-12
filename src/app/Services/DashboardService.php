@@ -8,6 +8,7 @@ use App\Models\Product;
 use Carbon\CarbonPeriod;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\DB;
 
 /**
  * KPIs do dashboard administrativo.
@@ -128,9 +129,16 @@ class DashboardService
      */
     public function vendasPorMes(Carbon $inicio, Carbon $fim): Collection
     {
+        // DATE_FORMAT() é só MySQL (produção); os testes rodam em SQLite
+        // (phpunit.xml), que usa strftime() -- sem essa checagem o método
+        // funciona em produção e quebra em qualquer teste que o exercite.
+        $mesExpr = DB::connection()->getDriverName() === 'sqlite'
+            ? "strftime('%Y-%m', created_at)"
+            : "DATE_FORMAT(created_at, '%Y-%m')";
+
         $porMes = Order::where('status', Order::STATUS_PAGO)
             ->whereBetween('created_at', [$inicio, $fim])
-            ->selectRaw("DATE_FORMAT(created_at, '%Y-%m') as mes, SUM(total) as faturamento, COUNT(*) as pedidos")
+            ->selectRaw("{$mesExpr} as mes, SUM(total) as faturamento, COUNT(*) as pedidos")
             ->groupBy('mes')
             ->get()
             ->keyBy('mes');
