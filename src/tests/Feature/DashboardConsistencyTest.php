@@ -190,6 +190,39 @@ class DashboardConsistencyTest extends TestCase
         $this->assertNull($fin['serie_mensal']->first()['lucro_bruto']);
     }
 
+    public function test_clientes_unicos_pagantes_do_resumo_fecha_com_contagem_de_clientes(): void
+    {
+        $service = new DashboardService();
+        $produto = $this->criarProduto();
+
+        $pedido1 = $this->criarPedido($produto, Carbon::create(2025, 1, 10), Order::STATUS_PAGO, qty: 1);
+        $pedido1->email = 'mesma.pessoa@exemplo.test';
+        $pedido1->save();
+
+        // Mesma pessoa comprando de novo, com email em caixa diferente --
+        // resumo() e clientes() têm que concordar que isso é 1 cliente, não 2.
+        $pedido2 = $this->criarPedido($produto, Carbon::create(2025, 1, 20), Order::STATUS_PAGO, qty: 1);
+        $pedido2->email = 'MESMA.PESSOA@exemplo.test';
+        $pedido2->save();
+
+        $pedido3 = $this->criarPedido($produto, Carbon::create(2025, 1, 25), Order::STATUS_PAGO, qty: 1);
+        $pedido3->email = 'outra.pessoa@exemplo.test';
+        $pedido3->save();
+
+        $inicio = Carbon::create(2025, 1, 1)->startOfDay();
+        $fim = Carbon::create(2025, 1, 31)->endOfDay();
+
+        $resumo = $service->resumo($inicio, $fim);
+        $clientes = $service->clientes($inicio, $fim);
+
+        // resumo() e clientes() contam a mesma coisa por dois caminhos de
+        // query diferentes (decisão da fase 8B, pra não duplicar a query de
+        // clientes() dentro de resumo()) -- se um dos dois divergir depois de
+        // alguém mexer só num dos dois, este teste pega a divergência.
+        $this->assertEquals(2, $resumo['clientes_unicos_pagantes']);
+        $this->assertCount($resumo['clientes_unicos_pagantes'], $clientes);
+    }
+
     private function criarProduto(?float $custo = null): Product
     {
         return Product::create([
