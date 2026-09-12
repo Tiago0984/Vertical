@@ -424,4 +424,69 @@ class DashboardService
     {
         return "DATE_FORMAT({$coluna}, '%Y-%m')";
     }
+
+    /**
+     * Clientes que compraram no período, agrupados por e-mail -- NUNCA por
+     * user_id. O checkout aceita convidado (orders.user_id nullable);
+     * agrupar por user_id descartaria silenciosamente todo pedido sem
+     * cadastro. Agrupar por e-mail também é o que junta corretamente o
+     * mesmo cliente que comprou uma vez como convidado e outra logado.
+     *
+     * LOWER(email) normaliza maiúsculas/minúsculas -- Ana@x.com e ana@x.com
+     * são a mesma pessoa e, sem isso, virariam duas linhas separadas.
+     *
+     * total_gasto usa orders.total (com frete, mesma convenção de "quanto o
+     * cliente pagou" das demais métricas deste service).
+     *
+     * @return Collection<int, array{
+     *   email: string, nome: string, pedidos: int, total_gasto: float,
+     *   ticket_medio: float, ultimo_pedido: string, segmento: string
+     * }>
+     */
+    public function clientes(Carbon $inicio, Carbon $fim): Collection
+    {
+        return Order::query()
+            ->where('status', Order::STATUS_PAGO)
+            ->whereBetween('created_at', [$inicio, $fim])
+            ->selectRaw(
+                'LOWER(email) as email, MAX(nome) as nome, COUNT(*) as pedidos, '
+                .'SUM(total) as total_gasto, AVG(total) as ticket_medio, '
+                .'MAX(created_at) as ultimo_pedido'
+            )
+            ->groupBy('email')
+            ->orderByDesc('total_gasto')
+            ->get()
+            ->map(function ($linha) {
+                $totalGasto = round((float) $linha->total_gasto, 2);
+
+                return [
+                    'email' => $linha->email,
+                    'nome' => $linha->nome,
+                    'pedidos' => (int) $linha->pedidos,
+                    'total_gasto' => $totalGasto,
+                    'ticket_medio' => round((float) $linha->ticket_medio, 2),
+                    'ultimo_pedido' => $linha->ultimo_pedido,
+                    'segmento' => $this->segmentoCliente($totalGasto),
+                ];
+            });
+    }
+
+    /**
+     * Segmento a partir de total_gasto e dos limiares em
+     * dashboard.clientes.segmentos (maior pro menor) -- data-driven em vez
+     * de if/elseif encadeado, pra adicionar/ajustar segmento sem tocar
+     * nesta lógica, e sem número mágico espalhado pelo código.
+     */
+    private function segmentoCliente(float $totalGasto): string
+    {
+        $segmentos = config('dashboard.clientes.segmentos');
+
+        foreach ($segmentos as $nome => $limiar) {
+            if ($totalGasto >= (float) $limiar) {
+                return $nome;
+            }
+        }
+
+        return array_key_last($segmentos);
+    }
 }

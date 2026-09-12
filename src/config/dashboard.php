@@ -44,4 +44,26 @@ return [
         'cobertura_custo_minima' => 0.8,
     ],
 
+    /*
+    |--------------------------------------------------------------------------
+    | Segmentação de clientes
+    |--------------------------------------------------------------------------
+    |
+    | Segmento é derivado de total_gasto (soma de orders.total, com frete, nos
+    | pedidos pagos do período) -- não de quantidade de pedidos. Ordenado do
+    | maior limiar pro menor: o primeiro que o total_gasto alcançar decide o
+    | segmento, sem precisar de if/else aninhado no código (ver
+    | DashboardService::segmentoCliente()). O último limiar deve ser 0, senão
+    | um cliente com total_gasto abaixo de todos os limiares fica sem segmento.
+    |
+    */
+
+    'clientes' => [
+        'segmentos' => [
+            'VIP' => 800.0,
+            'Recorrente' => 250.0,
+            'Novo' => 0.0,
+        ],
+    ],
+
 ];
