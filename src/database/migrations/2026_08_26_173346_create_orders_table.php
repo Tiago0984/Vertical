@@ -34,7 +34,7 @@ return new class extends Migration
             $table->string('cupom')->nullable();
 
             $table->string('forma_pagamento'); // cartao | pix | boleto
-            $table->string('status')->default('pendente_pagamento'); // pendente_pagamento | pago | confirmado | cancelado
+            $table->string('status')->default('pendente_pagamento'); // pendente_pagamento | pago | cancelado
 
             $table->json('endereco_entrega');
             $table->json('endereco_faturamento')->nullable(); // null = mesmo da entrega

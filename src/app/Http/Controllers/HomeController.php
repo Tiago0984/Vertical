@@ -21,13 +21,17 @@ class HomeController extends Controller
             ->groupBy('order_items.product_id')
             ->selectRaw('order_items.product_id as product_id, SUM(order_items.quantidade) as qtd_vendida')
             ->orderByDesc('qtd_vendida')
+            // 9 é o maior limite consumido a partir deste ranking (tendencias
+            // pega até 9, vitrine até 6) -- sem isso a query trazia todo
+            // produto já vendido só pra cortar em 9/6 depois, em memória.
+            ->limit(9)
             ->pluck('product_id');
 
         $maisVendidosIds = $rankingVendidosIds->take(9)->all();
         $maisVendidos = $this->produtosNaOrdemDosIds($maisVendidosIds);
 
-        $lancamentos = Product::where('is_novo', true)->latest()->limit(9)->get();
-        $emPromocao = Product::where('is_promocao', true)->latest()->limit(9)->get();
+        $lancamentos = Product::where('is_novo', true)->latest('id')->limit(9)->get();
+        $emPromocao = Product::where('is_promocao', true)->latest('id')->limit(9)->get();
 
         // destaques é o "resto" desta seção -- só ele precisa excluir as
         // outras três coleções das abas de Tendências. lancamentos, mais
@@ -62,7 +66,7 @@ class HomeController extends Controller
 
         $vitrineOfertas = Product::where('is_promocao', true)
             ->whereNotIn('id', $vitrineMaisVendidosIds)
-            ->latest()
+            ->latest('id')
             ->limit(6)
             ->get();
 

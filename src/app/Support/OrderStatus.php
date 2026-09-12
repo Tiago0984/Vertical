@@ -11,7 +11,6 @@ class OrderStatus
         return match ($status) {
             Order::STATUS_PENDENTE => 'Pagamento Pendente',
             Order::STATUS_PAGO => 'Pago',
-            Order::STATUS_CONFIRMADO => 'Confirmado',
             Order::STATUS_CANCELADO => 'Cancelado',
             default => ucfirst(str_replace('_', ' ', $status)),
         };
@@ -21,7 +20,7 @@ class OrderStatus
     {
         return match ($status) {
             Order::STATUS_PENDENTE => 'text-bg-warning',
-            Order::STATUS_PAGO, Order::STATUS_CONFIRMADO => 'text-bg-success',
+            Order::STATUS_PAGO => 'text-bg-success',
             Order::STATUS_CANCELADO => 'text-bg-danger',
             default => 'text-bg-secondary',
         };

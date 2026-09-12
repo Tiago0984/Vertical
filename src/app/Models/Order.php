@@ -19,7 +19,6 @@ class Order extends Model
 
     public const STATUS_PENDENTE = 'pendente_pagamento';
     public const STATUS_PAGO = 'pago';
-    public const STATUS_CONFIRMADO = 'confirmado';
     public const STATUS_CANCELADO = 'cancelado';
 
     public const PAGAMENTO_CARTAO = 'cartao';
@@ -29,7 +28,6 @@ class Order extends Model
     public const STATUSES = [
         self::STATUS_PENDENTE,
         self::STATUS_PAGO,
-        self::STATUS_CONFIRMADO,
         self::STATUS_CANCELADO,
     ];
 
