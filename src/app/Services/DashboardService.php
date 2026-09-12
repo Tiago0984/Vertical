@@ -163,8 +163,18 @@ class DashboardService
 
     /**
      * Status de estoque por produto + cobertura em meses (estoque ÷ média
-     * mensal vendida no período, calculada de order_items/pedidos pagos --
-     * nunca de um campo digitado, que ficaria desatualizado).
+     * mensal vendida, calculada de order_items/pedidos pagos -- nunca de um
+     * campo digitado, que ficaria desatualizado).
+     *
+     * SEM PARÂMETRO DE PERÍODO DE PROPÓSITO: estoque é estado ATUAL, não uma
+     * métrica que varia com o filtro de período do dashboard. A cobertura
+     * sempre olha pra uma janela fixa de dias corridos (config
+     * dashboard.estoque.janela_cobertura_dias, default 90) contados de
+     * "agora" pra trás -- não pro período que a tela estiver mostrando.
+     * Antes deste método aceitava $inicio/$fim e a média de venda mudava
+     * junto com o filtro: "últimos 7 dias" extrapolava uma semana pra uma
+     * média mensal, e o MESMO produto passava a "ter 4 meses de estoque" ou
+     * "0,5 mês" só dependendo do que o usuário tinha clicado.
      *
      * ARMADILHA tratada de propósito: a migration criou estoque/estoque_minimo
      * com default 0. Sem essa checagem, todo produto que ninguém configurou
@@ -172,31 +182,34 @@ class DashboardService
      * massa. estoque_minimo = 0 vira status NAO_CONFIGURADO, fora da
      * contagem de alertas (quem contar "repor"+"atencao" já exclui sozinho).
      *
-     * @return Collection<int, array{
-     *   id: int, nome: string, estoque: int, estoque_minimo: int,
-     *   custo: ?float, status: string, media_mensal_vendida: float,
-     *   cobertura_meses: ?float
-     * }>
+     * @return array{
+     *   cobertura_baseada_em_dias: int,
+     *   produtos: Collection<int, array{
+     *     id: int, nome: string, estoque: int, estoque_minimo: int,
+     *     custo: ?float, status: string, media_mensal_vendida: float,
+     *     cobertura_meses: ?float
+     *   }>
+     * }
      */
-    public function estoque(Carbon $inicio, Carbon $fim): Collection
+    public function estoque(): array
     {
         $multiplicadorAtencao = (float) config('dashboard.estoque.multiplicador_atencao');
+        $janelaCoberturaDias = (int) config('dashboard.estoque.janela_cobertura_dias');
 
-        // dias, não diffInMonths() -- período pode ser mais curto que 1 mês
-        // (ex.: "últimos 7 dias") e diffInMonths() truncaria pra 0, causando
-        // divisão por zero na média mensal logo abaixo.
-        $mesesNoPeriodo = max($inicio->diffInDays($fim), 1) / 30;
+        $fimJanela = Carbon::now();
+        $inicioJanela = Carbon::now()->subDays($janelaCoberturaDias);
+        $mesesNaJanela = $janelaCoberturaDias / 30;
 
         $vendidoPorProduto = OrderItem::query()
             ->join('orders', 'orders.id', '=', 'order_items.order_id')
             ->where('orders.status', Order::STATUS_PAGO)
-            ->whereBetween('orders.created_at', [$inicio, $fim])
+            ->whereBetween('orders.created_at', [$inicioJanela, $fimJanela])
             ->whereNotNull('order_items.product_id')
             ->groupBy('order_items.product_id')
             ->selectRaw('order_items.product_id, SUM(order_items.quantidade) as qtd_vendida')
             ->pluck('qtd_vendida', 'product_id');
 
-        return Product::orderBy('nome')->get()->map(function (Product $produto) use ($vendidoPorProduto, $mesesNoPeriodo, $multiplicadorAtencao) {
+        $produtos = Product::orderBy('nome')->get()->map(function (Product $produto) use ($vendidoPorProduto, $mesesNaJanela, $multiplicadorAtencao) {
             $estoque = (int) $produto->estoque;
             $estoqueMinimo = (int) $produto->estoque_minimo;
 
@@ -211,9 +224,9 @@ class DashboardService
             }
 
             $qtdVendida = (int) ($vendidoPorProduto[$produto->id] ?? 0);
-            $mediaMensalVendida = round($qtdVendida / $mesesNoPeriodo, 2);
+            $mediaMensalVendida = round($qtdVendida / $mesesNaJanela, 2);
 
-            // sem venda no período -> "meses de cobertura" não existe (não é
+            // sem venda na janela -> "meses de cobertura" não existe (não é
             // infinito, é indefinido: não dá pra prever quando vai acabar
             // vendendo a essa taxa porque não há taxa nenhuma pra extrapolar).
             $coberturaMeses = $mediaMensalVendida > 0
@@ -231,6 +244,13 @@ class DashboardService
                 'cobertura_meses' => $coberturaMeses,
             ];
         })->values();
+
+        return [
+            // rótulo explícito na SAÍDA, não só em comentário -- a UI deve
+            // exibir algo como "cobertura baseada nos últimos 90 dias".
+            'cobertura_baseada_em_dias' => $janelaCoberturaDias,
+            'produtos' => $produtos,
+        ];
     }
 
     /**
