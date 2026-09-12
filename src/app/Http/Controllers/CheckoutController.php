@@ -98,6 +98,14 @@ class CheckoutController extends Controller
             'subtotal' => $subtotal,
             'frete' => $frete,
             'total' => $total,
+            // Cupom hoje é só o campo string 'orders.cupom' e nunca é aplicado
+            // aqui (sempre null) -- nenhum pedido tem desconto de verdade.
+            // PRÉ-REQUISITO antes de implementar desconto real: criar uma
+            // coluna própria (ex.: orders.desconto) para gravar o VALOR
+            // aplicado no momento da compra. Sem isso, o desconto concedido
+            // fica só implícito em subtotal/total e não dá pra reconstruir
+            // depois -- quebra qualquer conciliação de subtotal+frete vs
+            // total nos relatórios (dashboard/financeiro).
             'cupom' => null,
             'forma_pagamento' => $data['forma_pagamento'],
             'status' => $status,
