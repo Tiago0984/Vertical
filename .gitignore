@@ -35,3 +35,4 @@ src/bootstrap/cache/*
 _ide_helper.php
 Homestead.json
 Homestead.yaml
+*Zone.Identifier
