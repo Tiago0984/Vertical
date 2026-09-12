@@ -1,3 +1,22 @@
+@php
+    // Vitrine pública: coluna sem produto não é renderizada (ao contrário do
+    // dashboard admin, aqui um "buraco" visual não ajuda ninguém). As
+    // colunas restantes redistribuem a largura do grid Bootstrap 3.
+    $colunasVitrine = collect([
+        ['titulo' => 'Itens em Destaque', 'produtos' => $vitrineDestaque, 'classeSlider' => 'slider8'],
+        ['titulo' => 'Ofertas Especiais', 'produtos' => $vitrineOfertas, 'classeSlider' => 'slider9'],
+        ['titulo' => 'Mais Vendidos', 'produtos' => $vitrineMaisVendidos, 'classeSlider' => 'slider10'],
+    ])->filter(fn ($coluna) => $coluna['produtos']->isNotEmpty())->values();
+
+    $larguraColuna = match ($colunasVitrine->count()) {
+        3 => 4,
+        2 => 6,
+        1 => 12,
+        default => 4,
+    };
+@endphp
+
+@if ($colunasVitrine->isNotEmpty())
 <!-- Produtos -->
 <section class="t_to_b_slider_area">
     <div class="container">
@@ -6,276 +25,21 @@
                 <div class="t_to_b_slider">
                     <div class="row">
 
-                        {{-- Coluna 1: Itens em Destaque --}}
-                        <div class="col-md-4 col-sm-4 col-xs-12">
-                            <div class="single_t_to_b_slider">
-                                <h3>Itens em Destaque</h3>
-                                <div class="multi_line"></div>
-                                <div class="single_t_to_b">
-                                    <div class="slider8">
-
-                                        <div class="slide">
-                                            <div class="t_to_b_content">
-                                                <div class="t_to_b_img">
-                                                    <img src="vertical/images/t_to1.png" alt="" />
-                                                </div>
-                                                <div class="t_to_b_text">
-                                                    <a href="{{ route('produto') }}"><p>Camiseta Básica<br>Branca</p></a>
-                                                    <div class="t_to_b_dollr"><span>R$49,90</span></div>
-                                                    <div class="t_to_b_del"><del>R$64,90</del></div>
-                                                </div>
-                                            </div>
+                        @foreach ($colunasVitrine as $coluna)
+                            <div class="col-md-{{ $larguraColuna }} col-sm-{{ $larguraColuna }} col-xs-12">
+                                <div class="single_t_to_b_slider">
+                                    <h3>{{ $coluna['titulo'] }}</h3>
+                                    <div class="multi_line"></div>
+                                    <div class="single_t_to_b">
+                                        <div class="{{ $coluna['classeSlider'] }}">
+                                            @foreach ($coluna['produtos'] as $produto)
+                                                @include('site.home.partials.vitrine-slide', ['produto' => $produto])
+                                            @endforeach
                                         </div>
-
-                                        <div class="slide">
-                                            <div class="t_to_b_content">
-                                                <div class="t_to_b_img">
-                                                    <img src="vertical/images/t_to2.png" alt="" />
-                                                </div>
-                                                <div class="t_to_b_text">
-                                                    <a href="{{ route('produto') }}"><p>Camiseta Gola V<br>Azul</p></a>
-                                                    <div class="t_to_b_dollr"><span>R$54,90</span></div>
-                                                </div>
-                                            </div>
-                                        </div>
-
-                                        <div class="slide">
-                                            <div class="t_to_b_content">
-                                                <div class="t_to_b_img">
-                                                    <img src="vertical/images/t_to3.png" alt="" />
-                                                </div>
-                                                <div class="t_to_b_text">
-                                                    <a href="{{ route('produto') }}"><p>Camiseta Oversized<br>Preta</p></a>
-                                                    <div class="t_to_b_dollr"><span>R$63,92</span></div>
-                                                    <div class="t_to_b_del"><del>R$79,90</del></div>
-                                                </div>
-                                            </div>
-                                        </div>
-
-                                        <div class="slide">
-                                            <div class="t_to_b_content">
-                                                <div class="t_to_b_img">
-                                                    <img src="vertical/images/t_to4.png" alt="" />
-                                                </div>
-                                                <div class="t_to_b_text">
-                                                    <a href="{{ route('produto') }}"><p>Camiseta Estampada<br>Street Art</p></a>
-                                                    <div class="t_to_b_dollr"><span>R$69,90</span></div>
-                                                    <div class="t_to_b_del"><del>R$89,90</del></div>
-                                                </div>
-                                            </div>
-                                        </div>
-
-                                        <div class="slide">
-                                            <div class="t_to_b_content">
-                                                <div class="t_to_b_img">
-                                                    <img src="vertical/images/t_to5.png" alt="" />
-                                                </div>
-                                                <div class="t_to_b_text">
-                                                    <a href="{{ route('produto') }}"><p>Camiseta Long<br>Line</p></a>
-                                                    <div class="t_to_b_dollr"><span>R$74,90</span></div>
-                                                    <div class="t_to_b_del"><del>R$94,90</del></div>
-                                                </div>
-                                            </div>
-                                        </div>
-
-                                        <div class="slide">
-                                            <div class="t_to_b_content">
-                                                <div class="t_to_b_img">
-                                                    <img src="vertical/images/t_to6.png" alt="" />
-                                                </div>
-                                                <div class="t_to_b_text">
-                                                    <a href="{{ route('produto') }}"><p>Camiseta Premium<br>Slim Fit</p></a>
-                                                    <div class="t_to_b_dollr"><span>R$99,90</span></div>
-                                                    <div class="t_to_b_del"><del>R$119,90</del></div>
-                                                </div>
-                                            </div>
-                                        </div>
-
                                     </div>
                                 </div>
                             </div>
-                        </div>
-
-                        {{-- Coluna 2: Ofertas Especiais --}}
-                        <div class="col-md-4 col-sm-4 col-xs-12">
-                            <div class="single_t_to_b_slider">
-                                <h3>Ofertas Especiais</h3>
-                                <div class="multi_line"></div>
-                                <div class="single_t_to_b">
-                                    <div class="slider9">
-
-                                        <div class="slide">
-                                            <div class="t_to_b_content">
-                                                <div class="t_to_b_img">
-                                                    <img src="vertical/images/t_to4.png" alt="" />
-                                                </div>
-                                                <div class="t_to_b_text">
-                                                    <a href="{{ route('produto') }}"><p>Camiseta Dry-Fit<br>Sport</p></a>
-                                                    <div class="t_to_b_dollr"><span>R$47,92</span></div>
-                                                    <div class="t_to_b_del"><del>R$59,90</del></div>
-                                                </div>
-                                            </div>
-                                        </div>
-
-                                        <div class="slide">
-                                            <div class="t_to_b_content">
-                                                <div class="t_to_b_img">
-                                                    <img src="vertical/images/t_to5.png" alt="" />
-                                                </div>
-                                                <div class="t_to_b_text">
-                                                    <a href="{{ route('produto') }}"><p>Camiseta Gola V<br>Azul</p></a>
-                                                    <div class="t_to_b_dollr"><span>R$43,92</span></div>
-                                                    <div class="t_to_b_del"><del>R$54,90</del></div>
-                                                </div>
-                                            </div>
-                                        </div>
-
-                                        <div class="slide">
-                                            <div class="t_to_b_content">
-                                                <div class="t_to_b_img">
-                                                    <img src="vertical/images/t_to8.png" alt="" />
-                                                </div>
-                                                <div class="t_to_b_text">
-                                                    <a href="{{ route('produto') }}"><p>Camiseta Básica<br>Cinza Mescla</p></a>
-                                                    <div class="t_to_b_dollr"><span>R$39,90</span></div>
-                                                    <div class="t_to_b_del"><del>R$49,90</del></div>
-                                                </div>
-                                            </div>
-                                        </div>
-
-                                        <div class="slide">
-                                            <div class="t_to_b_content">
-                                                <div class="t_to_b_img">
-                                                    <img src="vertical/images/t_to1.png" alt="" />
-                                                </div>
-                                                <div class="t_to_b_text">
-                                                    <a href="{{ route('produto') }}"><p>Camiseta Estampada<br>Geométrica</p></a>
-                                                    <div class="t_to_b_dollr"><span>R$51,90</span></div>
-                                                    <div class="t_to_b_del"><del>R$64,90</del></div>
-                                                </div>
-                                            </div>
-                                        </div>
-
-                                        <div class="slide">
-                                            <div class="t_to_b_content">
-                                                <div class="t_to_b_img">
-                                                    <img src="vertical/images/t_to3.png" alt="" />
-                                                </div>
-                                                <div class="t_to_b_text">
-                                                    <a href="{{ route('produto') }}"><p>Camiseta Long<br>Line</p></a>
-                                                    <div class="t_to_b_dollr"><span>R$59,92</span></div>
-                                                    <div class="t_to_b_del"><del>R$74,90</del></div>
-                                                </div>
-                                            </div>
-                                        </div>
-
-                                        <div class="slide">
-                                            <div class="t_to_b_content">
-                                                <div class="t_to_b_img">
-                                                    <img src="vertical/images/t_to9.png" alt="" />
-                                                </div>
-                                                <div class="t_to_b_text">
-                                                    <a href="{{ route('produto') }}"><p>Camiseta Premium<br>Slim Fit</p></a>
-                                                    <div class="t_to_b_dollr"><span>R$79,92</span></div>
-                                                    <div class="t_to_b_del"><del>R$99,90</del></div>
-                                                </div>
-                                            </div>
-                                        </div>
-
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        {{-- Coluna 3: Mais Vendidos --}}
-                        <div class="col-md-4 col-sm-4 col-xs-12">
-                            <div class="single_t_to_b_slider">
-                                <h3>Mais Vendidos</h3>
-                                <div class="multi_line"></div>
-                                <div class="single_t_to_b">
-                                    <div class="slider10">
-
-                                        <div class="slide">
-                                            <div class="t_to_b_content">
-                                                <div class="t_to_b_img">
-                                                    <img src="vertical/images/t_to6.png" alt="" />
-                                                </div>
-                                                <div class="t_to_b_text">
-                                                    <a href="{{ route('produto') }}"><p>Camiseta Estampada<br>Street Art</p></a>
-                                                    <div class="t_to_b_dollr"><span>R$69,90</span></div>
-                                                    <div class="t_to_b_del"><del>R$89,90</del></div>
-                                                </div>
-                                            </div>
-                                        </div>
-
-                                        <div class="slide">
-                                            <div class="t_to_b_content">
-                                                <div class="t_to_b_img">
-                                                    <img src="vertical/images/t_to9.png" alt="" />
-                                                </div>
-                                                <div class="t_to_b_text">
-                                                    <a href="{{ route('produto') }}"><p>Camiseta Básica<br>Branca</p></a>
-                                                    <div class="t_to_b_dollr"><span>R$49,90</span></div>
-                                                </div>
-                                            </div>
-                                        </div>
-
-                                        <div class="slide">
-                                            <div class="t_to_b_content">
-                                                <div class="t_to_b_img">
-                                                    <img src="vertical/images/t_to7.png" alt="" />
-                                                </div>
-                                                <div class="t_to_b_text">
-                                                    <a href="{{ route('produto') }}"><p>Camiseta Dry-Fit<br>Sport</p></a>
-                                                    <div class="t_to_b_dollr"><span>R$59,90</span></div>
-                                                    <div class="t_to_b_del"><del>R$79,90</del></div>
-                                                </div>
-                                            </div>
-                                        </div>
-
-                                        <div class="slide">
-                                            <div class="t_to_b_content">
-                                                <div class="t_to_b_img">
-                                                    <img src="vertical/images/t_to6.png" alt="" />
-                                                </div>
-                                                <div class="t_to_b_text">
-                                                    <a href="{{ route('produto') }}"><p>Camiseta Oversized<br>Preta</p></a>
-                                                    <div class="t_to_b_dollr"><span>R$79,90</span></div>
-                                                    <div class="t_to_b_del"><del>R$99,90</del></div>
-                                                </div>
-                                            </div>
-                                        </div>
-
-                                        <div class="slide">
-                                            <div class="t_to_b_content">
-                                                <div class="t_to_b_img">
-                                                    <img src="vertical/images/t_to4.png" alt="" />
-                                                </div>
-                                                <div class="t_to_b_text">
-                                                    <a href="{{ route('produto') }}"><p>Camiseta Gola V<br>Azul</p></a>
-                                                    <div class="t_to_b_dollr"><span>R$54,90</span></div>
-                                                    <div class="t_to_b_del"><del>R$74,90</del></div>
-                                                </div>
-                                            </div>
-                                        </div>
-
-                                        <div class="slide">
-                                            <div class="t_to_b_content">
-                                                <div class="t_to_b_img">
-                                                    <img src="vertical/images/t_to3.png" alt="" />
-                                                </div>
-                                                <div class="t_to_b_text">
-                                                    <a href="{{ route('produto') }}"><p>Camiseta Premium<br>Slim Fit</p></a>
-                                                    <div class="t_to_b_dollr"><span>R$99,90</span></div>
-                                                    <div class="t_to_b_del"><del>R$119,90</del></div>
-                                                </div>
-                                            </div>
-                                        </div>
-
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
+                        @endforeach
 
                     </div>
                 </div>
@@ -284,3 +48,4 @@
     </div>
 </section>
 <!-- Fim Produtos -->
+@endif
