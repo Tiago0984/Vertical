@@ -15,10 +15,11 @@ use Tests\TestCase;
  *
  *   SUM(receita do ranking) + SUM(frete dos pedidos pagos) = faturamento do resumo()
  *
- * Esse invariante quebra no dia em que orders.cupom passar a descontar de
- * verdade sem existir uma coluna orders.desconto (ver comentário no
- * CheckoutController) -- o comentário depende de alguém ler antes de mexer;
- * este teste não depende de ninguém, é o canário automático do gap.
+ * E, desde que orders.desconto passou a existir (fundação pro cupom da
+ * fase 2 -- ver migration add_desconto_to_orders_table e CheckoutController),
+ * também verifica o invariante de todo pedido:
+ *
+ *   subtotal - desconto + frete = total
  *
  * Cenário fixo dentro do próprio teste (não usa DashboardDemoSeeder, que é
  * aleatório -- um teste não pode passar ou falhar por sorte de seed).
@@ -223,6 +224,30 @@ class DashboardConsistencyTest extends TestCase
         $this->assertCount($resumo['clientes_unicos_pagantes'], $clientes);
     }
 
+    public function test_subtotal_menos_desconto_mais_frete_fecha_com_total(): void
+    {
+        $produto = $this->criarProduto();
+
+        $semDesconto = $this->criarPedido($produto, Carbon::create(2025, 1, 10), Order::STATUS_PAGO, qty: 1);
+        $comDesconto = $this->criarPedido($produto, Carbon::create(2025, 1, 11), Order::STATUS_PAGO, qty: 2, desconto: 30.00);
+
+        // subtotal 100,00 - desconto 0 + frete 19,90 = 119,90
+        $this->assertEquals(0.0, (float) $semDesconto->desconto);
+        $this->assertEquals(119.90, (float) $semDesconto->total);
+
+        // subtotal 200,00 - desconto 30,00 + frete 19,90 = 189,90
+        $this->assertEquals(30.00, (float) $comDesconto->desconto);
+        $this->assertEquals(189.90, (float) $comDesconto->total);
+
+        foreach ([$semDesconto, $comDesconto] as $pedido) {
+            $this->assertEquals(
+                round((float) $pedido->subtotal - (float) $pedido->desconto + (float) $pedido->frete, 2),
+                (float) $pedido->total,
+                "subtotal - desconto + frete deve fechar com total no pedido {$pedido->numero_pedido}"
+            );
+        }
+    }
+
     private function criarProduto(?float $custo = null): Product
     {
         return Product::create([
@@ -237,11 +262,11 @@ class DashboardConsistencyTest extends TestCase
         ]);
     }
 
-    private function criarPedido(Product $produto, Carbon $criadoEm, string $status, int $qty): Order
+    private function criarPedido(Product $produto, Carbon $criadoEm, string $status, int $qty, float $desconto = 0.0): Order
     {
         $subtotal = round($produto->preco * $qty, 2);
         $frete = $status === Order::STATUS_PAGO ? self::FRETE : 0;
-        $total = $subtotal + $frete;
+        $total = $subtotal - $desconto + $frete;
 
         $order = Order::create([
             'user_id' => null,
@@ -251,6 +276,7 @@ class DashboardConsistencyTest extends TestCase
             'email' => 'cliente.'.uniqid().'@exemplo.test',
             'telefone' => '(11) 90000-0000',
             'subtotal' => $subtotal,
+            'desconto' => $desconto,
             'frete' => $frete,
             'total' => $total,
             'cupom' => null,

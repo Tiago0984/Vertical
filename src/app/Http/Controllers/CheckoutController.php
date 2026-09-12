@@ -80,8 +80,17 @@ class CheckoutController extends Controller
             return response()->json(['message' => 'Carrinho vazio ou produtos inválidos.'], 422);
         }
 
+        // Frete grátis decidido pelo subtotal CHEIO, antes do desconto -- um
+        // cupom não pode fazer o cliente perder o frete grátis que ele já
+        // tinha, isso é experiência ruim e gera reclamação.
         $frete = $subtotal >= 150 ? 0 : 19.90;
-        $total = $subtotal + $frete;
+
+        // Sem cupom implementado ainda (fase 2), desconto é sempre zero --
+        // 0 aqui significa "sem desconto" de verdade, diferente de
+        // products.custo (onde 0 seria uma afirmação falsa sobre o custo).
+        $desconto = 0.00;
+        $total = $subtotal - $desconto + $frete;
+
         $status = $data['forma_pagamento'] === Order::PAGAMENTO_CARTAO ? Order::STATUS_PAGO : Order::STATUS_PENDENTE;
 
         do {
@@ -96,16 +105,14 @@ class CheckoutController extends Controller
             'email' => $data['email'],
             'telefone' => $data['telefone'],
             'subtotal' => $subtotal,
+            'desconto' => $desconto,
             'frete' => $frete,
             'total' => $total,
-            // Cupom hoje é só o campo string 'orders.cupom' e nunca é aplicado
-            // aqui (sempre null) -- nenhum pedido tem desconto de verdade.
-            // PRÉ-REQUISITO antes de implementar desconto real: criar uma
-            // coluna própria (ex.: orders.desconto) para gravar o VALOR
-            // aplicado no momento da compra. Sem isso, o desconto concedido
-            // fica só implícito em subtotal/total e não dá pra reconstruir
-            // depois -- quebra qualquer conciliação de subtotal+frete vs
-            // total nos relatórios (dashboard/financeiro).
+            // Cupom hoje é só o campo string 'orders.cupom' e nunca é
+            // preenchido aqui (sempre null) -- não existe campo de cupom no
+            // checkout nem tabela de cupons ainda (fase 2). O problema que
+            // bloqueava desconto real (não ter onde gravar o VALOR aplicado
+            // no momento da compra) já está resolvido: orders.desconto acima.
             'cupom' => null,
             'forma_pagamento' => $data['forma_pagamento'],
             'status' => $status,
