@@ -8,7 +8,6 @@ use App\Models\Product;
 use Carbon\CarbonPeriod;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Collection;
-use Illuminate\Support\Facades\DB;
 
 /**
  * KPIs do dashboard administrativo.
@@ -417,15 +416,12 @@ class DashboardService
     }
 
     /**
-     * DATE_FORMAT() é só MySQL (produção); os testes rodam em SQLite
-     * (phpunit.xml), que usa strftime() -- sem essa checagem, todo método
-     * que agrupa por mês funciona em produção e quebra em qualquer teste
-     * que o exercite.
+     * Compartilhado entre vendasPorMes() e financeiro() -- os testes rodam
+     * em MySQL de verdade (phpunit.xml), o mesmo motor de produção, então
+     * não existe caminho alternativo aqui: um único DATE_FORMAT().
      */
     private function mesExpressaoSql(string $coluna): string
     {
-        return DB::connection()->getDriverName() === 'sqlite'
-            ? "strftime('%Y-%m', {$coluna})"
-            : "DATE_FORMAT({$coluna}, '%Y-%m')";
+        return "DATE_FORMAT({$coluna}, '%Y-%m')";
     }
 }
