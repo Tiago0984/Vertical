@@ -163,7 +163,13 @@ class CheckoutCupomFase2bTest extends TestCase
             'valor em cache (test_finalizar_rele_usos_do_banco_no_momento_do_lock_nao_usa_valor_em_cache). '.
             'Verificação de concorrência de verdade exigiria dois processos PHP '.
             'independentes contra o banco, fora do wrapper transacional do PHPUnit -- '.
-            'viável como script manual, não como teste automatizado desta suíte.'
+            'viável como script manual, não como teste automatizado desta suíte. '.
+            'Verificado manualmente em 15/09/2026, em dev: duas requisições simultâneas a '.
+            '/checkout/finalizar (Promise.all no console do navegador, mesmo payload), '.
+            'cupom BEMVINDO10 com uso_maximo = 1. Resultado: dois pedidos criados, '.
+            'contador em 1/1, e apenas um com desconto -- CS-WSXKCUGC (R$ 127,84, com os '.
+            '20%) e CS-JHWLODO4 (R$ 159,80, preço cheio). O lockForUpdate segurou a '.
+            'segunda transação como esperado.'
         );
     }
 
