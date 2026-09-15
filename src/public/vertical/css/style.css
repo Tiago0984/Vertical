@@ -2603,22 +2603,22 @@ padding: 2px 5px 1px;
   color: #000000;
   text-decoration:none;
 }
-.panel-body > ul#c_tab1 {
+.panel-body > ul#c_tab1, .panel-body > ul#c_tab_preco {
   list-style: outside none none;
 margin: -28px 0 0 26px;
 padding: 0;
 }
-.panel-body > ul#c_tab1 li {
+.panel-body > ul#c_tab1 li, .panel-body > ul#c_tab_preco li {
   list-style-image: url("images/blog_li.png");
 }
-.panel-body > ul#c_tab1 li a {
+.panel-body > ul#c_tab1 li a, .panel-body > ul#c_tab_preco li a {
   color: #777777;
   display: block;
   font-size: 12px;
   padding: 11px 2px;
   text-transform: uppercase;
 }
-.panel-body > ul#c_tab1 li a:hover {
+.panel-body > ul#c_tab1 li a:hover, .panel-body > ul#c_tab_preco li a:hover {
   color: #000000;
   text-decoration:none;
 }

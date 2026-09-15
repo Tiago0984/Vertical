@@ -15,18 +15,24 @@
                         </ul>
                     </div>
                     <div class="s_results">
-                        <p><span>|</span> exibindo {{ $produtos->count() }} resultados</p>
+                        <p>
+                            <span>|</span> exibindo {{ $produtos->count() }} resultados
+                            @if ($temFiltroAtivo)
+                                &nbsp;&mdash;&nbsp;<a href="{{ $urlLimparFiltros }}">limpar filtros</a>
+                            @endif
+                        </p>
                     </div>
                 </div>
             </div>
             <div class="col-md-6 col-sm-4 col-xs-12">
                 <div class="filter_box_right">
-                    <a class="dropdown-toggle" data-toggle="dropdown" href="#">ordenar por novidade <span class="caret"></span></a>
+                    <a class="dropdown-toggle" data-toggle="dropdown" href="#">ordenar por {{ \Illuminate\Support\Str::lower($ordemAtualLabel) }} <span class="caret"></span></a>
                     <ul class="dropdown-menu">
-                        <li><a href="#">Mais vendidos</a></li>
-                        <li><a href="#">Mais populares</a></li>
-                        <li><a href="#">Ordem alfabética</a></li>
-                        <li><a href="#">Mais antigos</a></li>
+                        @foreach ($opcoesOrdem as $opcao)
+                            <li class="{{ $opcao['ativa'] ? 'active' : '' }}">
+                                <a href="{{ $opcao['url'] }}" style="{{ $opcao['ativa'] ? 'font-weight:700;' : '' }}">{{ $opcao['label'] }}</a>
+                            </li>
+                        @endforeach
                     </ul>
                 </div>
             </div>
@@ -60,8 +66,15 @@
                             <div id="collapseCatOne" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="headingCatOne">
                                 <div class="panel-body">
                                     <ul id="c_tab1">
+                                        <li>
+                                            <a href="{{ $urlTodasCategorias }}" style="{{ ! $categorias->contains('ativa', true) ? 'font-weight:700;' : '' }}">Todas as categorias</a>
+                                        </li>
                                         @foreach ($categorias as $categoria)
-                                            <li><a href="#">{{ $categoria->nome }} ({{ $categoria->products_count }})</a></li>
+                                            <li>
+                                                <a href="{{ $categoria['url'] }}" style="{{ $categoria['ativa'] ? 'font-weight:700; text-decoration:underline;' : '' }}">
+                                                    {{ $categoria['nome'] }} ({{ $categoria['products_count'] }})
+                                                </a>
+                                            </li>
                                         @endforeach
                                     </ul>
                                 </div>
@@ -80,13 +93,22 @@
                             </div>
                             <div id="collapseCatTwo" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingCatTwo">
                                 <div class="panel-body">
-                                    <div id="slider-range"></div>
-                                    <div class="cat_filter_box">
-                                        <p>
-                                            <label for="amount">Filtro</label>
-                                            <input type="text" id="amount" readonly style="border:0; color:#000; font-weight:bold;">
-                                        </p>
-                                    </div>
+                                    {{-- Faixas fixas, não slider -- o template tinha um jQuery UI
+                                         slider (#slider-range) que nunca foi ligado a nada; faixa
+                                         pré-definida é o que dá pra manter funcionando de verdade
+                                         sem entrar em trabalho de front que não se paga aqui. --}}
+                                    <ul id="c_tab_preco">
+                                        <li>
+                                            <a href="{{ $urlTodosPrecos }}" style="{{ ! $faixasPreco->contains('ativa', true) ? 'font-weight:700;' : '' }}">Todos os preços</a>
+                                        </li>
+                                        @foreach ($faixasPreco as $faixa)
+                                            <li>
+                                                <a href="{{ $faixa['url'] }}" style="{{ $faixa['ativa'] ? 'font-weight:700; text-decoration:underline;' : '' }}">
+                                                    {{ $faixa['label'] }}
+                                                </a>
+                                            </li>
+                                        @endforeach
+                                    </ul>
                                 </div>
                             </div>
                         </div>
@@ -100,11 +122,18 @@
                 <div class="main_category_right">
                     <div class="row">
 
-                        @foreach ($produtos as $produto)
+                        @forelse ($produtos as $produto)
                             <div class="col-md-4 col-sm-6 col-xs-12 produto-col">
                                 @include('partials.product-card', ['product' => $produto])
                             </div>
-                        @endforeach
+                        @empty
+                            <div class="col-md-12">
+                                <p style="text-align:center; color:#777; padding:40px 0;">
+                                    Nenhum produto encontrado com esse filtro.
+                                    <a href="{{ $urlLimparFiltros }}">Limpar filtros</a>.
+                                </p>
+                            </div>
+                        @endforelse
 
                     </div>
 
