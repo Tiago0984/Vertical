@@ -32,7 +32,7 @@ class LojaFiltrosFuncionaisTest extends TestCase
         $response = $this->get(route('loja', ['categoria' => $camisetas->slug]));
 
         $response->assertOk();
-        $response->assertSee('exibindo 2 resultados');
+        $response->assertSee('exibindo 1–2 de 2 resultados');
         $response->assertSee('Camiseta A');
         $response->assertSee('Camiseta B');
         $response->assertDontSee('Boné');
@@ -178,6 +178,113 @@ class LojaFiltrosFuncionaisTest extends TestCase
         $this->get(route('loja', ['preco' => 'faixa-desconhecida']))->assertOk();
         $this->get(route('loja', ['ordem' => 'ordem-estranha']))->assertOk();
         $this->get('/loja?categoria[]=x&preco[]=y&ordem[]=z')->assertOk();
+    }
+
+    public function test_pagina_invalida_na_query_string_nao_quebra_a_pagina(): void
+    {
+        $this->criarProduto();
+
+        $this->get(route('loja', ['page' => 999]))->assertOk();
+        $this->get('/loja?page=abc')->assertOk();
+        $this->get('/loja?page=-1')->assertOk();
+        $this->get('/loja?page[]=1')->assertOk();
+    }
+
+    public function test_pagina_fora_do_alcance_mostra_mensagem_em_vez_de_grid_vazio(): void
+    {
+        $this->criarProduto(['nome' => 'Único Produto']);
+
+        $response = $this->get(route('loja', ['page' => 999]));
+
+        $response->assertOk();
+        $response->assertSee('Nenhum produto encontrado com esse filtro.');
+        $response->assertDontSee('Único Produto');
+    }
+
+    public function test_paginacao_preserva_os_tres_filtros_ao_ir_para_pagina_2(): void
+    {
+        $categoria = $this->criarCategoria('Camisetas');
+
+        // 14 produtos na faixa 60-80, todos na mesma categoria -- com
+        // ordenação alfabética dá pra saber exatamente quem cai na página 2
+        // (os dois últimos em ordem alfabética: "13" e "14").
+        foreach (range(1, 14) as $i) {
+            $this->criarProduto([
+                'nome' => 'Camiseta '.str_pad((string) $i, 2, '0', STR_PAD_LEFT),
+                'category_id' => $categoria->id,
+                'preco' => 65.00,
+            ]);
+        }
+
+        $response = $this->get(route('loja', [
+            'categoria' => $categoria->slug,
+            'preco' => '60-80',
+            'ordem' => 'alfabetica',
+            'page' => 2,
+        ]));
+
+        $response->assertOk();
+        $response->assertSee('Camiseta 13');
+        $response->assertSee('Camiseta 14');
+        $response->assertDontSee('Camiseta 01');
+        $response->assertSee('exibindo 13–14 de 14 resultados');
+
+        // O link "Anterior" (volta pra página 1) tem que preservar os três filtros.
+        preg_match('/<a href="([^"]*)" rel="prev">/', $response->getContent(), $matches);
+        $this->assertNotEmpty($matches, 'link "Anterior" não encontrado');
+        $this->assertStringContainsString('categoria='.$categoria->slug, $matches[1]);
+        $this->assertStringContainsString('preco=60-80', $matches[1]);
+        $this->assertStringContainsString('ordem=alfabetica', $matches[1]);
+    }
+
+    public function test_trocar_de_filtro_reseta_para_pagina_1(): void
+    {
+        foreach (range(1, 14) as $i) {
+            $this->criarProduto(['nome' => 'Produto '.str_pad((string) $i, 2, '0', STR_PAD_LEFT)]);
+        }
+
+        // Parte da página 2, sem filtro nenhum.
+        $response = $this->get(route('loja', ['page' => 2]));
+        $response->assertOk();
+
+        $html = $response->getContent();
+
+        // O link de ordenar por "menor preço" não pode levar page=2 junto --
+        // mudar de ordenação tem que voltar pra página 1.
+        preg_match('/href="([^"]*)"[^>]*>Menor preço<\/a>/', $html, $matches);
+        $this->assertNotEmpty($matches, 'link "Menor preço" não encontrado');
+        $this->assertStringNotContainsString('page=', $matches[1]);
+
+        // O mesmo vale pro filtro de faixa de preço.
+        preg_match('/href="([^"]*)"[^>]*>\s*Até R\$ 60\s*<\/a>/', $html, $matches2);
+        $this->assertNotEmpty($matches2, 'link "Até R$ 60" não encontrado');
+        $this->assertStringNotContainsString('page=', $matches2[1]);
+    }
+
+    public function test_contador_mostra_total_filtrado_nao_o_da_pagina(): void
+    {
+        foreach (range(1, 14) as $i) {
+            $this->criarProduto(['nome' => 'Produto Contador '.$i]);
+        }
+
+        $response = $this->get(route('loja'));
+        $response->assertOk();
+        $response->assertSee('exibindo 1–12 de 14 resultados');
+
+        $response = $this->get(route('loja', ['page' => 2]));
+        $response->assertOk();
+        $response->assertSee('exibindo 13–14 de 14 resultados');
+    }
+
+    public function test_categoria_pequena_nao_renderiza_controles_de_paginacao(): void
+    {
+        $categoria = $this->criarCategoria('Categoria Pequena');
+        $this->criarProduto(['nome' => 'Único', 'category_id' => $categoria->id]);
+
+        $response = $this->get(route('loja', ['categoria' => $categoria->slug]));
+
+        $response->assertOk();
+        $response->assertDontSee('id="pagination"', false);
     }
 
     private function extrairOrdemDosNomes(string $html, array $nomes): array

@@ -16,7 +16,12 @@
                     </div>
                     <div class="s_results">
                         <p>
-                            <span>|</span> exibindo {{ $produtos->count() }} resultados
+                            <span>|</span>
+                            @if ($produtos->total() > 0)
+                                exibindo {{ $produtos->firstItem() }}–{{ $produtos->lastItem() }} de {{ $produtos->total() }} resultados
+                            @else
+                                exibindo 0 resultados
+                            @endif
                             @if ($temFiltroAtivo)
                                 &nbsp;&mdash;&nbsp;<a href="{{ $urlLimparFiltros }}">limpar filtros</a>
                             @endif
@@ -137,19 +142,12 @@
 
                     </div>
 
-                    {{-- Paginação --}}
+                    {{-- Paginação -- view própria em resources/views/vendor/pagination/loja.blade.php,
+                         reaproveita as classes pagi_ul/#pagination do tema com links reais. --}}
                     <div class="row">
                         <div class="col-md-12 col-sm-12 col-xs-12">
                             <div class="pagi_line"></div>
-                            <div class="pagi_ul">
-                                <ul id="pagination">
-                                    <li><a href="#">Anterior</a></li>
-                                    <li><a href="#">1</a></li>
-                                    <li><a href="#">2</a></li>
-                                    <li><a href="#">3</a></li>
-                                    <li><a href="#">Próximo</a></li>
-                                </ul>
-                            </div>
+                            {{ $produtos->links('vendor.pagination.loja') }}
                         </div>
                     </div>
                 </div>

@@ -10,6 +10,8 @@ use Illuminate\Http\Request;
 
 class LojaController extends Controller
 {
+    private const POR_PAGINA = 12;
+
     private const ORDEM_PADRAO = 'recentes';
 
     /**
@@ -56,6 +58,13 @@ class LojaController extends Controller
             $ordemChave = self::ORDEM_PADRAO;
         }
 
+        // Página inválida (não numérica, negativa, "?page[]=1") vira 1 aqui
+        // mesmo, sem deixar o paginate() cair no fallback dele: passando
+        // sempre um inteiro concreto (nunca null), o Laravel nunca releria o
+        // "page" bruto da request pra tentar validar sozinho -- e "page"
+        // como array quebrando validação interna vem exatamente daí.
+        $pagina = $this->paginaValida($request);
+
         $query = Product::query()->with('category');
 
         if ($categoriaAtiva) {
@@ -73,11 +82,17 @@ class LojaController extends Controller
 
         $this->aplicarOrdenacao($query, $ordemChave);
 
-        $produtos = $query->get();
+        // withQueryString() é o que impede a página 2 de perder
+        // categoria/preco/ordem -- sem isso, ir pra próxima página cai num
+        // catálogo sem filtro nenhum, diferente do que a pessoa via.
+        $produtos = $query->paginate(self::POR_PAGINA, ['*'], 'page', $pagina)->withQueryString();
 
         // Só os parâmetros reconhecidos/válidos sobrevivem nos links -- um
         // parâmetro inválido na URL de entrada (categoria/faixa/ordem que não
-        // existe) não se propaga pros links da própria tela.
+        // existe) não se propaga pros links da própria tela. "page" nunca
+        // entra aqui de propósito: trocar de filtro tem que voltar pra
+        // página 1 -- quem está na 2 e filtra por uma categoria pequena não
+        // pode cair numa página que não existe mais pra ela.
         $paramsAtuais = array_filter([
             'categoria' => $categoriaAtiva?->slug,
             'preco' => $faixaAtiva !== null ? $faixaChave : null,
@@ -146,6 +161,11 @@ class LojaController extends Controller
      * override -- valor null no override REMOVE a chave (usado pelos links
      * "todas as categorias" / "todos os preços" e pra não gravar
      * ?ordem=recentes na URL do padrão).
+     *
+     * "page" é descartado explicitamente (nunca está em $paramsAtuais nem
+     * deve vir em $overrides, mas o unset() garante isso mesmo que alguém
+     * adicione um dia): mudar categoria/preço/ordem tem que voltar pra
+     * página 1 sempre, não continuar na página em que a pessoa estava.
      */
     private function construirUrl(array $paramsAtuais, array $overrides): string
     {
@@ -153,6 +173,7 @@ class LojaController extends Controller
             array_merge($paramsAtuais, $overrides),
             fn ($valor) => $valor !== null
         );
+        unset($params['page']);
 
         return route('loja', $params);
     }
@@ -162,5 +183,24 @@ class LojaController extends Controller
         $valor = $request->query($chave);
 
         return is_string($valor) ? $valor : null;
+    }
+
+    /**
+     * Sempre devolve um inteiro concreto (nunca null) -- "?page=abc",
+     * "?page=-1" e "?page[]=1" caem pra 1 aqui mesmo. Devolver null faria o
+     * paginate() cair no fallback dele (Paginator::resolveCurrentPage()),
+     * que RELÊ o "page" bruto da request pra validar sozinho; "page" como
+     * array chegando lá é o cenário que queremos evitar por completo, não
+     * confiar que o validador interno lida bem com ele.
+     */
+    private function paginaValida(Request $request): int
+    {
+        $valor = $this->queryString($request, 'page');
+
+        if ($valor === null || ! ctype_digit($valor) || (int) $valor < 1) {
+            return 1;
+        }
+
+        return (int) $valor;
     }
 }
