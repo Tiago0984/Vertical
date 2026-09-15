@@ -7,8 +7,6 @@
 @include('site.home.promocao')
 @include('site.home.tendencias')
 @include('site.home.produtos')
-@include('site.home.novidades')
-@include('site.home.depoimentos')
 @include('site.home.marcas')
 
 @endsection

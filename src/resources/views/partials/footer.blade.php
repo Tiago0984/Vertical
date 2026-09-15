@@ -60,7 +60,6 @@
                             <li><a href="{{ route('categorias') }}">Promoções</a></li>
                             <li><a href="{{ route('loja') }}">Lançamentos</a></li>
                             <li><a href="{{ route('loja') }}">Coleções</a></li>
-                            <li><a href="{{ route('blog') }}">Blog de Moda</a></li>
                         </ul>
                     </div>
                 </div>

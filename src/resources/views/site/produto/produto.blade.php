@@ -59,16 +59,6 @@
                         {{ $produto->nome }}
                     </h2>
 
-                    {{-- Avaliação --}}
-                    <div style="margin-bottom: 10px;">
-                        <i class="fa fa-star" style="color:#f5a623;"></i>
-                        <i class="fa fa-star" style="color:#f5a623;"></i>
-                        <i class="fa fa-star" style="color:#f5a623;"></i>
-                        <i class="fa fa-star" style="color:#f5a623;"></i>
-                        <i class="fa fa-star-half-o" style="color:#f5a623;"></i>
-                        <span style="font-size:12px; color:#999; margin-left:6px;">(42 avaliações)</span>
-                    </div>
-
                     {{-- Preço --}}
                     <div style="margin-bottom: 18px;">
                         <span style="font-size:28px; font-weight:700; color:#000;">R$ {{ number_format($produto->preco, 2, ',', '.') }}</span>
@@ -169,12 +159,6 @@
                                Material &amp; Cuidados
                             </a>
                         </li>
-                        <li role="presentation">
-                            <a href="#aba-avaliacoes" role="tab" data-toggle="tab"
-                               style="font-size:12px; font-weight:700; text-transform:uppercase;">
-                               Avaliações <span style="background:#000; color:#fff; border-radius:10px; padding:1px 7px; font-size:10px;">42</span>
-                            </a>
-                        </li>
                     </ul>
 
                     <div class="tab-content">
@@ -229,53 +213,6 @@
                                         <i class="fa fa-tint" style="font-size:36px; color:#1565C0; display:block; margin-bottom:10px;"></i>
                                         <p style="font-size:13px; color:#555; margin:0;">Lavar fria</p>
                                     </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        {{-- Avaliações --}}
-                        <div role="tabpanel" class="tab-pane" id="aba-avaliacoes">
-                            <div class="row">
-                                <div class="col-md-8">
-
-                                    {{-- Avaliação 1 --}}
-                                    <div style="border-bottom:1px solid #f0f0f0; padding-bottom:20px; margin-bottom:20px;">
-                                        <div style="display:flex; align-items:center; gap:12px; margin-bottom:8px;">
-                                            <div style="width:42px; height:42px; background:#000; border-radius:50%; display:flex; align-items:center; justify-content:center; color:#fff; font-weight:700; font-size:16px;">M</div>
-                                            <div>
-                                                <strong style="font-size:13px;">Maria S.</strong>
-                                                <div>
-                                                    <i class="fa fa-star" style="color:#f5a623; font-size:11px;"></i>
-                                                    <i class="fa fa-star" style="color:#f5a623; font-size:11px;"></i>
-                                                    <i class="fa fa-star" style="color:#f5a623; font-size:11px;"></i>
-                                                    <i class="fa fa-star" style="color:#f5a623; font-size:11px;"></i>
-                                                    <i class="fa fa-star" style="color:#f5a623; font-size:11px;"></i>
-                                                    <span style="font-size:11px; color:#aaa; margin-left:4px;">há 3 dias</span>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <p style="font-size:14px; color:#555; margin:0;">Camiseta incrível! O algodão é super macio e a estampa ficou perfeita depois de várias lavagens. Comprei tamanho M e caiu certinho.</p>
-                                    </div>
-
-                                    {{-- Avaliação 2 --}}
-                                    <div style="border-bottom:1px solid #f0f0f0; padding-bottom:20px; margin-bottom:20px;">
-                                        <div style="display:flex; align-items:center; gap:12px; margin-bottom:8px;">
-                                            <div style="width:42px; height:42px; background:#1565C0; border-radius:50%; display:flex; align-items:center; justify-content:center; color:#fff; font-weight:700; font-size:16px;">J</div>
-                                            <div>
-                                                <strong style="font-size:13px;">João P.</strong>
-                                                <div>
-                                                    <i class="fa fa-star" style="color:#f5a623; font-size:11px;"></i>
-                                                    <i class="fa fa-star" style="color:#f5a623; font-size:11px;"></i>
-                                                    <i class="fa fa-star" style="color:#f5a623; font-size:11px;"></i>
-                                                    <i class="fa fa-star" style="color:#f5a623; font-size:11px;"></i>
-                                                    <i class="fa fa-star-o" style="color:#f5a623; font-size:11px;"></i>
-                                                    <span style="font-size:11px; color:#aaa; margin-left:4px;">há 1 semana</span>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <p style="font-size:14px; color:#555; margin:0;">Muito boa qualidade! Entrega rápida e embalagem excelente. Só tirei uma estrela porque o tamanho G ficou um pouco largo — sugiro pedir um tamanho a menos se preferir mais ajustado.</p>
-                                    </div>
-
                                 </div>
                             </div>
                         </div>

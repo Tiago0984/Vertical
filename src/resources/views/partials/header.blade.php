@@ -77,7 +77,6 @@
 					<li><a href="{{ route('home') }}">Início</a></li>
 					<li><a href="{{ route('categorias') }}">Camisetas</a></li>
 					<li><a href="{{ route('loja') }}">Loja</a></li>
-					<li><a href="{{ route('blog') }}">Blog</a></li>
 					<li><a href="{{ route('favoritos') }}">Favoritos</a></li>
 				</ul>
 			</div>
@@ -87,7 +86,6 @@
 						<li class="current-page-item"><a href="{{ route('home') }}">Início</a></li>
 						<li><a href="{{ route('categorias') }}">Camisetas</a></li>
 						<li><a href="{{ route('loja') }}">Loja</a></li>
-						<li><a href="{{ route('blog') }}">Blog</a></li>
 					</ul>
 				</nav>
 			</div>
@@ -116,9 +114,6 @@
 							</li>
 							<li>
 								<a href='{{ route('loja') }}'><span>Loja</span></a>
-							</li>
-							<li>
-								<a href='{{ route('blog') }}'><span>Blog</span></a>
 							</li>
 							<li>
 								<a href='#' class="js-cart-open"><span>Carrinho</span></a>

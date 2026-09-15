@@ -67,18 +67,8 @@ ul.wid_social li {
 .filter_box_right .dropdown-menu {
   left: 64%;
 }
-.panel-body.colors_cat ul#cat_color li {
-  margin-right: 2px;
-}
-.panel-body.colors_cat ul#cat_color li a {
-  height: 34px;
-  width: 34px;
-}
 .cat_filter_box p label {
   padding: 4px 12px;
-}
-.panel-body ul#cat_size {
-  margin: -13px 17px 0;
 }
 #headingOne .panel-title {
   font-size: 11px;
@@ -498,15 +488,6 @@ ul#single_blog_nav {
 .cat_filter_box p label {
   padding: 4px 13px;
 }
-.panel-body.colors_cat ul#cat_color li {
-  margin-right: 2px;
-}
-.panel-body ul#cat_size {
-  margin: -13px 15px 0;
- }
-.panel-body ul#cat_size li {
-  margin-right: 13px;
-}
 .tr-add-cart ul li a {
   font-size: 13px;
 }
@@ -829,13 +810,6 @@ width: 94%;
 }
 .submit_btn {
   margin-left: 14px;
-}
-.panel-body ul#cat_size li a {
-  height: 28px;
-  width: 37px;
-}
-.panel-body > ul#cat_size li {
-  margin-right: 6px;
 }
 .filter_box_left p {
   margin-bottom: 15px;
@@ -1167,10 +1141,6 @@ position: relative;
   left: 0;
   width: 100%;
 }
-.panel-body.colors_cat ul#cat_color li a {
-  height: 25px;
-  width: 25px;
-}
 .owl-carousel .item {
   margin: 0 auto;
 }
@@ -1295,9 +1265,6 @@ float: none;
 }
 .filter_box_right .dropdown-menu {
   left: 64%;
-}
-.panel-body.colors_cat ul#cat_color li {
-  margin-right: 3px;
 }
 .client_box > img {
   float: left;
