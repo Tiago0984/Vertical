@@ -20,6 +20,7 @@ class DashboardController extends Controller
         $resumo = $service->resumo($inicio, $fim);
         $ranking = $service->rankingProdutos($inicio, $fim);
         $financeiro = $service->financeiro($inicio, $fim);
+        $desempenhoCupons = $service->desempenhoPorCupom($inicio, $fim);
         $clientes = $service->clientes($inicio, $fim);
 
         // estoque não recebe período de propósito -- é estado atual, a
@@ -66,6 +67,7 @@ class DashboardController extends Controller
             'resumo' => $resumo,
             'ranking' => $ranking,
             'financeiro' => $financeiro,
+            'desempenhoCupons' => $desempenhoCupons,
             'clientes' => $clientes,
             'estoque' => $estoque,
             'estoqueContagem' => $estoque['produtos']->countBy('status'),

@@ -72,6 +72,15 @@ class DashboardService
             ->distinct()
             ->count('email');
 
+        // Descontos e frete dos pedidos pagos -- existem só pra sustentar a
+        // linha de conciliação do card Financeiro (ver view):
+        //   receita de produtos (sem frete) - desconto + frete = faturamento
+        // Sem essa linha, o primeiro pedido com cupom faz a receita de
+        // produtos parecer maior que o faturamento, sem nada na tela
+        // explicando a diferença.
+        $descontoTotalPago = (float) $baseQuery()->where('status', Order::STATUS_PAGO)->sum('desconto');
+        $freteTotalPago = (float) $baseQuery()->where('status', Order::STATUS_PAGO)->sum('frete');
+
         return [
             'periodo' => [
                 'inicio' => $inicio->toDateString(),
@@ -85,6 +94,8 @@ class DashboardService
             'faturamento' => round($faturamento, 2),
             'ticket_medio' => round($ticketMedio, 2),
             'clientes_unicos_pagantes' => $clientesUnicosPagantes,
+            'desconto_total_pago' => round($descontoTotalPago, 2),
+            'frete_total_pago' => round($freteTotalPago, 2),
         ];
     }
 
@@ -281,6 +292,36 @@ class DashboardService
                 'produto' => $linha->produto,
                 'qtd_vendida' => (int) $linha->qtd_vendida,
                 'receita' => round((float) $linha->receita, 2),
+            ]);
+    }
+
+    /**
+     * Desempenho por cupom no período: só pedidos pagos, agrupados por
+     * orders.cupom (o CÓDIGO congelado no pedido, não uma FK) -- pedido sem
+     * cupom (coluna NULL) fica de fora, não é "cupom vazio" nem entra
+     * somado em nenhum grupo.
+     *
+     * faturamento aqui é orders.total (com frete, mesma convenção de
+     * "faturamento" do resto do service); desconto_total é a soma do que
+     * orders.desconto tirou nesses pedidos.
+     *
+     * @return Collection<int, array{codigo: string, pedidos: int, faturamento: float, desconto_total: float}>
+     */
+    public function desempenhoPorCupom(Carbon $inicio, Carbon $fim): Collection
+    {
+        return Order::query()
+            ->where('status', Order::STATUS_PAGO)
+            ->whereBetween('created_at', [$inicio, $fim])
+            ->whereNotNull('cupom')
+            ->selectRaw('cupom, COUNT(*) as pedidos, SUM(total) as faturamento, SUM(desconto) as desconto_total')
+            ->groupBy('cupom')
+            ->orderByDesc('faturamento')
+            ->get()
+            ->map(fn ($linha) => [
+                'codigo' => $linha->cupom,
+                'pedidos' => (int) $linha->pedidos,
+                'faturamento' => round((float) $linha->faturamento, 2),
+                'desconto_total' => round((float) $linha->desconto_total, 2),
             ]);
     }
 

@@ -98,6 +98,12 @@
                     'sublabel' => 'compraram no período',
                 ])
             </div>
+            <div class="col-lg-3 col-md-4 col-6">
+                @include('admin.partials.stat-card', [
+                    'label' => 'Descontos concedidos',
+                    'value' => 'R$ '.number_format($resumo['desconto_total_pago'], 2, ',', '.'),
+                ])
+            </div>
         </div>
 
         {{-- ===== Gráfico de vendas ===== --}}
@@ -165,23 +171,41 @@
                 @if ($financeiro['cobertura_custo']['produtos_vendidos'] === 0)
                     {{-- Sem venda nenhuma no período, "0 de 0 produtos com custo" não é
                          alerta de dado em falta -- é ausência de dado pra calcular
-                         qualquer coisa. Cor de alerta aqui seria falso positivo. --}}
+                         qualquer coisa. Cor de alerta aqui seria falso positivo.
+                         A conciliação abaixo também fica de fora: zeros numa
+                         identidade contábil parecem cálculo conferido, e não são. --}}
                     <p class="text-secondary small mb-3">Sem vendas no período.</p>
-                @elseif (! $financeiro['margem_confiavel'])
-                    <div class="alert alert-danger">
-                        <strong>Margem não confiável neste período.</strong>
-                        Só {{ $financeiro['cobertura_custo']['produtos_com_custo'] }} de
-                        {{ $financeiro['cobertura_custo']['produtos_vendidos'] }} produtos vendidos têm custo
-                        cadastrado ({{ number_format($financeiro['cobertura_custo']['percentual'] * 100, 1, ',', '.') }}%,
-                        abaixo do mínimo de {{ number_format($financeiro['cobertura_custo']['minimo_exigido'] * 100, 0, ',', '.') }}%
-                        exigido). Cadastre o custo dos produtos em falta pra liberar o cálculo de margem.
-                    </div>
                 @else
-                    <p class="text-secondary small mb-3">
-                        Cobertura de custo: {{ $financeiro['cobertura_custo']['produtos_com_custo'] }} de
-                        {{ $financeiro['cobertura_custo']['produtos_vendidos'] }} produtos vendidos
-                        ({{ number_format($financeiro['cobertura_custo']['percentual'] * 100, 1, ',', '.') }}%).
+                    {{--
+                        Conciliação: SUM(order_items.subtotal) é receita BRUTA,
+                        antes do desconto. Sem esta linha, no primeiro pedido com
+                        cupom "Receita de produtos" fica maior que "Faturamento"
+                        e parece erro. Só aparece quando há venda paga no período
+                        -- mesma condição da tabela de CMV/lucro logo abaixo.
+                    --}}
+                    <p class="small text-secondary mb-3">
+                        Receita de produtos (sem frete) R$ {{ number_format($receitaProdutos, 2, ',', '.') }}
+                        − Descontos concedidos R$ {{ number_format($resumo['desconto_total_pago'], 2, ',', '.') }}
+                        + Frete R$ {{ number_format($resumo['frete_total_pago'], 2, ',', '.') }}
+                        = Faturamento (com frete) R$ {{ number_format($resumo['faturamento'], 2, ',', '.') }}
                     </p>
+
+                    @if (! $financeiro['margem_confiavel'])
+                        <div class="alert alert-danger">
+                            <strong>Margem não confiável neste período.</strong>
+                            Só {{ $financeiro['cobertura_custo']['produtos_com_custo'] }} de
+                            {{ $financeiro['cobertura_custo']['produtos_vendidos'] }} produtos vendidos têm custo
+                            cadastrado ({{ number_format($financeiro['cobertura_custo']['percentual'] * 100, 1, ',', '.') }}%,
+                            abaixo do mínimo de {{ number_format($financeiro['cobertura_custo']['minimo_exigido'] * 100, 0, ',', '.') }}%
+                            exigido). Cadastre o custo dos produtos em falta pra liberar o cálculo de margem.
+                        </div>
+                    @else
+                        <p class="text-secondary small mb-3">
+                            Cobertura de custo: {{ $financeiro['cobertura_custo']['produtos_com_custo'] }} de
+                            {{ $financeiro['cobertura_custo']['produtos_vendidos'] }} produtos vendidos
+                            ({{ number_format($financeiro['cobertura_custo']['percentual'] * 100, 1, ',', '.') }}%).
+                        </p>
+                    @endif
                 @endif
 
                 <div class="table-responsive">
@@ -206,6 +230,37 @@
                         </tbody>
                     </table>
                 </div>
+
+                <h6 class="text-uppercase text-secondary small mt-4 mb-2">Desempenho por cupom</h6>
+                @if ($desempenhoCupons->isEmpty())
+                    {{-- Rótulo explica a ausência -- diferente da coluna do ranking de
+                         produtos, aqui a mensagem serve porque "nenhum cupom usado" é
+                         uma resposta completa, não um "sem dado" genérico. --}}
+                    <p class="text-secondary small mb-0">Nenhum cupom usado no período.</p>
+                @else
+                    <div class="table-responsive">
+                        <table class="table table-striped m-0">
+                            <thead>
+                                <tr>
+                                    <th>Código</th>
+                                    <th>Pedidos</th>
+                                    <th>Faturamento gerado</th>
+                                    <th>Desconto concedido</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach ($desempenhoCupons as $linha)
+                                    <tr>
+                                        <td>{{ $linha['codigo'] }}</td>
+                                        <td>{{ $linha['pedidos'] }}</td>
+                                        <td>R$ {{ number_format($linha['faturamento'], 2, ',', '.') }}</td>
+                                        <td>R$ {{ number_format($linha['desconto_total'], 2, ',', '.') }}</td>
+                                    </tr>
+                                @endforeach
+                            </tbody>
+                        </table>
+                    </div>
+                @endif
             </div>
         </div>
 
