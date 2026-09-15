@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Order;
-use App\Models\Product;
+use App\Services\PedidoCalculoService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 use Illuminate\Validation\Rule;
@@ -15,7 +15,7 @@ class CheckoutController extends Controller
         return view('site.checkout.checkout');
     }
 
-    public function finalizar(Request $request)
+    public function finalizar(Request $request, PedidoCalculoService $calculoService)
     {
         $data = $request->validate([
             'nome' => ['required', 'string', 'max:255'],
@@ -46,6 +46,10 @@ class CheckoutController extends Controller
             'endereco_faturamento.uf' => ['required_with:endereco_faturamento', 'string', 'size:2'],
             'endereco_faturamento.telefone' => ['nullable', 'string'],
 
+            // 'desconto' deliberadamente ausente daqui -- o cliente manda no
+            // máximo um código de cupom (fase 2b), nunca um valor de
+            // desconto. Qualquer 'desconto' no payload é descartado pelo
+            // validate() por não estar nas regras, nunca chega em $data.
             'items' => ['required', 'array', 'min:1'],
             'items.*.id' => ['required', 'integer'],
             'items.*.cor' => ['nullable', 'string'],
@@ -53,43 +57,15 @@ class CheckoutController extends Controller
             'items.*.qty' => ['required', 'integer', 'min:1'],
         ]);
 
-        $produtos = Product::whereIn('id', collect($data['items'])->pluck('id'))->get()->keyBy('id');
+        // Toda a aritmética (subtotal, desconto, frete, total) mora no
+        // service -- sem cupom vindo do cliente ainda (sem campo/UI, fase
+        // 2b), então desconto sai sempre zero, mas pelo MESMO caminho que
+        // vai calcular desconto de verdade depois.
+        $calculo = $calculoService->calcular($data['items']);
 
-        $subtotal = 0;
-        $itensParaCriar = [];
-        foreach ($data['items'] as $item) {
-            $produto = $produtos->get($item['id']);
-            if (! $produto) {
-                continue;
-            }
-
-            $itemSubtotal = $produto->preco * $item['qty'];
-            $subtotal += $itemSubtotal;
-            $itensParaCriar[] = [
-                'product_id' => $produto->id,
-                'nome' => $produto->nome,
-                'preco' => $produto->preco,
-                'cor' => $item['cor'] ?? null,
-                'tamanho' => $item['tamanho'] ?? null,
-                'quantidade' => $item['qty'],
-                'subtotal' => $itemSubtotal,
-            ];
-        }
-
-        if (empty($itensParaCriar)) {
+        if ($calculo['itens']->isEmpty()) {
             return response()->json(['message' => 'Carrinho vazio ou produtos inválidos.'], 422);
         }
-
-        // Frete grátis decidido pelo subtotal CHEIO, antes do desconto -- um
-        // cupom não pode fazer o cliente perder o frete grátis que ele já
-        // tinha, isso é experiência ruim e gera reclamação.
-        $frete = $subtotal >= 150 ? 0 : 19.90;
-
-        // Sem cupom implementado ainda (fase 2), desconto é sempre zero --
-        // 0 aqui significa "sem desconto" de verdade, diferente de
-        // products.custo (onde 0 seria uma afirmação falsa sobre o custo).
-        $desconto = 0.00;
-        $total = $subtotal - $desconto + $frete;
 
         $status = $data['forma_pagamento'] === Order::PAGAMENTO_CARTAO ? Order::STATUS_PAGO : Order::STATUS_PENDENTE;
 
@@ -104,15 +80,13 @@ class CheckoutController extends Controller
             'sobrenome' => $data['sobrenome'],
             'email' => $data['email'],
             'telefone' => $data['telefone'],
-            'subtotal' => $subtotal,
-            'desconto' => $desconto,
-            'frete' => $frete,
-            'total' => $total,
-            // Cupom hoje é só o campo string 'orders.cupom' e nunca é
-            // preenchido aqui (sempre null) -- não existe campo de cupom no
-            // checkout nem tabela de cupons ainda (fase 2). O problema que
-            // bloqueava desconto real (não ter onde gravar o VALOR aplicado
-            // no momento da compra) já está resolvido: orders.desconto acima.
+            'subtotal' => $calculo['subtotal'],
+            'desconto' => $calculo['desconto'],
+            'frete' => $calculo['frete'],
+            'total' => $calculo['total'],
+            // Sem campo de cupom no checkout ainda (fase 2b) -- ninguém
+            // preenche isso hoje. Quando existir, grava o CÓDIGO aqui
+            // ($calculo['cupom']?->codigo), nunca um valor de desconto.
             'cupom' => null,
             'forma_pagamento' => $data['forma_pagamento'],
             'status' => $status,
@@ -120,7 +94,7 @@ class CheckoutController extends Controller
             'endereco_faturamento' => $data['endereco_faturamento'] ?? null,
         ]);
 
-        foreach ($itensParaCriar as $item) {
+        foreach ($calculo['itens'] as $item) {
             $order->items()->create($item);
         }
 
