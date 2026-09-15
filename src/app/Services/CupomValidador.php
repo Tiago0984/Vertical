@@ -41,6 +41,10 @@ class CupomValidador
     ];
 
     /**
+     * Busca o cupom pelo código e valida -- sem lock, uso normal (preview
+     * na tela, rota de validar cupom). Pra revalidar um cupom JÁ CARREGADO
+     * sob lockForUpdate() dentro de uma transação, use validarCupom().
+     *
      * @return array{status: string, mensagem: ?string, cupom: ?Coupon}
      */
     public function validar(string $codigo, float $subtotalAntesDoDesconto): array
@@ -53,6 +57,18 @@ class CupomValidador
             return $this->recusa(self::NAO_EXISTE);
         }
 
+        return $this->validarCupom($cupom, $subtotalAntesDoDesconto);
+    }
+
+    /**
+     * Valida um Coupon já carregado -- separado de validar() pra permitir
+     * revalidação final sob lockForUpdate() sem precisar buscar por código
+     * de novo (o que perderia o lock que o chamador já tomou).
+     *
+     * @return array{status: string, mensagem: ?string, cupom: ?Coupon}
+     */
+    public function validarCupom(Coupon $cupom, float $subtotalAntesDoDesconto): array
+    {
         if (! $cupom->ativo) {
             return $this->recusa(self::INATIVO);
         }

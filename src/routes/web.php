@@ -35,6 +35,12 @@ Route::get('/paginas', [PaginasController::class, 'paginas'])->name('paginas');
 Route::get('/produto/{slug?}', [ProdutoController::class, 'produto'])->name('produto');
 Route::get('/checkout', [CheckoutController::class, 'checkout'])->name('checkout');
 Route::post('/checkout/finalizar', [CheckoutController::class, 'finalizar'])->name('checkout.finalizar');
+// Throttle por IP: sem isso a rota vira um oráculo pra descobrir código de
+// cupom por força bruta (10 tentativas/minuto -- dá pra digitar errado
+// algumas vezes, não dá pra varrer um dicionário de códigos).
+Route::post('/checkout/cupom', [CheckoutController::class, 'validarCupom'])
+    ->middleware('throttle:10,1')
+    ->name('checkout.cupom');
 Route::get('/favoritos', [FavoritosController::class, 'favoritos'])->name('favoritos');
 Route::get('/contato', [ContatoController::class, 'contato'])->name('contato');
 Route::get('/404', [Erro404Controller::class, 'erro404'])->name('erro404');

@@ -574,6 +574,18 @@
 
                     <hr class="side-divider">
 
+                    <div style="margin-bottom:12px;">
+                        <div style="display:flex; gap:6px;">
+                            <input type="text" id="cupom-input" placeholder="Código do cupom"
+                                   style="flex:1; padding:8px; border:1px solid #ddd; border-radius:4px; text-transform:uppercase; font-size:13px;">
+                            <button type="button" id="cupom-aplicar-btn"
+                                    style="padding:8px 14px; border:none; border-radius:4px; background:#000; color:#fff; cursor:pointer; font-size:13px;">
+                                Aplicar
+                            </button>
+                        </div>
+                        <div id="cupom-mensagem" style="font-size:12px; margin-top:6px; display:none;"></div>
+                    </div>
+
                     <div class="side-total-row">
                         <span>Subtotal</span>
                         <span id="checkout-side-subtotal">R$ 0,00</span>
@@ -581,6 +593,10 @@
                     <div class="side-total-row" id="checkout-side-frete-row">
                         <span><i class="fa fa-truck" style="color:#4caf50; margin-right:4px;"></i>Frete</span>
                         <span class="green" id="checkout-side-frete">GRÁTIS</span>
+                    </div>
+                    <div class="side-total-row" id="checkout-side-desconto-row" style="display:none;">
+                        <span>Desconto</span>
+                        <span class="green" id="checkout-side-desconto">-R$ 0,00</span>
                     </div>
                     <div class="side-total-row total">
                         <span>Total</span>
@@ -734,6 +750,10 @@ function coletarDadosPedido() {
         endereco_entrega: enderecoEntrega,
         endereco_faturamento: enderecoFaturamento,
         items: itens.map(item => ({ id: item.id, cor: item.cor, tamanho: item.tamanho, qty: item.qty })),
+        // Manda só o CÓDIGO -- quem calcula o desconto é sempre o servidor,
+        // que revalida do zero (o cupom pode ter expirado nos últimos
+        // minutos do checkout).
+        cupom: cupomAplicado ? cupomAplicado.codigo : null,
     };
 }
 
@@ -955,6 +975,69 @@ document.addEventListener('DOMContentLoaded', () => {
 /* ── Resumo do pedido — lê os itens reais do carrinho (VerticalCart / localStorage) ── */
 const FRETE_GRATIS_MINIMO = 150;
 
+// { codigo, desconto } do último cupom validado com sucesso, ou null. Só
+// preview -- o servidor revalida do zero em /checkout/finalizar, nunca
+// confia neste valor.
+let cupomAplicado = null;
+let cupomValidando = false;
+
+function mostrarMensagemCupom(texto, cor) {
+    const msgEl = document.getElementById('cupom-mensagem');
+    msgEl.textContent = texto;
+    msgEl.style.color = cor;
+    msgEl.style.display = 'block';
+}
+
+async function aplicarCupom() {
+    const input = document.getElementById('cupom-input');
+    const codigo = input.value.trim();
+    if (!codigo || cupomValidando) return;
+
+    const itens = window.VerticalCart ? window.VerticalCart.load() : [];
+    if (itens.length === 0) return;
+
+    cupomValidando = true;
+    const btn = document.getElementById('cupom-aplicar-btn');
+    if (btn) btn.disabled = true;
+    document.getElementById('cupom-mensagem').style.display = 'none';
+
+    try {
+        const resp = await fetch('{{ route('checkout.cupom') }}', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Accept': 'application/json',
+                'X-CSRF-TOKEN': csrfToken(),
+            },
+            body: JSON.stringify({
+                codigo,
+                items: itens.map(item => ({ id: item.id, cor: item.cor, tamanho: item.tamanho, qty: item.qty })),
+            }),
+        });
+
+        if (resp.status === 429) {
+            cupomAplicado = null;
+            mostrarMensagemCupom('Muitas tentativas. Aguarde um instante e tente de novo.', '#c0392b');
+        } else {
+            const resultado = await resp.json();
+            if (resp.ok && resultado.valido) {
+                cupomAplicado = { codigo, desconto: resultado.desconto };
+                mostrarMensagemCupom('Cupom aplicado!', '#2e7d32');
+            } else {
+                cupomAplicado = null;
+                mostrarMensagemCupom(resultado.mensagem || 'Não foi possível aplicar o cupom.', '#c0392b');
+            }
+        }
+    } catch (e) {
+        cupomAplicado = null;
+        mostrarMensagemCupom('Erro ao validar o cupom. Tente novamente.', '#c0392b');
+    } finally {
+        cupomValidando = false;
+        if (btn) btn.disabled = false;
+        renderResumoCheckout();
+    }
+}
+
 function renderResumoCheckout() {
     if (!window.VerticalCart) return;
 
@@ -989,16 +1072,34 @@ function renderResumoCheckout() {
     }
 
     const subtotal = window.VerticalCart.subtotal(itens);
+    // Frete decidido pelo subtotal CHEIO, antes do desconto -- mesma regra
+    // do servidor (PedidoCalculoService), preview tem que bater com o real.
     const freteGratis = itens.length === 0 || subtotal >= FRETE_GRATIS_MINIMO;
     const frete = freteGratis ? 0 : 19.90;
-    const total = subtotal + frete;
+    const desconto = cupomAplicado ? cupomAplicado.desconto : 0;
+    const total = Math.max(0, subtotal - desconto + frete);
 
     document.getElementById('checkout-side-subtotal').textContent = window.VerticalCart.formatBRL(subtotal);
     document.getElementById('checkout-side-frete').textContent = freteGratis ? 'GRÁTIS' : window.VerticalCart.formatBRL(frete);
+
+    const descontoRowEl = document.getElementById('checkout-side-desconto-row');
+    if (desconto > 0) {
+        descontoRowEl.style.display = 'flex';
+        document.getElementById('checkout-side-desconto').textContent = '-' + window.VerticalCart.formatBRL(desconto);
+    } else {
+        descontoRowEl.style.display = 'none';
+    }
+
     document.getElementById('checkout-side-total').textContent = window.VerticalCart.formatBRL(total);
 }
 
-document.addEventListener('DOMContentLoaded', renderResumoCheckout);
+document.addEventListener('DOMContentLoaded', function() {
+    renderResumoCheckout();
+    document.getElementById('cupom-aplicar-btn').addEventListener('click', aplicarCupom);
+    document.getElementById('cupom-input').addEventListener('keydown', function(e) {
+        if (e.key === 'Enter') { e.preventDefault(); aplicarCupom(); }
+    });
+});
 </script>
 
 @endsection

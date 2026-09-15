@@ -25,6 +25,9 @@ class PedidoCalculoService
     }
 
     /**
+     * Preview (rota de validar cupom) ou cálculo sem cupom nenhum: busca o
+     * cupom pelo código, sem lock -- não escreve nada no banco.
+     *
      * @param  array<int, array{id: int, qty: int, cor?: ?string, tamanho?: ?string}>  $itens
      * @return array{
      *     itens: Collection,
@@ -39,13 +42,7 @@ class PedidoCalculoService
      */
     public function calcular(array $itens, ?string $codigoCupom = null): array
     {
-        $itensCalculados = $this->calcularItens($itens);
-        $subtotal = round($itensCalculados->sum('subtotal'), 2);
-
-        // Regra #2: decidido pelo subtotal cheio, antes de qualquer desconto.
-        $frete = $subtotal >= (float) config('checkout.frete_gratis_a_partir_de')
-            ? 0.0
-            : (float) config('checkout.frete_padrao');
+        [$itensCalculados, $subtotal, $frete] = $this->calcularBase($itens);
 
         $cupom = null;
         $cupomStatus = null;
@@ -63,18 +60,67 @@ class PedidoCalculoService
             }
         }
 
-        $total = round($subtotal - $desconto + $frete, 2);
+        return $this->montarResultado($itensCalculados, $subtotal, $desconto, $frete, $cupom, $cupomStatus, $cupomMensagem);
+    }
 
-        return [
-            'itens' => $itensCalculados,
-            'subtotal' => $subtotal,
-            'desconto' => $desconto,
-            'frete' => $frete,
-            'total' => $total,
-            'cupom' => $cupom,
-            'cupom_status' => $cupomStatus,
-            'cupom_mensagem' => $cupomMensagem,
-        ];
+    /**
+     * Revalidação final do checkout: recebe um Coupon JÁ CARREGADO sob
+     * lockForUpdate() dentro da transação do pedido -- não busca por
+     * código de novo aqui, pra não abrir mão do lock que o chamador já
+     * tomou. Se a revalidação falhar (esgotou, expirou, foi desativado
+     * entre a tela e o envio), o desconto simplesmente não é aplicado --
+     * o pedido segue sem cupom, não é bloqueado.
+     *
+     * @param  array<int, array{id: int, qty: int, cor?: ?string, tamanho?: ?string}>  $itens
+     * @return array{
+     *     itens: Collection,
+     *     subtotal: float,
+     *     desconto: float,
+     *     frete: float,
+     *     total: float,
+     *     cupom: ?Coupon,
+     *     cupom_status: ?string,
+     *     cupom_mensagem: ?string,
+     * }
+     */
+    public function calcularComCupomTravado(array $itens, ?Coupon $cupomTravado): array
+    {
+        [$itensCalculados, $subtotal, $frete] = $this->calcularBase($itens);
+
+        $cupom = null;
+        $cupomStatus = null;
+        $cupomMensagem = null;
+        $desconto = 0.0;
+
+        if ($cupomTravado !== null) {
+            $resultado = $this->cupomValidador->validarCupom($cupomTravado, $subtotal);
+            $cupomStatus = $resultado['status'];
+            $cupomMensagem = $resultado['mensagem'];
+
+            if ($resultado['status'] === CupomValidador::VALIDO) {
+                $cupom = $resultado['cupom'];
+                $desconto = $this->calcularDesconto($cupom, $subtotal);
+            }
+        }
+
+        return $this->montarResultado($itensCalculados, $subtotal, $desconto, $frete, $cupom, $cupomStatus, $cupomMensagem);
+    }
+
+    /**
+     * @param  array<int, array{id: int, qty: int, cor?: ?string, tamanho?: ?string}>  $itens
+     * @return array{0: Collection, 1: float, 2: float}
+     */
+    private function calcularBase(array $itens): array
+    {
+        $itensCalculados = $this->calcularItens($itens);
+        $subtotal = round($itensCalculados->sum('subtotal'), 2);
+
+        // Regra #2: decidido pelo subtotal cheio, antes de qualquer desconto.
+        $frete = $subtotal >= (float) config('checkout.frete_gratis_a_partir_de')
+            ? 0.0
+            : (float) config('checkout.frete_padrao');
+
+        return [$itensCalculados, $subtotal, $frete];
     }
 
     /**
@@ -115,5 +161,26 @@ class PedidoCalculoService
 
         // Regra #4: nunca negativo, nunca passa do subtotal (sem total negativo).
         return max(0.0, min($desconto, $subtotal));
+    }
+
+    private function montarResultado(
+        Collection $itensCalculados,
+        float $subtotal,
+        float $desconto,
+        float $frete,
+        ?Coupon $cupom,
+        ?string $cupomStatus,
+        ?string $cupomMensagem
+    ): array {
+        return [
+            'itens' => $itensCalculados,
+            'subtotal' => $subtotal,
+            'desconto' => $desconto,
+            'frete' => $frete,
+            'total' => round($subtotal - $desconto + $frete, 2),
+            'cupom' => $cupom,
+            'cupom_status' => $cupomStatus,
+            'cupom_mensagem' => $cupomMensagem,
+        ];
     }
 }

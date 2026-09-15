@@ -2,9 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Coupon;
 use App\Models\Order;
 use App\Services\PedidoCalculoService;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 use Illuminate\Validation\Rule;
 
@@ -47,9 +49,10 @@ class CheckoutController extends Controller
             'endereco_faturamento.telefone' => ['nullable', 'string'],
 
             // 'desconto' deliberadamente ausente daqui -- o cliente manda no
-            // máximo um código de cupom (fase 2b), nunca um valor de
-            // desconto. Qualquer 'desconto' no payload é descartado pelo
-            // validate() por não estar nas regras, nunca chega em $data.
+            // máximo um código de cupom, nunca um valor de desconto.
+            // Qualquer 'desconto' no payload é descartado pelo validate()
+            // por não estar nas regras, nunca chega em $data.
+            'cupom' => ['nullable', 'string', 'max:50'],
             'items' => ['required', 'array', 'min:1'],
             'items.*.id' => ['required', 'integer'],
             'items.*.cor' => ['nullable', 'string'],
@@ -57,54 +60,100 @@ class CheckoutController extends Controller
             'items.*.qty' => ['required', 'integer', 'min:1'],
         ]);
 
-        // Toda a aritmética (subtotal, desconto, frete, total) mora no
-        // service -- sem cupom vindo do cliente ainda (sem campo/UI, fase
-        // 2b), então desconto sai sempre zero, mas pelo MESMO caminho que
-        // vai calcular desconto de verdade depois.
-        $calculo = $calculoService->calcular($data['items']);
+        return DB::transaction(function () use ($request, $data, $calculoService) {
+            // Revalidação final: busca o cupom sob lockForUpdate() dentro da
+            // MESMA transação do pedido. A linha fica travada até o commit
+            // -- um segundo pedido concorrente com o mesmo cupom espera essa
+            // transação terminar antes de conseguir ler/incrementar usos,
+            // então dois pedidos não conseguem furar uso_maximo juntos.
+            $cupomTravado = null;
+            if (! empty($data['cupom'])) {
+                $cupomTravado = Coupon::where('codigo', Str::upper(trim($data['cupom'])))
+                    ->lockForUpdate()
+                    ->first();
+            }
 
-        if ($calculo['itens']->isEmpty()) {
-            return response()->json(['message' => 'Carrinho vazio ou produtos inválidos.'], 422);
-        }
+            // Se o cupom expirou/esgotou/foi desativado entre a tela e o
+            // envio, calcularComCupomTravado() já devolve desconto=0 e
+            // cupom=null -- o pedido segue sem desconto, não é bloqueado.
+            $calculo = $calculoService->calcularComCupomTravado($data['items'], $cupomTravado);
 
-        $status = $data['forma_pagamento'] === Order::PAGAMENTO_CARTAO ? Order::STATUS_PAGO : Order::STATUS_PENDENTE;
+            if ($calculo['itens']->isEmpty()) {
+                return response()->json(['message' => 'Carrinho vazio ou produtos inválidos.'], 422);
+            }
 
-        do {
-            $numeroPedido = 'CS-'.strtoupper(Str::random(8));
-        } while (Order::where('numero_pedido', $numeroPedido)->exists());
+            $status = $data['forma_pagamento'] === Order::PAGAMENTO_CARTAO ? Order::STATUS_PAGO : Order::STATUS_PENDENTE;
 
-        $order = Order::create([
-            'user_id' => $request->user()?->id,
-            'numero_pedido' => $numeroPedido,
-            'nome' => $data['nome'],
-            'sobrenome' => $data['sobrenome'],
-            'email' => $data['email'],
-            'telefone' => $data['telefone'],
+            do {
+                $numeroPedido = 'CS-'.strtoupper(Str::random(8));
+            } while (Order::where('numero_pedido', $numeroPedido)->exists());
+
+            $order = Order::create([
+                'user_id' => $request->user()?->id,
+                'numero_pedido' => $numeroPedido,
+                'nome' => $data['nome'],
+                'sobrenome' => $data['sobrenome'],
+                'email' => $data['email'],
+                'telefone' => $data['telefone'],
+                'subtotal' => $calculo['subtotal'],
+                'desconto' => $calculo['desconto'],
+                'frete' => $calculo['frete'],
+                'total' => $calculo['total'],
+                // CÓDIGO congelado no pedido, nunca o valor recalculável --
+                // null se nenhum cupom foi aplicado (ou se a revalidação
+                // acima recusou).
+                'cupom' => $calculo['cupom']?->codigo,
+                'forma_pagamento' => $data['forma_pagamento'],
+                'status' => $status,
+                'endereco_entrega' => $data['endereco_entrega'],
+                'endereco_faturamento' => $data['endereco_faturamento'] ?? null,
+            ]);
+
+            foreach ($calculo['itens'] as $item) {
+                $order->items()->create($item);
+            }
+
+            // Incrementa usos só quando o cupom realmente foi aplicado,
+            // dentro da mesma transação/lock do pedido.
+            $calculo['cupom']?->increment('usos');
+
+            if ($request->user()) {
+                $request->user()->cartItems()->delete();
+            }
+
+            return response()->json([
+                'numero_pedido' => $order->numero_pedido,
+                'status' => $order->status,
+            ]);
+        });
+    }
+
+    /**
+     * Preview do desconto pra atualizar o resumo sem recarregar a página --
+     * NÃO grava nada (nem pedido, nem usos). A revalidação de verdade
+     * acontece de novo em finalizar(), sob lock: o cliente pode ter ficado
+     * minutos na tela e o cupom ter mudado nesse meio tempo.
+     */
+    public function validarCupom(Request $request, PedidoCalculoService $calculoService)
+    {
+        $data = $request->validate([
+            'codigo' => ['required', 'string', 'max:50'],
+            'items' => ['required', 'array', 'min:1'],
+            'items.*.id' => ['required', 'integer'],
+            'items.*.cor' => ['nullable', 'string'],
+            'items.*.tamanho' => ['nullable', 'string'],
+            'items.*.qty' => ['required', 'integer', 'min:1'],
+        ]);
+
+        $calculo = $calculoService->calcular($data['items'], $data['codigo']);
+
+        return response()->json([
+            'valido' => $calculo['cupom'] !== null,
+            'mensagem' => $calculo['cupom_mensagem'],
             'subtotal' => $calculo['subtotal'],
             'desconto' => $calculo['desconto'],
             'frete' => $calculo['frete'],
             'total' => $calculo['total'],
-            // Sem campo de cupom no checkout ainda (fase 2b) -- ninguém
-            // preenche isso hoje. Quando existir, grava o CÓDIGO aqui
-            // ($calculo['cupom']?->codigo), nunca um valor de desconto.
-            'cupom' => null,
-            'forma_pagamento' => $data['forma_pagamento'],
-            'status' => $status,
-            'endereco_entrega' => $data['endereco_entrega'],
-            'endereco_faturamento' => $data['endereco_faturamento'] ?? null,
-        ]);
-
-        foreach ($calculo['itens'] as $item) {
-            $order->items()->create($item);
-        }
-
-        if ($request->user()) {
-            $request->user()->cartItems()->delete();
-        }
-
-        return response()->json([
-            'numero_pedido' => $order->numero_pedido,
-            'status' => $order->status,
         ]);
     }
 }
