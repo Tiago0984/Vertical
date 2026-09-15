@@ -6,6 +6,7 @@ use App\Models\Coupon;
 use App\Models\Order;
 use App\Services\PedidoCalculoService;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 use Illuminate\Validation\Rule;
@@ -14,7 +15,24 @@ class CheckoutController extends Controller
 {
     public function checkout()
     {
-        return view('site.checkout.checkout');
+        // Campo de cupom vazio na tela derruba conversão -- só mostra o
+        // bloco quando existe pelo menos um cupom utilizável AGORA (ativo,
+        // dentro da validade, com uso disponível). Cacheado por ser uma
+        // checagem por pageview de checkout; Coupon invalida sozinho no
+        // save/delete (ver Coupon::booted()), então uma campanha nova
+        // aparece assim que o cache expira ou é salvo, o que vier primeiro.
+        //
+        // Esconder é só decisão de UI: a rota de validar cupom e o
+        // finalizar() continuam aceitando cupom normalmente mesmo com o
+        // campo escondido -- não pode virar uma segunda regra de negócio
+        // que contradiz CupomValidador.
+        $cupomUtilizavel = Cache::remember(
+            Coupon::CACHE_KEY_UTILIZAVEL_AGORA,
+            now()->addMinutes(5),
+            fn () => Coupon::utilizavelAgora()->exists()
+        );
+
+        return view('site.checkout.checkout', ['cupomUtilizavel' => $cupomUtilizavel]);
     }
 
     public function finalizar(Request $request, PedidoCalculoService $calculoService)

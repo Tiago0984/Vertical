@@ -574,6 +574,7 @@
 
                     <hr class="side-divider">
 
+                    @if ($cupomUtilizavel ?? false)
                     <div style="margin-bottom:12px;">
                         <div style="display:flex; gap:6px;">
                             <input type="text" id="cupom-input" placeholder="Código do cupom"
@@ -585,6 +586,7 @@
                         </div>
                         <div id="cupom-mensagem" style="font-size:12px; margin-top:6px; display:none;"></div>
                     </div>
+                    @endif
 
                     <div class="side-total-row">
                         <span>Subtotal</span>
@@ -1095,8 +1097,13 @@ function renderResumoCheckout() {
 
 document.addEventListener('DOMContentLoaded', function() {
     renderResumoCheckout();
-    document.getElementById('cupom-aplicar-btn').addEventListener('click', aplicarCupom);
-    document.getElementById('cupom-input').addEventListener('keydown', function(e) {
+    // Bloco de cupom pode não existir no DOM (nenhum cupom utilizável agora
+    // -- ver CheckoutController::checkout()); os elementos abaixo saem null
+    // nesse caso, então o listener só é preso quando eles realmente existem.
+    const cupomBtn = document.getElementById('cupom-aplicar-btn');
+    const cupomInput = document.getElementById('cupom-input');
+    if (cupomBtn) cupomBtn.addEventListener('click', aplicarCupom);
+    if (cupomInput) cupomInput.addEventListener('keydown', function(e) {
         if (e.key === 'Enter') { e.preventDefault(); aplicarCupom(); }
     });
 });
