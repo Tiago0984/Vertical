@@ -11,12 +11,21 @@
                 <h3 class="card-title">Itens do Pedido</h3>
             </div>
             <div class="card-body p-0">
+                @php
+                    // Cor é atributo do produto hoje (não mais um seletor no checkout) --
+                    // pedido novo grava cor null em todo item. A coluna só aparece pra
+                    // pedido antigo, que tem cor de verdade gravada; pedido novo não deve
+                    // mostrar uma coluna cheia de traços.
+                    $temCor = $pedido->items->contains(fn ($item) => filled($item->cor));
+                @endphp
                 <div class="table-responsive">
                     <table class="table table-striped m-0">
                         <thead>
                             <tr>
                                 <th>Produto</th>
-                                <th>Cor</th>
+                                @if ($temCor)
+                                    <th>Cor</th>
+                                @endif
                                 <th>Tamanho</th>
                                 <th>Qtd.</th>
                                 <th>Preço</th>
@@ -32,7 +41,9 @@
                                             <span class="badge text-bg-secondary">produto removido</span>
                                         @endunless
                                     </td>
-                                    <td>{{ $item->cor ?? '—' }}</td>
+                                    @if ($temCor)
+                                        <td>{{ $item->cor ?? '—' }}</td>
+                                    @endif
                                     <td>{{ $item->tamanho ?? '—' }}</td>
                                     <td>{{ $item->quantidade }}</td>
                                     <td>R$ {{ number_format($item->preco, 2, ',', '.') }}</td>

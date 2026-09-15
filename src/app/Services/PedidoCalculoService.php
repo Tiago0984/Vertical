@@ -143,8 +143,12 @@ class PedidoCalculoService
                     'product_id' => $produto->id,
                     'nome' => $produto->nome,
                     'preco' => (float) $produto->preco,
-                    'cor' => $item['cor'] ?? null,
-                    'tamanho' => $item['tamanho'] ?? null,
+                    // filled() em vez de ?? -- o carrinho manda '' (não ausente/null)
+                    // pra item sem cor, já que cart_items usa '' como sentinela de
+                    // "sem variação" na chave única (ver migration de cart_items).
+                    // Sem isso, order_items.cor gravaria string vazia em vez de null.
+                    'cor' => filled($item['cor'] ?? null) ? $item['cor'] : null,
+                    'tamanho' => filled($item['tamanho'] ?? null) ? $item['tamanho'] : null,
                     'quantidade' => $item['qty'],
                     'subtotal' => $itemSubtotal,
                 ];

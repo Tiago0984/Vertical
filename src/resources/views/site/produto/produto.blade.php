@@ -82,26 +82,11 @@
 
                     <hr style="border-color:#f0f0f0; margin: 0 0 16px;">
 
-                    {{-- Seletor de COR --}}
-                    <div>
-                        <p style="font-size:12px; font-weight:700; color:#333; text-transform:uppercase; margin-bottom:4px;">
-                            Cor: <span id="cor-selecionada" style="color:#000; font-weight:400; text-transform:none;">Branca</span>
-                        </p>
-                        <div class="color-selector">
-                            <div class="color-dot active" style="background:#FFFFFF;" title="Branca"
-                                 onclick="selecionarCor(this,'Branca')"></div>
-                            <div class="color-dot" style="background:#1a1a1a;" title="Preta"
-                                 onclick="selecionarCor(this,'Preta')"></div>
-                            <div class="color-dot" style="background:#9E9E9E;" title="Cinza"
-                                 onclick="selecionarCor(this,'Cinza')"></div>
-                            <div class="color-dot" style="background:#1565C0;" title="Azul"
-                                 onclick="selecionarCor(this,'Azul')"></div>
-                            <div class="color-dot" style="background:#C62828;" title="Vermelha"
-                                 onclick="selecionarCor(this,'Vermelha')"></div>
-                            <div class="color-dot" style="background:#2E7D32;" title="Verde"
-                                 onclick="selecionarCor(this,'Verde')"></div>
-                        </div>
-                    </div>
+                    {{-- Sem seletor de cor de propósito: cor é atributo do produto, não
+                         variação dele -- cada cor é um item próprio do catálogo ("Camiseta
+                         Gola V Azul", "Camiseta Gola V Preta" etc.), cada um com sua própria
+                         foto, preço e estoque. Um seletor aqui só permitiria pedir uma cor
+                         que este produto específico não é. --}}
 
                     {{-- Seletor de TAMANHO --}}
                     <div style="margin-top: 12px;">
@@ -450,12 +435,6 @@
      SCRIPTS DE INTERAÇÃO
 ══════════════════════════════════════════ --}}
 <script>
-function selecionarCor(el, nome) {
-    document.querySelectorAll('.color-dot').forEach(d => d.classList.remove('active'));
-    el.classList.add('active');
-    document.getElementById('cor-selecionada').textContent = nome;
-}
-
 function selecionarTamanho(el) {
     if (el.classList.contains('esgotado')) return;
     document.querySelectorAll('.size-btn').forEach(b => b.classList.remove('active'));
@@ -465,7 +444,6 @@ function selecionarTamanho(el) {
 
 function adicionarAoCarrinho() {
     const tamanho = document.getElementById('tamanho-selecionado').textContent;
-    const cor = document.getElementById('cor-selecionada').textContent;
     const qty = parseInt(document.getElementById('quantidade').value, 10) || 1;
 
     if (tamanho === '—') {
@@ -478,7 +456,6 @@ function adicionarAoCarrinho() {
         nome: '{{ addslashes($produto->nome) }}',
         preco: {{ $produto->preco }},
         imagem: '{{ asset($produto->imagem) }}',
-        cor: cor,
         tamanho: tamanho,
         qty: qty,
     });
