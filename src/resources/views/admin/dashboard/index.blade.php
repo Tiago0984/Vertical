@@ -336,6 +336,13 @@
     </div>
     <div class="col-lg-3 col-md-4 col-6">
         @include('admin.partials.stat-card', [
+            'label' => 'Produtos esgotados',
+            'value' => $estoqueContagem->get(\App\Services\DashboardService::ESTOQUE_ESGOTADO, 0),
+            'tone' => $estoqueContagem->get(\App\Services\DashboardService::ESTOQUE_ESGOTADO, 0) > 0 ? 'danger' : 'neutro',
+        ])
+    </div>
+    <div class="col-lg-3 col-md-4 col-6">
+        @include('admin.partials.stat-card', [
             'label' => 'Produtos para repor',
             'value' => $estoqueContagem->get(\App\Services\DashboardService::ESTOQUE_REPOR, 0),
             'tone' => $estoqueContagem->get(\App\Services\DashboardService::ESTOQUE_REPOR, 0) > 0 ? 'danger' : 'neutro',

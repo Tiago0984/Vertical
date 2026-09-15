@@ -43,6 +43,8 @@ class DashboardService
 {
     public const ESTOQUE_REPOR = 'repor';
 
+    public const ESTOQUE_ESGOTADO = 'esgotado';
+
     public const ESTOQUE_ATENCAO = 'atencao';
 
     public const ESTOQUE_OK = 'ok';
