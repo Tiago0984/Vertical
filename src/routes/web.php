@@ -19,6 +19,7 @@ use App\Http\Controllers\AccountController;
 use App\Http\Controllers\AddressController;
 use App\Http\Controllers\AccountOrderController;
 use App\Http\Controllers\Admin\CategoryController as AdminCategoryController;
+use App\Http\Controllers\Admin\CouponController as AdminCouponController;
 use App\Http\Controllers\Admin\CustomerController as AdminCustomerController;
 use App\Http\Controllers\Admin\DashboardController as AdminDashboardController;
 use App\Http\Controllers\Admin\OrderController as AdminOrderController;
@@ -95,4 +96,7 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
 
     Route::get('clientes', [AdminCustomerController::class, 'index'])->name('clientes.index');
     Route::get('clientes/{cliente}', [AdminCustomerController::class, 'show'])->name('clientes.show');
+
+    Route::resource('cupons', AdminCouponController::class)->parameters(['cupons' => 'cupom'])->except('show');
+    Route::patch('cupons/{cupom}/toggle-ativo', [AdminCouponController::class, 'toggleAtivo'])->name('cupons.toggle-ativo');
 });

@@ -97,6 +97,12 @@
                                 <p>Clientes</p>
                             </a>
                         </li>
+                        <li class="nav-item">
+                            <a href="{{ route('admin.cupons.index') }}" class="nav-link {{ request()->routeIs('admin.cupons.*') ? 'active' : '' }}">
+                                <i class="nav-icon bi bi-ticket-perforated-fill"></i>
+                                <p>Cupons</p>
+                            </a>
+                        </li>
                     </ul>
                 </nav>
             </div>
